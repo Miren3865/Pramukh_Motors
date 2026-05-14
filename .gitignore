@@ -10,7 +10,7 @@ yarn-error.log*
 .env.local
 .env.*.local
 
-# Server
+# Servers
 .env
 node_modules/
 npm-debug.log
