@@ -1,17 +1,17 @@
-# Revora Motors - Premium Luxury Car Dealer
+# Pramukh Motors - Premium Luxury Car Dealer
 
 A full-stack premium second-hand luxury car dealer website with modern animations, glassmorphism effects, and a responsive admin dashboard.
 
 ## 🚀 Live Demo
 
-- **Website**: [Revora Motors](https://revora-motors.vercel.app)
-- **Admin Dashboard**: [Admin Panel](https://revora-motors.vercel.app/admin/login)
-- **Backend API**: [Revora API](https://revora-motors-api.render.com)
+- **Website**: [Pramukh Motors](https://pramukh-motors.vercel.app)
+- **Admin Dashboard**: [Admin Panel](https://pramukh-motors.vercel.app/admin/login)
+- **Backend API**: [Pramukh API](https://pramukh-motors-api.render.com)
 
 ## 📋 Project Structure
 
 ```
-revora-motors/
+pramukh-motors/
 ├── client/                 # Frontend (React + Vite)
 │   ├── src/
 │   │   ├── components/    # Reusable components
@@ -76,7 +76,7 @@ revora-motors/
 
 ```bash
 # Navigate to client directory
-cd revora-motors/client
+cd pramukh-motors/client
 
 # Install dependencies
 npm install
@@ -98,7 +98,7 @@ npm run build
 
 ```bash
 # Navigate to server directory
-cd revora-motors/server
+cd pramukh-motors/server
 
 # Install dependencies
 npm install
@@ -130,14 +130,14 @@ MONGO_URI=your_mongodb_connection_string
 PORT=5000
 NODE_ENV=development
 JWT_SECRET=your_secret_key
-ADMIN_EMAIL=admin@revoramotors.com
+ADMIN_EMAIL=admin@pramukhmotors.com
 ADMIN_PASSWORD=admin123
 ```
 
 ## 🔐 Default Admin Credentials
 
 ```
-Email: admin@revoramotors.com
+Email: admin@pramukhmotors.com
 Password: admin123
 ```
 
@@ -292,7 +292,7 @@ This project is licensed under the MIT License - see LICENSE file for details.
 
 ## 👨‍💻 Author
 
-Built with ❤️ by the Revora Motors Team
+Built with ❤️ by the Pramukh Motors Team
 
 ## 🤝 Contributing
 
@@ -300,7 +300,7 @@ Contributions welcome! Please submit pull requests with your improvements.
 
 ## 📞 Support
 
-For support, email hello@revoramotors.com
+For support, email hello@pramukhmotors.com
 
 ## 🎯 Roadmap
 
@@ -318,4 +318,5 @@ For support, email hello@revoramotors.com
 ---
 
 Made with ❤️ for car enthusiasts
-"# Revora_Motors" 
+"# Pramukh_Motors" 
+"# Pramukh_Motors" 
