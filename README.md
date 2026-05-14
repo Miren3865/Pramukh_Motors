@@ -5,8 +5,6 @@ A full-stack premium second-hand luxury car dealer website with modern animation
 ## 🚀 Live Demo
 
 - **Website**: [Pramukh Motors](https://pramukh-motors.vercel.app)
-- **Admin Dashboard**: [Admin Panel](https://pramukh-motors.vercel.app/admin/login)
-- **Backend API**: [Pramukh API](https://pramukh-motors-api.render.com)
 
 ## 📋 Project Structure
 
@@ -130,15 +128,8 @@ MONGO_URI=your_mongodb_connection_string
 PORT=5000
 NODE_ENV=development
 JWT_SECRET=your_secret_key
-ADMIN_EMAIL=admin@pramukhmotors.com
-ADMIN_PASSWORD=admin123
-```
-
-## 🔐 Default Admin Credentials
-
-```
-Email: admin@pramukhmotors.com
-Password: admin123
+ADMIN_EMAIL=your_email
+ADMIN_PASSWORD=your_password
 ```
 
 **⚠️ Change these credentials in production!**
@@ -318,5 +309,6 @@ For support, email hello@pramukhmotors.com
 ---
 
 Made with ❤️ for car enthusiasts
+"# Pramukh_Motors" 
 "# Pramukh_Motors" 
 "# Pramukh_Motors" 
