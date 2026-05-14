@@ -16,7 +16,7 @@ const TestimonialSection = () => {
       role: 'CEO, Tech Innovations',
       image: '👨‍💼',
       rating: 5,
-      text: 'Revora Motors exceeded all my expectations. The quality of service, the vehicle selection, and the professionalism of the team made my luxury car purchase an unforgettable experience.',
+      text: 'Pramukh Motors exceeded all my expectations. The quality of service, the vehicle selection, and the professionalism of the team made my luxury car purchase an unforgettable experience.',
     },
     {
       id: 2,
@@ -24,7 +24,7 @@ const TestimonialSection = () => {
       role: 'Entrepreneur',
       image: '👩‍💼',
       rating: 5,
-      text: 'I was skeptical at first, but Revora Motors proved to be the real deal. Premium quality cars, transparent pricing, and exceptional customer support. Highly recommended!',
+      text: 'I was skeptical at first, but Pramukh Motors proved to be the real deal. Premium quality cars, transparent pricing, and exceptional customer support. Highly recommended!',
     },
     {
       id: 3,
@@ -40,7 +40,31 @@ const TestimonialSection = () => {
       role: 'Fashion Designer',
       image: '👩‍🎨',
       rating: 5,
-      text: 'Revora Motors understands luxury and style. They helped me find the perfect car that matches my personality. The attention to detail is unparalleled.',
+      text: 'Pramukh Motors understands luxury and style. They helped me find the perfect car that matches my personality. The attention to detail is unparalleled.',
+    },
+    {
+      id: 5,
+      name: 'Rajesh Patel',
+      role: 'Investment Banker',
+      image: '👨‍💼',
+      rating: 5,
+      text: 'Exceptional service from start to finish! The team at Pramukh Motors made the entire buying experience smooth and enjoyable. My Mercedes-Benz is absolutely perfect. Highly satisfied!',
+    },
+    {
+      id: 6,
+      name: 'Priya Sharma',
+      role: 'Corporate Executive',
+      image: '👩‍💼',
+      rating: 5,
+      text: 'Outstanding quality vehicles and impeccable customer service. The financing options are flexible and competitive. I felt valued as a customer throughout the entire process. Definitely coming back!',
+    },
+    {
+      id: 7,
+      name: 'David Thompson',
+      role: 'Real Estate Developer',
+      image: '👨‍💼',
+      rating: 5,
+      text: 'Pramukh Motors truly offers premium luxury vehicles at fair prices. The after-sales support is phenomenal. My Audi purchase was the best decision I made this year. Couldn\'t be happier!',
     },
   ]
 
@@ -65,59 +89,62 @@ const TestimonialSection = () => {
         </motion.div>
 
         {/* Testimonials Carousel */}
-        <Swiper
-          modules={[Autoplay, Navigation, Pagination]}
-          autoplay={{ delay: 5000, disableOnInteraction: false }}
-          navigation={false}
-          pagination={{ clickable: true, dynamicBullets: true }}
-          spaceBetween={30}
-          slidesPerView={1}
-          breakpoints={{
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-          }}
-          className="pb-12"
-        >
-          {testimonials.map((testimonial) => (
-            <SwiperSlide key={testimonial.id}>
-              <motion.div
-                variants={itemVariants}
-                whileHover={{ y: -10 }}
-                className="glass-dark p-8 rounded-xl border border-neon-blue/20 hover:border-neon-blue/60 transition-all h-full flex flex-col"
-              >
-                {/* Quote Icon */}
-                <div className="mb-4">
-                  <Quote className="text-neon-blue/50" size={32} />
-                </div>
-
-                {/* Testimonial Text */}
-                <p className="text-gray-300 mb-6 flex-grow leading-relaxed">
-                  "{testimonial.text}"
-                </p>
-
-                {/* Rating */}
-                <div className="flex gap-1 mb-4">
-                  {Array.from({ length: testimonial.rating }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className="text-neon-blue fill-neon-blue"
-                      size={18}
-                    />
-                  ))}
-                </div>
-
-                {/* Author */}
-                <div className="flex items-center gap-4">
-                  <div className="text-3xl">{testimonial.image}</div>
-                  <div>
-                    <p className="text-white font-bold">{testimonial.name}</p>
-                    <p className="text-gray-400 text-sm">{testimonial.role}</p>
+        <div className="pb-16 pt-6">
+          <Swiper
+            modules={[Autoplay, Navigation, Pagination]}
+            autoplay={{ delay: 5000, disableOnInteraction: false }}
+            navigation={false}
+            pagination={{ clickable: true, dynamicBullets: true }}
+            spaceBetween={30}
+            slidesPerView={1}
+            breakpoints={{
+              768: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+            }}
+            className="pb-12"
+            style={{ overflow: 'visible' }}
+          >
+            {testimonials.map((testimonial) => (
+              <SwiperSlide key={testimonial.id}>
+                <motion.div
+                  variants={itemVariants}
+                  whileHover={{ y: -10 }}
+                  className="glass-dark p-8 rounded-xl border border-neon-blue/20 hover:border-neon-blue/60 transition-all h-full flex flex-col"
+                >
+                  {/* Quote Icon */}
+                  <div className="mb-4">
+                    <Quote className="text-neon-blue/50" size={32} />
                   </div>
-                </div>
-              </motion.div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+
+                  {/* Testimonial Text */}
+                  <p className="text-gray-300 mb-6 flex-grow leading-relaxed">
+                    "{testimonial.text}"
+                  </p>
+
+                  {/* Rating */}
+                  <div className="flex gap-1 mb-4">
+                    {Array.from({ length: testimonial.rating }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className="text-neon-blue fill-neon-blue"
+                        size={18}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Author */}
+                  <div className="flex items-center gap-4">
+                    <div className="text-3xl">{testimonial.image}</div>
+                    <div>
+                      <p className="text-white font-bold">{testimonial.name}</p>
+                      <p className="text-gray-400 text-sm">{testimonial.role}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </div>
     </section>
   )

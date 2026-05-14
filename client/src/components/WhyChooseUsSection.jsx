@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Shield, CheckCircle, CreditCard, Zap, Users } from 'lucide-react'
+import { Shield, CheckCircle, CreditCard, Zap, Users, Award } from 'lucide-react'
 import { containerVariants, itemVariants } from '../animations/variants'
 
 const WhyChooseUsSection = () => {
@@ -35,6 +35,12 @@ const WhyChooseUsSection = () => {
       title: 'Expert Support',
       description: 'Dedicated customer service team available 24/7 to assist with your purchase',
     },
+    {
+      id: 6,
+      icon: Award,
+      title: 'Extended Warranty',
+      description: 'Comprehensive warranty coverage with hassle-free claims and nationwide service center network',
+    },
   ]
 
   return (
@@ -50,7 +56,7 @@ const WhyChooseUsSection = () => {
         >
           <h2 className="text-5xl md:text-6xl font-bold mb-4">
             <span className="text-white">Why Choose </span>
-            <span className="gradient-text neon-glow">Revora Motors</span>
+            <span className="gradient-text neon-glow">Pramukh Motors</span>
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Premium service backed by industry expertise and customer satisfaction

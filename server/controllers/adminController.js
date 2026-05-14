@@ -104,7 +104,7 @@ export const initializeAdmin = async (req, res) => {
     const admin = await Admin.create({
       email: process.env.ADMIN_EMAIL,
       password: process.env.ADMIN_PASSWORD,
-      name: 'Revora Admin',
+      name: 'Pramukh Admin',
       role: 'super_admin',
     })
 

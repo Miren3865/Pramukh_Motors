@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Edit2, Trash2, Eye, EyeOff, Car, AlertCircle } from 'lucide-react'
+import { Plus, Edit2, Trash2, Eye, EyeOff, Car, AlertCircle, X } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { getAllCars, deleteCar, getCarStats } from '../services/api'
+import { getAllCars, deleteCar, getCarStats, updateCar } from '../services/api'
 import AddCarModal from './AddCarModal'
+import CustomSelect from '@/components/ui/CustomSelect'
 import EditCarModal from './EditCarModal'
 
 const AdminCars = () => {
@@ -14,11 +15,22 @@ const AdminCars = () => {
   const [filterStatus, setFilterStatus] = useState('all')
   const [showAddModal, setShowAddModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [selectedCar, setSelectedCar] = useState(null)
+  const [deleteTarget, setDeleteTarget] = useState(null)
 
   useEffect(() => {
     fetchCars()
     fetchStats()
+  }, [])
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchCars()
+      fetchStats()
+    }, 15000)
+
+    return () => clearInterval(intervalId)
   }, [])
 
   const fetchCars = async () => {
@@ -47,20 +59,60 @@ const AdminCars = () => {
     }
   }
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this car?')) return
+  const handleDelete = (car) => {
+    setDeleteTarget(car)
+    setShowDeleteModal(true)
+  }
+
+  const handleToggleShowOnUser = async (car) => {
+    try {
+      const response = await updateCar(car._id, { showOnUser: !car.showOnUser })
+      if (response.success) {
+        setCars((prevCars) => prevCars.map((item) => item._id === car._id ? response.data : item))
+        toast.success(`Car ${!car.showOnUser ? 'shown' : 'hidden'} on user site`)
+      }
+    } catch (error) {
+      toast.error('Failed to update visibility')
+      console.error('Visibility toggle error:', error)
+    }
+  }
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return
 
     try {
-      await deleteCar(id)
-      setCars(cars.filter((car) => car._id !== id))
+      await deleteCar(deleteTarget._id)
+      setCars(cars.filter((car) => car._id !== deleteTarget._id))
       toast.success('Car deleted successfully')
       fetchStats()
     } catch (error) {
       toast.error('Failed to delete car')
+    } finally {
+      setShowDeleteModal(false)
+      setDeleteTarget(null)
     }
   }
 
+  const cancelDelete = () => {
+    setShowDeleteModal(false)
+    setDeleteTarget(null)
+  }
+
+  useEffect(() => {
+    if (!showDeleteModal) return
+
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        cancelDelete()
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [showDeleteModal])
+
   const handleEditClick = (car) => {
+    if (car.status === 'sold') return
     setSelectedCar(car)
     setShowEditModal(true)
   }
@@ -165,21 +217,23 @@ const AdminCars = () => {
               placeholder="Search by name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:border-neon-blue focus:outline-none"
+              className="w-full rounded-lg px-4 text-white placeholder-gray-400 focus:border-neon-blue focus:outline-none"
+              style={{ height: '44px', background: '#0d1b2e', border: '1px solid rgba(99,179,237,0.3)' }}
             />
           </div>
           <div>
             <label className="text-gray-300 text-sm mb-2 block">Filter by Status</label>
-            <select
+            <CustomSelect
               value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white focus:border-neon-blue focus:outline-none"
-            >
-              <option value="all">All Status</option>
-              <option value="available">Available</option>
-              <option value="reserved">Reserved</option>
-              <option value="sold">Sold</option>
-            </select>
+              onChange={(val) => setFilterStatus(val)}
+              options={[
+                { value: 'all', label: 'All Status' },
+                { value: 'available', label: 'Available' },
+                { value: 'reserved', label: 'Reserved' },
+                { value: 'sold', label: 'Sold' },
+              ]}
+              placeholder="Filter by Status"
+            />
           </div>
         </div>
       </motion.div>
@@ -211,6 +265,7 @@ const AdminCars = () => {
                   <th className="px-6 py-4 text-left text-sm font-semibold text-neon-blue">Fuel</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-neon-blue">Transmission</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-neon-blue">Status</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-neon-blue">Public</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-neon-blue">Actions</th>
                 </tr>
               </thead>
@@ -226,7 +281,7 @@ const AdminCars = () => {
                     <td className="px-6 py-4 text-sm text-white font-medium">{car.name}</td>
                     <td className="px-6 py-4 text-sm text-gray-300">{car.year}</td>
                     <td className="px-6 py-4 text-sm text-neon-blue font-semibold">
-                      ${(car.price / 1000).toFixed(0)}K
+                      ₹{car.price?.toLocaleString()}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-300">{car.fuel}</td>
                     <td className="px-6 py-4 text-sm text-gray-300">{car.transmission}</td>
@@ -243,22 +298,44 @@ const AdminCars = () => {
                         {car.status.charAt(0).toUpperCase() + car.status.slice(1)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm space-x-2 flex">
+                    <td className="px-6 py-4 text-sm">
                       <motion.button
-                        whileHover={{ scale: 1.1 }}
+                        whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        onClick={() => handleToggleShowOnUser(car)}
+                        className={`inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                          car.showOnUser
+                            ? 'bg-green-500/10 border border-green-500/20 text-green-300 hover:bg-green-500/20'
+                            : 'bg-slate-700/10 border border-slate-600/20 text-slate-300 hover:bg-slate-700/20'
+                        }`}
+                      >
+                        {car.showOnUser ? <Eye size={14} /> : <EyeOff size={14} />}
+                        <span>{car.showOnUser ? 'Visible' : 'Hidden'}</span>
+                      </motion.button>
+                    </td>
+                    <td className="px-6 py-4 text-sm flex items-center gap-2">
+                      <motion.button
+                        whileHover={{ scale: car.status === 'sold' ? 1 : 1.05 }}
+                        whileTap={{ scale: car.status === 'sold' ? 1 : 0.95 }}
                         onClick={() => handleEditClick(car)}
-                        className="p-2 bg-blue-500/20 hover:bg-blue-500/40 rounded-lg text-blue-400 transition-colors"
+                        disabled={car.status === 'sold'}
+                        className={`inline-flex items-center justify-center gap-2 px-3 py-2 border rounded-lg text-xs font-medium transition-all ${
+                          car.status === 'sold'
+                            ? 'bg-gray-700/50 border-gray-600 text-gray-400 cursor-not-allowed'
+                            : 'bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20 text-blue-300'
+                        }`}
                       >
                         <Edit2 size={16} />
+                        <span>Edit</span>
                       </motion.button>
                       <motion.button
-                        whileHover={{ scale: 1.1 }}
+                        whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => handleDelete(car._id)}
-                        className="p-2 bg-red-500/20 hover:bg-red-500/40 rounded-lg text-red-400 transition-colors"
+                        onClick={() => handleDelete(car)}
+                        className="inline-flex items-center justify-center gap-2 px-3 py-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-lg text-red-300 transition-all"
                       >
                         <Trash2 size={16} />
+                        <span className="text-xs font-medium">Delete</span>
                       </motion.button>
                     </td>
                   </motion.tr>
@@ -274,6 +351,65 @@ const AdminCars = () => {
         {showAddModal && <AddCarModal onClose={() => setShowAddModal(false)} onCarAdded={handleCarAdded} />}
         {showEditModal && selectedCar && (
           <EditCarModal car={selectedCar} onClose={() => setShowEditModal(false)} onCarUpdated={handleCarUpdated} />
+        )}
+        {showDeleteModal && deleteTarget && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 py-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="relative w-full max-w-md overflow-hidden rounded-[2rem] border border-cyan-400/10 bg-slate-950/95 p-6 shadow-[0_40px_120px_-60px_rgba(0,0,0,0.85)] backdrop-blur-2xl"
+              initial={{ opacity: 0, y: 20, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+            >
+              <button
+                type="button"
+                onClick={cancelDelete}
+                className="absolute right-5 top-5 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-slate-900/80 text-slate-100 transition-all duration-200 hover:scale-105 hover:bg-red-500/10 hover:border-red-400/30"
+                aria-label="Cancel delete"
+              >
+                <X size={18} />
+              </button>
+
+              <div className="mb-4">
+                <p className="text-xs uppercase tracking-[0.35em] text-cyan-300/80">Confirm Delete</p>
+                <h3 className="mt-3 text-2xl font-bold text-white">Delete this car?</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-300">
+                  This will permanently remove the car from inventory. You cannot undo this action.
+                </p>
+              </div>
+
+              <div className="rounded-[1.5rem] border border-white/10 bg-slate-900/85 p-4">
+                <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Car preview</p>
+                <p className="mt-3 text-sm text-white font-semibold">{deleteTarget.name}</p>
+                <p className="mt-2 text-xs text-slate-500">
+                  {deleteTarget.year} · {deleteTarget.fuel} · {deleteTarget.transmission}
+                </p>
+                <p className="mt-2 text-xs text-slate-500">Price: ₹{deleteTarget.price?.toLocaleString()}</p>
+              </div>
+
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  onClick={cancelDelete}
+                  className="w-full rounded-3xl border border-white/10 bg-slate-900/80 px-5 py-3 text-sm font-semibold text-slate-200 transition-all duration-200 hover:bg-slate-900/95 sm:w-auto"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmDelete}
+                  className="w-full rounded-3xl bg-gradient-to-r from-red-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:scale-105 sm:w-auto"
+                >
+                  Delete Car
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

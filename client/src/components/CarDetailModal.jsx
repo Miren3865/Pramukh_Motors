@@ -1,9 +1,66 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Zap, Gauge, Settings, Fuel, DollarSign, Star, ChevronLeft, ChevronRight } from 'lucide-react'
+import { X, Zap, Gauge, Settings, Fuel, IndianRupee , Star, ChevronLeft, ChevronRight, AlertTriangle } from 'lucide-react'
+import toast from 'react-hot-toast'
+import { createReservation } from '../services/api'
 
-const CarDetailModal = ({ car, isOpen, onClose }) => {
+const CarDetailModal = ({ car, isOpen, onClose, onReserved }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [reserving, setReserving] = useState(false)
+  const [showReserveConfirm, setShowReserveConfirm] = useState(false)
+  const [reservationDetails, setReservationDetails] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    note: '',
+  })
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    const originalBodyOverflow = document.body.style.overflow
+    const originalBodyTouchAction = document.body.style.touchAction
+    const originalHtmlOverflow = document.documentElement.style.overflow
+
+    document.body.style.overflow = 'hidden'
+    document.body.style.touchAction = 'none'
+    document.documentElement.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = originalBodyOverflow
+      document.body.style.touchAction = originalBodyTouchAction
+      document.documentElement.style.overflow = originalHtmlOverflow
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        if (showReserveConfirm) {
+          setShowReserveConfirm(false)
+          return
+        }
+        onClose()
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [isOpen, onClose, showReserveConfirm])
+
+  useEffect(() => {
+    if (!isOpen) {
+      setShowReserveConfirm(false)
+      setReservationDetails({
+        name: '',
+        email: '',
+        phone: '',
+        note: '',
+      })
+    }
+  }, [isOpen])
 
   // Get all available images for the gallery
   const getAllImages = () => {
@@ -74,11 +131,97 @@ const CarDetailModal = ({ car, isOpen, onClose }) => {
   }
 
   const specs = [
-    { icon: Fuel, label: 'Fuel Type', value: car?.fuel, color: 'text-yellow-400' },
-    { icon: Gauge, label: 'Mileage', value: `${car?.mileage.toLocaleString()} km`, color: 'text-cyan-400' },
-    { icon: Settings, label: 'Transmission', value: car?.transmission, color: 'text-purple-400' },
-    { icon: Zap, label: 'Year', value: car?.year, color: 'text-green-400' },
+    { icon: Fuel, label: 'Fuel Type', value: car?.fuel || 'N/A', color: 'text-yellow-400' },
+    { icon: Gauge, label: 'Mileage', value: car?.mileage ? `${car.mileage.toLocaleString()} km` : 'N/A', color: 'text-cyan-400' },
+    { icon: Settings, label: 'Transmission', value: car?.transmission || 'N/A', color: 'text-purple-400' },
+    { icon: Zap, label: 'Year', value: car?.year || 'N/A', color: 'text-green-400' },
   ]
+
+  const detailItems = [
+    { label: 'Vehicle Type', value: car?.vehicleType || 'N/A' },
+    { label: 'Drive', value: car?.drive || 'N/A' },
+    { label: 'Doors', value: car?.doors ?? 'N/A' },
+    { label: 'Seats', value: car?.seats ?? 'N/A' },
+    { label: 'Engine Size', value: car?.engineSize || 'N/A' },
+    { label: 'Horsepower', value: car?.horsepower ?? 'N/A' },
+    { label: 'Acceleration', value: car?.acceleration ? `${car.acceleration} sec` : 'N/A' },
+    { label: 'Top Speed', value: car?.topSpeed ? `${car.topSpeed} km/h` : 'N/A' },
+    { label: 'Fuel Consumption', value: car?.fuelConsumption || 'N/A' },
+    { label: 'Registration Year', value: car?.registrationYear ?? 'N/A' },
+    { label: 'Registration State', value: car?.registrationState || 'N/A' },
+    { label: 'Ownership', value: car?.ownership || 'N/A' },
+    { label: 'Trunk Capacity', value: car?.trunk || 'N/A' },
+    { label: 'Service History', value: car?.serviceHistory === false ? 'No' : 'Yes' },
+    { label: 'Color', value: car?.color || 'N/A' },
+  ]
+
+  const featureList = car?.features?.length > 0
+    ? car.features
+    : [
+      '🔒 Full Service History Available',
+      '✨ Professional Detailing Included',
+      '🛡️ Extended Warranty Option',
+      '🚗 Pre-Purchase Inspection Completed',
+    ]
+
+  const isUnavailable = car?.status === 'reserved' || car?.status === 'sold'
+  const isValidEmail = (email) => /^\S+@\S+\.\S+$/.test(email)
+  const isReservationFormValid =
+    reservationDetails.name.trim().length >= 2 &&
+    isValidEmail(reservationDetails.email) &&
+    reservationDetails.phone.trim().length >= 10
+
+  const handleReservationDetailChange = (event) => {
+    const { name, value } = event.target
+    setReservationDetails((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  const handleReserveClick = () => {
+    if (!car?._id || isUnavailable || reserving) return
+    setShowReserveConfirm(true)
+  }
+
+  const handleReserveConfirm = async () => {
+    if (!car?._id || isUnavailable || reserving || !isReservationFormValid) return
+
+    try {
+      setReserving(true)
+
+      const response = await createReservation({
+        carId: car._id,
+        carName: car.name,
+        carYear: car.year,
+        carPrice: car.price,
+        customerName: reservationDetails.name.trim(),
+        customerEmail: reservationDetails.email.trim(),
+        customerPhone: reservationDetails.phone.trim(),
+        note: reservationDetails.note.trim(),
+      })
+
+      if (response?.success) {
+        setShowReserveConfirm(false)
+        setReservationDetails({
+          name: '',
+          email: '',
+          phone: '',
+          note: '',
+        })
+        toast.success('Reservation confirmed successfully')
+        if (onReserved) {
+          onReserved(response.car || response.data)
+        }
+        onClose()
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to reserve this car')
+      console.error('Reserve car error:', error)
+    } finally {
+      setReserving(false)
+    }
+  }
 
   return (
     <AnimatePresence>
@@ -182,34 +325,6 @@ const CarDetailModal = ({ car, isOpen, onClose }) => {
                       )}
 
                       {/* Thumbnail Strip */}
-                      {allImages.length > 1 && (
-                        <div className="absolute bottom-4 left-4 right-4 flex justify-center space-x-2">
-                          {allImages.slice(0, 5).map((img, index) => (
-                            <motion.button
-                              key={index}
-                              onClick={() => setCurrentImageIndex(index)}
-                              className={`w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${
-                                index === currentImageIndex
-                                  ? 'border-neon-blue shadow-lg shadow-neon-blue/50'
-                                  : 'border-white/30 hover:border-white/60'
-                              }`}
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              <img
-                                src={img}
-                                alt={`Thumbnail ${index + 1}`}
-                                className="w-full h-full object-cover"
-                              />
-                            </motion.button>
-                          ))}
-                          {allImages.length > 5 && (
-                            <div className="w-12 h-12 bg-black/50 rounded-lg flex items-center justify-center">
-                              <span className="text-white text-xs">+{allImages.length - 5}</span>
-                            </div>
-                          )}
-                        </div>
-                      )}
                     </>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
@@ -268,12 +383,12 @@ const CarDetailModal = ({ car, isOpen, onClose }) => {
                   >
                     <div className="flex items-center gap-4">
                       <div className="w-14 h-14 bg-gradient-to-br from-neon-blue/20 to-neon-purple/20 rounded-lg flex items-center justify-center">
-                        <DollarSign className="text-neon-blue" size={28} />
+                        <IndianRupee className="text-neon-blue" size={28} />
                       </div>
                       <div>
                         <p className="text-gray-400 text-sm mb-1">Price</p>
                         <p className="text-3xl font-bold text-neon-blue">
-                          ${(car?.price / 1000).toFixed(0)}K
+                          ₹{car?.price?.toLocaleString()}
                         </p>
                       </div>
                     </div>
@@ -308,6 +423,32 @@ const CarDetailModal = ({ car, isOpen, onClose }) => {
                     </div>
                   </motion.div>
 
+                  {/* Description */}
+                  <motion.div variants={itemVariants} className="mb-8">
+                    <h3 className="text-xl font-bold text-white mb-4">Description</h3>
+                    <p className="text-gray-300 leading-7">{car?.description || 'No additional description available.'}</p>
+                  </motion.div>
+
+                  {/* Detailed Attributes */}
+                  <motion.div variants={itemVariants} className="mb-8">
+                    <h3 className="text-xl font-bold text-white mb-4">Car Details</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {detailItems.map((item, index) => (
+                        <motion.div
+                          key={index}
+                          className="glass p-4 rounded-xl border border-neon-blue/20 hover:border-neon-blue/60 transition-all"
+                          whileHover={{ y: -6 }}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.05 * index, duration: 0.35 }}
+                        >
+                          <p className="text-gray-400 text-xs uppercase tracking-[.2em] mb-2">{item.label}</p>
+                          <p className="text-white font-semibold">{item.value}</p>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+
                   {/* Additional Info */}
                   <motion.div variants={itemVariants} className="mb-8">
                     <h3 className="text-xl font-bold text-white mb-4">Features & Benefits</h3>
@@ -317,12 +458,7 @@ const CarDetailModal = ({ car, isOpen, onClose }) => {
                       initial="hidden"
                       animate="visible"
                     >
-                      {[
-                        '🔒 Full Service History Available',
-                        '✨ Professional Detailing Included',
-                        '🛡️ Extended Warranty Option',
-                        '🚗 Pre-Purchase Inspection Completed',
-                      ].map((feature, i) => (
+                      {featureList.map((feature, i) => (
                         <motion.div
                           key={i}
                           className="glass p-3 rounded-lg border border-neon-blue/20 hover:border-neon-blue/40 transition-all flex items-center gap-3"
@@ -344,10 +480,21 @@ const CarDetailModal = ({ car, isOpen, onClose }) => {
                     <motion.button
                       whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(0, 217, 255, 0.6)' }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={onClose}
-                      className="flex-1 btn-primary py-3 font-bold rounded-lg"
+                      onClick={handleReserveClick}
+                      disabled={isUnavailable || reserving}
+                      className={`flex-1 py-3 font-bold rounded-lg transition-all ${
+                        isUnavailable || reserving
+                          ? 'bg-gray-700 text-gray-300 cursor-not-allowed'
+                          : 'btn-primary'
+                      }`}
                     >
-                      Reserve This Car
+                      {reserving
+                        ? 'Reserving...'
+                        : isUnavailable
+                        ? car?.status === 'sold'
+                          ? 'Already Sold'
+                          : 'This car is already reserved'
+                        : 'Reserve This Car'}
                     </motion.button>
                     <motion.button
                       whileHover={{ scale: 1.05 }}
@@ -359,9 +506,126 @@ const CarDetailModal = ({ car, isOpen, onClose }) => {
                     </motion.button>
                   </motion.div>
                 </motion.div>
+
               </div>
             </motion.div>
           </motion.div>
+
+          <AnimatePresence>
+            {showReserveConfirm && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 backdrop-blur-sm p-6"
+                onClick={() => setShowReserveConfirm(false)}
+              >
+                <motion.div
+                  initial={{ opacity: 0, y: 24, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 24, scale: 0.95 }}
+                  transition={{ type: 'spring', stiffness: 280, damping: 25 }}
+                  className="w-full max-w-lg rounded-2xl border border-neon-blue/40 bg-dark-card/95 p-6 shadow-[0_20px_80px_rgba(0,0,0,0.65)]"
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="shrink-0 rounded-xl bg-neon-purple/20 border border-neon-purple/50 p-3">
+                      <AlertTriangle size={22} className="text-neon-purple" />
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold text-white">Reservation Details Required</h4>
+                      <p className="mt-2 text-sm text-gray-300 leading-6">
+                        Please fill your details first. Final confirmation will appear after all required fields are valid.
+                      </p>
+                      <p className="mt-1 text-xs text-neon-blue">
+                        {car?.name} will be reserved once you confirm.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-2">
+                    <div className="md:col-span-1">
+                      <label className="mb-1 block text-xs font-medium text-gray-300">Full Name *</label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={reservationDetails.name}
+                        onChange={handleReservationDetailChange}
+                        placeholder="Enter your full name"
+                        className="w-full rounded-lg border border-neon-blue/30 bg-dark-bg px-3 py-2 text-white placeholder-gray-500 focus:border-neon-blue focus:outline-none"
+                      />
+                    </div>
+                    <div className="md:col-span-1">
+                      <label className="mb-1 block text-xs font-medium text-gray-300">Email *</label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={reservationDetails.email}
+                        onChange={handleReservationDetailChange}
+                        placeholder="you@example.com"
+                        className="w-full rounded-lg border border-neon-blue/30 bg-dark-bg px-3 py-2 text-white placeholder-gray-500 focus:border-neon-blue focus:outline-none"
+                      />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="mb-1 block text-xs font-medium text-gray-300">Phone Number *</label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={reservationDetails.phone}
+                        onChange={handleReservationDetailChange}
+                        placeholder="Enter your phone number"
+                        className="w-full rounded-lg border border-neon-blue/30 bg-dark-bg px-3 py-2 text-white placeholder-gray-500 focus:border-neon-blue focus:outline-none"
+                      />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="mb-1 block text-xs font-medium text-gray-300">Note (Optional)</label>
+                      <textarea
+                        name="note"
+                        value={reservationDetails.note}
+                        onChange={handleReservationDetailChange}
+                        rows={3}
+                        placeholder="Any specific request..."
+                        className="w-full rounded-lg border border-neon-blue/30 bg-dark-bg px-3 py-2 text-white placeholder-gray-500 focus:border-neon-blue focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-4 rounded-lg border border-neon-blue/30 bg-neon-blue/5 p-3">
+                    <p className="text-xs text-neon-blue">
+                      {isReservationFormValid
+                        ? 'Details complete. Final confirmation is now enabled.'
+                        : 'Fill all mandatory fields to unlock final confirmation.'}
+                    </p>
+                  </div>
+
+                  <div className="mt-6 flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setShowReserveConfirm(false)}
+                      disabled={reserving}
+                      className="flex-1 rounded-lg border border-neon-blue/40 bg-transparent py-3 font-semibold text-neon-blue transition-all hover:bg-neon-blue/10 disabled:opacity-50"
+                    >
+                      Cancel
+                    </button>
+                    {isReservationFormValid ? (
+                      <button
+                        type="button"
+                        onClick={handleReserveConfirm}
+                        disabled={reserving}
+                        className="flex-1 rounded-lg bg-gradient-to-r from-neon-blue to-neon-purple py-3 font-semibold text-white transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {reserving ? 'Reserving...' : 'Final Confirm Reservation'}
+                      </button>
+                    ) : (
+                      <div className="flex-1 rounded-lg border border-dashed border-neon-blue/40 bg-neon-blue/5 py-3 text-center text-xs font-medium text-gray-300">
+                        Complete required details to unlock confirmation
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </>
       )}
     </AnimatePresence>

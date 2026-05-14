@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { itemVariants, containerVariants } from '../animations/variants'
+import showroomImage from '../assets/showroom.png'
 
 const ShowroomSection = () => {
   const [carsSold, setCarsSold] = useState(0)
@@ -75,10 +76,15 @@ const ShowroomSection = () => {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <div className="glass-dark rounded-xl overflow-hidden h-96 bg-gradient-to-br from-neon-blue/20 via-neon-purple/10 to-transparent flex items-center justify-center border border-neon-blue/20">
-              <div className="text-center">
-                <div className="text-6xl mb-4">🏢</div>
-                <p className="text-gray-400">Premium Showroom</p>
+            <div className="glass-dark rounded-xl overflow-hidden h-96 bg-gradient-to-br from-neon-blue/20 via-neon-purple/10 to-transparent border border-neon-blue/20 group relative">
+              <img
+                src={showroomImage}
+                alt="Pramukh Motors Luxury Showroom"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-dark-bg via-transparent to-transparent opacity-30"></div>
+              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-dark-bg to-transparent">
+                <p className="text-white font-semibold"></p>
               </div>
             </div>
           </motion.div>

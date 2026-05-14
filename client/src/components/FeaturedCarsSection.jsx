@@ -1,66 +1,29 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import CarCard from './CarCard'
 import MagneticButton from './MagneticButton'
+import { getAllCars } from '../services/api'
 import { containerVariants, charRevealContainer, charReveal } from '../animations/variants'
 
 const FeaturedCarsSection = () => {
-  const cars = [
-    {
-      id: 1,
-      name: 'BMW 7 Series',
-      year: 2023,
-      fuel: 'Hybrid',
-      mileage: 15000,
-      transmission: 'Automatic',
-      price: 125000,
-    },
-    {
-      id: 2,
-      name: 'Mercedes-Benz S-Class',
-      year: 2023,
-      fuel: 'Diesel',
-      mileage: 20000,
-      transmission: 'Automatic',
-      price: 140000,
-    },
-    {
-      id: 3,
-      name: 'Audi A8',
-      year: 2022,
-      fuel: 'Petrol',
-      mileage: 30000,
-      transmission: 'Automatic',
-      price: 110000,
-    },
-    {
-      id: 4,
-      name: 'Lamborghini Urus',
-      year: 2023,
-      fuel: 'Petrol',
-      mileage: 10000,
-      transmission: 'Automatic',
-      price: 220000,
-    },
-    {
-      id: 5,
-      name: 'Porsche 911',
-      year: 2022,
-      fuel: 'Petrol',
-      mileage: 25000,
-      transmission: 'Automatic',
-      price: 150000,
-    },
-    {
-      id: 6,
-      name: 'Range Rover Sport',
-      year: 2023,
-      fuel: 'Diesel',
-      mileage: 18000,
-      transmission: 'Automatic',
-      price: 95000,
-    },
-  ]
+  const [cars, setCars] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  const fetchCars = async () => {
+    try {
+      const result = await getAllCars()
+      setCars(result.data || [])
+    } catch (error) {
+      console.error('Failed to load featured cars:', error)
+      setCars([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchCars()
+  }, [])
 
   const heading = "Featured Inventory"
 
@@ -145,17 +108,23 @@ const FeaturedCarsSection = () => {
         </motion.div>
 
         {/* Cars Grid with Enhanced Stagger */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
-        >
-          {cars.map((car, index) => (
-            <CarCard key={car.id} car={car} index={index} />
-          ))}
-        </motion.div>
+        {loading ? (
+          <div className="mb-12 text-center text-gray-400">Loading cars...</div>
+        ) : cars.filter((car) => car.showOnUser).length === 0 ? (
+          <div className="mb-12 text-center text-gray-400">No featured cars are available right now. Please check back later.</div>
+        ) : (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-100px' }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
+          >
+            {cars.filter((car) => car.showOnUser).slice(0, 6).map((car, index) => (
+              <CarCard key={car._id || car.id} car={car} index={index} onCarReserved={fetchCars} />
+            ))}
+          </motion.div>
+        )}
 
         {/* Browse All Button with Magnetic Effect */}
         <motion.div

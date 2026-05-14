@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { formField, floatingLabel } from '../animations/variants';
+import { formField } from '../animations/variants';
 
 const LuxuryFormField = ({
   label,
@@ -17,14 +17,10 @@ const LuxuryFormField = ({
   rows = null,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
-  const inputRef = useRef(null);
   const fieldType = type || 'text';
   const isTextarea = fieldType === 'textarea';
 
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
-
+  const handleFocus = () => setIsFocused(true);
   const handleBlur = (e) => {
     setIsFocused(false);
     if (onBlur) onBlur(e);
@@ -32,8 +28,9 @@ const LuxuryFormField = ({
 
   const fieldClasses = [
     'form-field',
+    isTextarea ? 'min-h-[140px] resize-none py-3' : 'h-12',
     error && 'error',
-    success && 'success',
+    success && !error && 'success',
     className,
   ].filter(Boolean).join(' ');
 
@@ -47,79 +44,32 @@ const LuxuryFormField = ({
       whileInView="visible"
       viewport={{ once: true, margin: '-100px' }}
     >
-      <div className="relative">
-        <Component
-          ref={inputRef}
-          type={!isTextarea ? fieldType : undefined}
-          name={name}
-          value={value}
-          onChange={onChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          placeholder={placeholder || ' '}
-          className={fieldClasses}
-          rows={isTextarea ? rows : undefined}
-          required={required}
-        />
-        
-        {label && (
-          <motion.label
-            htmlFor={name}
-            className="floating-label"
-            animate={isFocused || value ? 'animate' : 'initial'}
-            variants={floatingLabel}
-          >
-            {label}
-            {required && <span className="text-red-500 ml-1">*</span>}
-          </motion.label>
-        )}
-
-        {/* Light ray effect on focus */}
-        {isFocused && (
-          <motion.div
-            className="light-ray animate"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          />
-        )}
-      </div>
-
-      {/* Error message with animation */}
-      {error && (
-        <motion.p
-          className="text-red-400 text-sm mt-2 ml-2"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {error}
-        </motion.p>
+      {label && (
+        <label htmlFor={name} className="block text-sm font-medium text-slate-200 mb-2">
+          {label}
+          {required && <span className="text-red-500 ml-1">*</span>}
+        </label>
       )}
 
-      {/* Success message with animation */}
-      {success && !error && (
-        <motion.div
-          className="flex items-center gap-2 mt-2 ml-2 text-green-400"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
-          <span className="text-sm">Field validated</span>
-        </motion.div>
+      <Component
+        type={!isTextarea ? fieldType : undefined}
+        name={name}
+        value={value}
+        onChange={onChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        placeholder={placeholder || ''}
+        className={fieldClasses}
+        rows={isTextarea ? rows : undefined}
+        required={required}
+      />
+
+      {error ? (
+        <p className="text-sm text-red-400 mt-2">{error}</p>
+      ) : success ? (
+        <p className="text-sm text-emerald-400 mt-2">Looks good</p>
+      ) : (
+        <p className="sr-only">{label} field</p>
       )}
     </motion.div>
   );

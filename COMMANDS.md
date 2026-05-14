@@ -95,9 +95,9 @@ VITE_API_URL=http://localhost:5000/api
 MONGO_URI=mongodb+srv://Second_Hand_Car_Dealing:SHCD_123@secondhandcardealing.2uvmejl.mongodb.net/secondhandcar?retryWrites=true&w=majority&appName=SecondHandCarDealing
 PORT=5000
 NODE_ENV=development
-JWT_SECRET=revora_motors_super_secret_key_2024
-ADMIN_EMAIL=admin@revoramotors.com
-ADMIN_PASSWORD=admin123
+JWT_SECRET=pramukh_motors_super_secret_key_2024
+ADMIN_EMAIL=your_email
+ADMIN_PASSWORD=your_password
 ```
 
 ---
@@ -127,8 +127,8 @@ curl -X POST http://localhost:5000/api/contact \
 curl -X POST http://localhost:5000/api/admin/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "admin@revoramotors.com",
-    "password": "admin123"
+    "email": "your_email",
+    "password": "your_password"
   }'
 ```
 
@@ -184,7 +184,7 @@ db.contacts.deleteOne({ _id: ObjectId("...") })
 git init
 git add .
 git commit -m "Initial commit"
-git remote add origin https://github.com/YOUR_USERNAME/revora-motors
+git remote add origin https://github.com/YOUR_USERNAME/pramukh-motors
 git branch -M main
 git push -u origin main
 ```
@@ -202,7 +202,7 @@ git push
 
 ### Change Brand Name
 ```bash
-# Search for "Revora Motors" and replace in:
+# Search for "Pramukh Motors" and replace in:
 # - client/src/components/Navbar.jsx
 # - client/src/components/Footer.jsx
 # - client/index.html

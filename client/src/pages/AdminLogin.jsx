@@ -59,7 +59,7 @@ const AdminLogin = () => {
             >
               <span className="text-white font-bold text-3xl">R</span>
             </motion.div>
-            <h1 className="text-3xl font-bold text-white mb-2">Revora Motors</h1>
+            <h1 className="text-3xl font-bold text-white mb-2">Pramukh Motors</h1>
             <p className="text-gray-400">Admin Dashboard</p>
           </div>
 
@@ -77,7 +77,7 @@ const AdminLogin = () => {
                   onChange={handleChange}
                   required
                   className="w-full bg-dark-card border border-neon-blue/30 rounded-lg pl-12 pr-4 py-3 text-white focus:outline-none focus:border-neon-blue transition-all"
-                  placeholder="admin@revoramotors.com"
+                  placeholder="your_email"
                 />
               </div>
             </div>
@@ -110,13 +110,6 @@ const AdminLogin = () => {
               {loading ? 'Logging in...' : 'Login to Dashboard'}
             </motion.button>
           </form>
-
-          {/* Demo Credentials */}
-          <div className="mt-8 p-4 bg-neon-blue/10 rounded-lg border border-neon-blue/20">
-            <p className="text-gray-400 text-xs mb-2">Demo Credentials:</p>
-            <p className="text-gray-300 text-sm">Email: admin@revoramotors.com</p>
-            <p className="text-gray-300 text-sm">Password: admin123</p>
-          </div>
         </div>
       </motion.div>
     </div>

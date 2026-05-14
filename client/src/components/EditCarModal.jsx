@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { updateCar } from '../services/api'
 import ImageUploader from './ImageUploader'
+import CustomSelect from '@/components/ui/CustomSelect'
 
 const EditCarModal = ({ car, onClose, onCarUpdated }) => {
   const [formData, setFormData] = useState({
@@ -26,13 +27,12 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
     seats: car.seats,
     trunk: car.trunk || '',
     warranty: car.warranty || '',
+    showOnUser: car.showOnUser || false,
     serviceHistory: car.serviceHistory,
   })
 
   const [loading, setLoading] = useState(false)
   const [galleryImages, setGalleryImages] = useState([])
-  const [thumbnailImage, setThumbnailImage] = useState([])
-  const [featuredImage, setFeaturedImage] = useState([])
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -65,6 +65,7 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
         doors: parseInt(formData.doors),
         seats: parseInt(formData.seats),
         features: formData.features ? formData.features.split(',').map((f) => f.trim()) : [],
+        showOnUser: formData.showOnUser,
       }
 
       // Append all car data to FormData
@@ -74,18 +75,10 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
         }
       })
 
-      // Add images (only if new ones are uploaded)
+      // Add gallery images (only if new ones are uploaded)
       galleryImages.forEach((file, index) => {
         formDataToSend.append('gallery', file)
       })
-
-      if (thumbnailImage.length > 0) {
-        formDataToSend.append('thumbnail', thumbnailImage[0])
-      }
-
-      if (featuredImage.length > 0) {
-        formDataToSend.append('featured', featuredImage[0])
-      }
 
       const response = await updateCar(car._id, formDataToSend)
 
@@ -105,6 +98,17 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
   }
+
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [onClose])
 
   const modalVariants = {
     hidden: { opacity: 0, y: 50, scale: 0.95 },
@@ -184,7 +188,7 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
                 />
               </div>
               <div>
-                <label className="text-gray-300 text-sm mb-2 block">Price (USD) *</label>
+                <label className="text-gray-300 text-sm mb-2 block">Price (INR) *</label>
                 <input
                   type="number"
                   name="price"
@@ -223,42 +227,46 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
               </div>
               <div>
                 <label className="text-gray-300 text-sm mb-2 block">Fuel Type *</label>
-                <select
-                  name="fuel"
+                <CustomSelect
                   value={formData.fuel}
-                  onChange={handleChange}
-                  className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white focus:border-neon-blue focus:outline-none"
-                >
-                  <option value="Petrol">Petrol</option>
-                  <option value="Diesel">Diesel</option>
-                  <option value="Hybrid">Hybrid</option>
-                  <option value="Electric">Electric</option>
-                </select>
+                  onChange={(val) => handleChange({ target: { name: 'fuel', value: val, type: 'select-one' } })}
+                  options={[
+                    { value: 'Petrol', label: 'Petrol' },
+                    { value: 'Diesel', label: 'Diesel' },
+                    { value: 'Hybrid', label: 'Hybrid' },
+                    { value: 'Electric', label: 'Electric' },
+                  ]}
+                  placeholder="Select Fuel Type"
+                />
               </div>
               <div>
                 <label className="text-gray-300 text-sm mb-2 block">Transmission *</label>
-                <select
-                  name="transmission"
+                <CustomSelect
                   value={formData.transmission}
-                  onChange={handleChange}
-                  className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white focus:border-neon-blue focus:outline-none"
-                >
-                  <option value="Manual">Manual</option>
-                  <option value="Automatic">Automatic</option>
-                </select>
+                  onChange={(val) => handleChange({ target: { name: 'transmission', value: val, type: 'select-one' } })}
+                  options={[
+                    { value: 'Manual', label: 'Manual' },
+                    { value: 'Automatic', label: 'Automatic' },
+                  ]}
+                  placeholder="Select Transmission"
+                />
               </div>
               <div>
                 <label className="text-gray-300 text-sm mb-2 block">Status *</label>
-                <select
-                  name="status"
+                <CustomSelect
                   value={formData.status}
-                  onChange={handleChange}
-                  className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white focus:border-neon-blue focus:outline-none"
-                >
-                  <option value="available">Available</option>
-                  <option value="reserved">Reserved</option>
-                  <option value="sold">Sold</option>
-                </select>
+                  onChange={(val) => handleChange({ target: { name: 'status', value: val, type: 'select-one' } })}
+                  options={
+                    car.status === 'reserved'
+                      ? [
+                          { value: 'reserved', label: 'Reserved' },
+                          { value: 'sold', label: 'Sold' },
+                        ]
+                      : [{ value: 'available', label: 'Available' }]
+                  }
+                  placeholder="Select Status"
+                  disabled={car.status === 'available'}
+                />
               </div>
             </div>
 
@@ -277,27 +285,6 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
                 className="mb-6"
               />
 
-              {/* Thumbnail Image */}
-              <ImageUploader
-                images={thumbnailImage}
-                onImagesChange={setThumbnailImage}
-                maxImages={1}
-                label="Update Thumbnail Image"
-                description="Replace the main listing image"
-                thumbnailMode={true}
-                className="mb-6"
-              />
-
-              {/* Featured Image */}
-              <ImageUploader
-                images={featuredImage}
-                onImagesChange={setFeaturedImage}
-                maxImages={1}
-                label="Update Featured Image"
-                description="Replace the high-quality featured image"
-                featuredMode={true}
-                className="mb-6"
-              />
             </div>
 
             {/* Optional Fields */}
@@ -352,28 +339,22 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
                   placeholder="Trunk Size (e.g., 540L)"
                   className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:border-neon-blue focus:outline-none"
                 />
-                <select
-                  name="doors"
-                  value={formData.doors}
-                  onChange={handleChange}
-                  className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white focus:border-neon-blue focus:outline-none"
-                >
-                  <option value="2">2 Doors</option>
-                  <option value="4">4 Doors</option>
-                  <option value="5">5 Doors</option>
-                </select>
-                <select
-                  name="seats"
-                  value={formData.seats}
-                  onChange={handleChange}
-                  className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white focus:border-neon-blue focus:outline-none"
-                >
-                  {[2, 3, 4, 5, 6, 7, 8].map((num) => (
-                    <option key={num} value={num}>
-                      {num} Seats
-                    </option>
-                  ))}
-                </select>
+                <CustomSelect
+                  value={String(formData.doors)}
+                  onChange={(val) => handleChange({ target: { name: 'doors', value: val, type: 'select-one' } })}
+                  options={[
+                    { value: '2', label: '2 Doors' },
+                    { value: '4', label: '4 Doors' },
+                    { value: '5', label: '5 Doors' },
+                  ]}
+                  placeholder="Select Doors"
+                />
+                <CustomSelect
+                  value={String(formData.seats)}
+                  onChange={(val) => handleChange({ target: { name: 'seats', value: val, type: 'select-one' } })}
+                  options={[2, 3, 4, 5, 6, 7, 8].map(num => ({ value: String(num), label: `${num} Seats` }))}
+                  placeholder="Select Seats"
+                />
                 <input
                   type="text"
                   name="warranty"
@@ -411,6 +392,16 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
                   className="w-4 h-4 accent-neon-blue"
                 />
                 <span className="text-gray-300 text-sm">Full Service History Available</span>
+              </label>
+              <label className="flex items-center gap-2 mt-4 cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="showOnUser"
+                  checked={formData.showOnUser}
+                  onChange={handleChange}
+                  className="w-4 h-4 accent-neon-blue"
+                />
+                <span className="text-gray-300 text-sm">Show this car on the user site</span>
               </label>
             </div>
 

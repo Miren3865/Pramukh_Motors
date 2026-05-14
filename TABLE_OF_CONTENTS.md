@@ -111,10 +111,10 @@
 ## 📁 File Structure & Contents
 
 ```
-revora-motors/
+pramukh-motors/
 │
 ├── 📄 Documentation Files
-│   ├── README.md                  ← Main docs
+│   ├── README.md                  ← Main documents
 │   ├── QUICKSTART.md              ← Start here!
 │   ├── PROJECT_SUMMARY.md         ← Quick overview
 │   ├── DEPLOYMENT.md              ← For production
@@ -339,8 +339,8 @@ cd client && npm run dev  # Terminal 2
 - API: http://localhost:5000/api
 
 **Default Credentials**
-- Email: admin@revoramotors.com
-- Password: admin123
+- Email: your_email
+- Password: your_password
 
 **Quick Commands**
 ```bash

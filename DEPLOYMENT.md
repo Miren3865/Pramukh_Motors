@@ -1,4 +1,4 @@
-# 🚀 Revora Motors - Deployment Guide
+# 🚀 Pramukh Motors - Deployment Guide
 
 ## Quick Start
 
@@ -25,7 +25,7 @@ npm run dev  # Runs on http://localhost:3000
 git init
 git add .
 git commit -m "Initial commit"
-git remote add origin https://github.com/YOUR_USERNAME/revora-motors
+git remote add origin https://github.com/YOUR_USERNAME/pramukh-motors
 git push -u origin main
 ```
 
@@ -33,7 +33,7 @@ git push -u origin main
 - Go to [vercel.com](https://vercel.com)
 - Sign in with GitHub
 - Click "New Project"
-- Select `revora-motors` repository
+- Select `pramukh-motors` repository
 - Choose `client` as root directory
 - Set environment variables:
   ```
@@ -48,7 +48,7 @@ git push -u origin main
 ### Vercel Environment Variables
 
 ```env
-VITE_API_URL=https://revora-motors-api.render.com/api
+VITE_API_URL=https://pramukh-motors-api.render.com/api
 ```
 
 ## Backend Deployment (Render)
@@ -60,13 +60,13 @@ VITE_API_URL=https://revora-motors-api.render.com/api
    - Sign up with GitHub
 
 2. **Create New Web Service**
-   - Click "New +"
+   - Click "New"
    - Select "Web Service"
    - Connect GitHub repository
    - Select repository
 
 3. **Configure**
-   - **Name**: revora-motors-api
+   - **Name**: pramukh-motors-api
    - **Root Directory**: server
    - **Runtime**: Node
    - **Build Command**: `npm install`
@@ -77,7 +77,7 @@ VITE_API_URL=https://revora-motors-api.render.com/api
    MONGO_URI=mongodb+srv://Second_Hand_Car_Dealing:SHCD_123@secondhandcardealing.2uvmejl.mongodb.net/secondhandcar?retryWrites=true&w=majority
    JWT_SECRET=your_secure_secret_key_here
    NODE_ENV=production
-   ADMIN_EMAIL=admin@revoramotors.com
+   ADMIN_EMAIL=your_email
    ADMIN_PASSWORD=secure_password_here
    ```
 

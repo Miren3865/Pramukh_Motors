@@ -4,7 +4,6 @@ import { Mail, Phone, MapPin, Check } from 'lucide-react'
 import toast, { Toaster } from 'react-hot-toast'
 import { submitContact } from '../services/api'
 import LuxuryFormField from './LuxuryFormField'
-import MagneticButton from './MagneticButton'
 import { formFieldContainer, iconHover, parallaxItem } from '../animations/variants'
 
 const ContactSection = () => {
@@ -20,29 +19,62 @@ const ContactSection = () => {
     email: false,
     message: false,
   })
+  const [fieldErrors, setFieldErrors] = useState({
+    name: '',
+    email: '',
+    message: '',
+  })
+
+  const validateField = (name, value) => {
+    const trimmed = value.trim()
+    if (name === 'email') {
+      if (!trimmed) return 'Please enter your email address.'
+      if (!/^[^\s@]+@[^\s@]+\.com$/i.test(trimmed)) return 'Please enter a valid .com email address.'
+      return ''
+    }
+    if (name === 'name') {
+      if (!trimmed) return 'Please enter your full name.'
+      if (trimmed.length < 2) return 'Name must be at least 2 characters.'
+      return ''
+    }
+    if (name === 'message') {
+      if (!trimmed) return 'Please enter your message.'
+      if (trimmed.length < 10) return 'Message must be at least 10 characters.'
+      return ''
+    }
+    return ''
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
-    
-    // Simple validation feedback
-    if (value.length > 0) {
-      setFieldStates((prev) => ({ ...prev, [name]: true }))
-    }
+    const error = validateField(name, value)
+    setFieldErrors((prev) => ({ ...prev, [name]: error }))
+    setFieldStates((prev) => ({ ...prev, [name]: !error }))
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
 
-    if (formData.message.trim().length < 10) {
-      toast.error('Message must be at least 10 characters.')
-      setLoading(false)
-      return
+    const nameError = validateField('name', formData.name)
+    const emailError = validateField('email', formData.email)
+    const messageError = validateField('message', formData.message)
+
+    const errors = {
+      name: nameError,
+      email: emailError,
+      message: messageError,
     }
 
-    if (formData.name.trim().length < 2) {
-      toast.error('Name must be at least 2 characters.')
+    setFieldErrors(errors)
+    setFieldStates({
+      name: !nameError,
+      email: !emailError,
+      message: !messageError,
+    })
+
+    if (nameError || emailError || messageError) {
       setLoading(false)
       return
     }
@@ -71,19 +103,19 @@ const ContactSection = () => {
     {
       icon: Phone,
       label: 'Phone',
-      value: '+1 (800) 123-4567',
+      value: '+91 9238764501',
       delay: 0,
     },
     {
       icon: Mail,
       label: 'Email',
-      value: 'hello@revoramotors.com',
+      value: 'hello@pramukhmotors.com',
       delay: 0.1,
     },
     {
       icon: MapPin,
       label: 'Address',
-      value: '123 Luxury Lane, Beverly Hills, CA 90210',
+      value: '23, Pramukh Society, Varacha 395006 ',
       delay: 0.2,
     },
   ]
@@ -229,6 +261,7 @@ const ContactSection = () => {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
             onSubmit={handleSubmit}
+            noValidate
             className="glass-dark p-8 rounded-xl border border-neon-blue/20 glow-border-enhanced relative overflow-hidden"
           >
             {/* Success Overlay Animation */}
@@ -273,6 +306,7 @@ const ContactSection = () => {
                 onChange={handleChange}
                 placeholder="John Doe"
                 success={fieldStates.name}
+                error={fieldErrors.name}
                 required
               />
 
@@ -285,6 +319,7 @@ const ContactSection = () => {
                 onChange={handleChange}
                 placeholder="john@example.com"
                 success={fieldStates.email}
+                error={fieldErrors.email}
                 required
               />
 
@@ -297,6 +332,7 @@ const ContactSection = () => {
                 onChange={handleChange}
                 placeholder="Tell us about your interest or questions..."
                 success={fieldStates.message}
+                error={fieldErrors.message}
                 rows={5}
                 required
               />
@@ -308,25 +344,20 @@ const ContactSection = () => {
                 transition={{ delay: 0.5 }}
                 viewport={{ once: true }}
               >
-                <MagneticButton
-                  variant="primary"
-                  onClick={(e) => {}}
-                  className="w-full text-lg py-4 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                <button
+                  type="submit"
+                  className="w-full h-12 rounded-xl bg-cyan-500 text-slate-950 text-base font-semibold transition duration-200 hover:bg-cyan-400 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={loading}
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
-                      <motion.div
-                        className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity }}
-                      />
+                      <span className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
                       Sending...
                     </span>
                   ) : (
                     'Send Message'
                   )}
-                </MagneticButton>
+                </button>
               </motion.div>
             </motion.div>
           </motion.form>

@@ -1,6 +1,5 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { ChevronDown } from 'lucide-react'
 import { fadeInUp, charRevealContainer, charReveal, badgeFloat } from '../animations/variants'
 import MagneticButton from './MagneticButton'
 
@@ -112,7 +111,7 @@ const HeroSection = () => {
         ></div>
       </div>
 
-      <div className="container-custom relative z-10 text-center">
+      <div className="container-custom z-10 text-center">
         {/* Main Content */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -213,30 +212,6 @@ const HeroSection = () => {
         </motion.div>
 
         {/* Enhanced Scroll Indicator */}
-        <motion.div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        >
-          <motion.div
-            className="flex flex-col items-center gap-2 cursor-pointer"
-            whileHover={{ scale: 1.1 }}
-            onClick={() => scrollToSection('#inventory')}
-          >
-            <p className="text-gray-400 text-sm hover:text-neon-blue transition-colors">
-              Scroll to explore
-            </p>
-            <motion.div
-              animate={{ 
-                y: [0, 5, 0],
-                color: ['rgba(0, 217, 255, 0.6)', 'rgba(0, 217, 255, 1)', 'rgba(0, 217, 255, 0.6)']
-              }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
-              <ChevronDown size={24} />
-            </motion.div>
-          </motion.div>
-        </motion.div>
       </div>
     </section>
   )

@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { createCar } from '../services/api'
 import ImageUploader from './ImageUploader'
+import CustomSelect from '@/components/ui/CustomSelect'
 
 const AddCarModal = ({ onClose, onCarAdded }) => {
   const [formData, setFormData] = useState({
@@ -14,9 +15,14 @@ const AddCarModal = ({ onClose, onCarAdded }) => {
     fuel: 'Petrol',
     transmission: 'Automatic',
     color: '',
+    vehicleType: '',
+    registrationYear: '',
+    registrationState: '',
+    ownership: '',
+    peakTorque: '',
+    drive: 'AWD',
     features: '',
     description: '',
-    status: 'available',
     engineSize: '',
     horsepower: '',
     acceleration: '',
@@ -27,12 +33,12 @@ const AddCarModal = ({ onClose, onCarAdded }) => {
     trunk: '',
     warranty: '',
     serviceHistory: true,
+    showOnUser: false,
   })
 
   const [loading, setLoading] = useState(false)
-  const [galleryImages, setGalleryImages] = useState([])
   const [thumbnailImage, setThumbnailImage] = useState([])
-  const [featuredImage, setFeaturedImage] = useState([])
+  const [galleryImages, setGalleryImages] = useState([])
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -61,15 +67,18 @@ const AddCarModal = ({ onClose, onCarAdded }) => {
       // Create FormData for file uploads
       const formDataToSend = new FormData()
 
-      // Add car data
+      // Add cars data
       const carData = {
         ...formData,
+        status: 'available',
         price: parseInt(formData.price),
         mileage: parseInt(formData.mileage),
+        registrationYear: formData.registrationYear ? parseInt(formData.registrationYear) : null,
         horsepower: formData.horsepower ? parseInt(formData.horsepower) : null,
         doors: parseInt(formData.doors),
         seats: parseInt(formData.seats),
         features: formData.features ? formData.features.split(',').map((f) => f.trim()) : [],
+        showOnUser: formData.showOnUser,
       }
 
       // Append all car data to FormData
@@ -80,17 +89,12 @@ const AddCarModal = ({ onClose, onCarAdded }) => {
       })
 
       // Add images
-      galleryImages.forEach((file, index) => {
-        formDataToSend.append('gallery', file)
-      })
-
       if (thumbnailImage.length > 0) {
         formDataToSend.append('thumbnail', thumbnailImage[0])
       }
-
-      if (featuredImage.length > 0) {
-        formDataToSend.append('featured', featuredImage[0])
-      }
+      galleryImages.forEach((file, index) => {
+        formDataToSend.append('gallery', file)
+      })
 
       const response = await createCar(formDataToSend)
 
@@ -110,6 +114,17 @@ const AddCarModal = ({ onClose, onCarAdded }) => {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
   }
+
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [onClose])
 
   const modalVariants = {
     hidden: { opacity: 0, y: 50, scale: 0.95 },
@@ -189,7 +204,7 @@ const AddCarModal = ({ onClose, onCarAdded }) => {
                 />
               </div>
               <div>
-                <label className="text-gray-300 text-sm mb-2 block">Price (USD) *</label>
+                <label className="text-gray-300 text-sm mb-2 block">Price (INR) *</label>
                 <input
                   type="number"
                   name="price"
@@ -228,48 +243,46 @@ const AddCarModal = ({ onClose, onCarAdded }) => {
               </div>
               <div>
                 <label className="text-gray-300 text-sm mb-2 block">Fuel Type *</label>
-                <select
-                  name="fuel"
+                <CustomSelect
                   value={formData.fuel}
-                  onChange={handleChange}
-                  className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white focus:border-neon-blue focus:outline-none"
-                >
-                  <option value="Petrol">Petrol</option>
-                  <option value="Diesel">Diesel</option>
-                  <option value="Hybrid">Hybrid</option>
-                  <option value="Electric">Electric</option>
-                </select>
+                  onChange={(val) => handleChange({ target: { name: 'fuel', value: val, type: 'select-one' } })}
+                  options={[
+                    { value: 'Petrol', label: 'Petrol' },
+                    { value: 'Diesel', label: 'Diesel' },
+                    { value: 'Hybrid', label: 'Hybrid' },
+                    { value: 'Electric', label: 'Electric' },
+                  ]}
+                  placeholder="Select Fuel Type"
+                />
               </div>
               <div>
                 <label className="text-gray-300 text-sm mb-2 block">Transmission *</label>
-                <select
-                  name="transmission"
+                <CustomSelect
                   value={formData.transmission}
-                  onChange={handleChange}
-                  className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white focus:border-neon-blue focus:outline-none"
-                >
-                  <option value="Manual">Manual</option>
-                  <option value="Automatic">Automatic</option>
-                </select>
-              </div>
-              <div>
-                <label className="text-gray-300 text-sm mb-2 block">Status *</label>
-                <select
-                  name="status"
-                  value={formData.status}
-                  onChange={handleChange}
-                  className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white focus:border-neon-blue focus:outline-none"
-                >
-                  <option value="available">Available</option>
-                  <option value="reserved">Reserved</option>
-                  <option value="sold">Sold</option>
-                </select>
+                  onChange={(val) => handleChange({ target: { name: 'transmission', value: val, type: 'select-one' } })}
+                  options={[
+                    { value: 'Manual', label: 'Manual' },
+                    { value: 'Automatic', label: 'Automatic' },
+                  ]}
+                  placeholder="Select Transmission"
+                />
               </div>
             </div>
 
             {/* Image Upload Section */}
             <div className="border-t border-neon-blue/20 pt-4">
               <h3 className="text-lg font-semibold text-neon-blue mb-4">Car Images *</h3>
+
+              {/* Thumbnail Image */}
+              <ImageUploader
+                images={thumbnailImage}
+                onImagesChange={setThumbnailImage}
+                maxImages={1}
+                label="Thumbnail Image"
+                description="Upload the main image for the car (optional, first gallery image will be used if not provided)"
+                thumbnailMode={true}
+                className="mb-6"
+              />
 
               {/* Gallery Images */}
               <ImageUploader
@@ -281,34 +294,65 @@ const AddCarModal = ({ onClose, onCarAdded }) => {
                 galleryMode={true}
                 className="mb-6"
               />
-
-              {/* Thumbnail Image */}
-              <ImageUploader
-                images={thumbnailImage}
-                onImagesChange={setThumbnailImage}
-                maxImages={1}
-                label="Thumbnail Image"
-                description="Main image that will be displayed in car listings"
-                thumbnailMode={true}
-                className="mb-6"
-              />
-
-              {/* Featured Image */}
-              <ImageUploader
-                images={featuredImage}
-                onImagesChange={setFeaturedImage}
-                maxImages={1}
-                label="Featured Image (Optional)"
-                description="High-quality image for featured car displays"
-                featuredMode={true}
-                className="mb-6"
-              />
             </div>
 
             {/* Optional Fields */}
             <div className="border-t border-neon-blue/20 pt-4">
               <h3 className="text-lg font-semibold text-neon-blue mb-4">Additional Details (Optional)</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  name="vehicleType"
+                  value={formData.vehicleType}
+                  onChange={handleChange}
+                  placeholder="Vehicle Type (e.g., SUV)"
+                  className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:border-neon-blue focus:outline-none"
+                />
+                <input
+                  type="number"
+                  name="registrationYear"
+                  value={formData.registrationYear}
+                  onChange={handleChange}
+                  min="1990"
+                  max={new Date().getFullYear() + 1}
+                  placeholder="Registration Year"
+                  className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:border-neon-blue focus:outline-none"
+                />
+                <input
+                  type="text"
+                  name="registrationState"
+                  value={formData.registrationState}
+                  onChange={handleChange}
+                  placeholder="Registration State (e.g., CH)"
+                  className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:border-neon-blue focus:outline-none"
+                />
+                <input
+                  type="text"
+                  name="ownership"
+                  value={formData.ownership}
+                  onChange={handleChange}
+                  placeholder="Ownership (e.g., 1st Owner)"
+                  className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:border-neon-blue focus:outline-none"
+                />
+                <input
+                  type="text"
+                  name="peakTorque"
+                  value={formData.peakTorque}
+                  onChange={handleChange}
+                  placeholder="Peak Torque (e.g., 400Nm)"
+                  className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:border-neon-blue focus:outline-none"
+                />
+                <CustomSelect
+                  value={formData.drive}
+                  onChange={(val) => handleChange({ target: { name: 'drive', value: val, type: 'select-one' } })}
+                  options={[
+                    { value: 'AWD', label: 'AWD' },
+                    { value: 'RWD', label: 'RWD' },
+                    { value: 'FWD', label: 'FWD' },
+                    { value: '4WD', label: '4WD' },
+                  ]}
+                  placeholder="Drive Type"
+                />
                 <input
                   type="text"
                   name="engineSize"
@@ -357,28 +401,22 @@ const AddCarModal = ({ onClose, onCarAdded }) => {
                   placeholder="Trunk Size (e.g., 540L)"
                   className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:border-neon-blue focus:outline-none"
                 />
-                <select
-                  name="doors"
-                  value={formData.doors}
-                  onChange={handleChange}
-                  className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white focus:border-neon-blue focus:outline-none"
-                >
-                  <option value="2">2 Doors</option>
-                  <option value="4">4 Doors</option>
-                  <option value="5">5 Doors</option>
-                </select>
-                <select
-                  name="seats"
-                  value={formData.seats}
-                  onChange={handleChange}
-                  className="w-full bg-dark-card border border-neon-blue/20 rounded-lg px-4 py-2 text-white focus:border-neon-blue focus:outline-none"
-                >
-                  {[2, 3, 4, 5, 6, 7, 8].map((num) => (
-                    <option key={num} value={num}>
-                      {num} Seats
-                    </option>
-                  ))}
-                </select>
+                <CustomSelect
+                  value={String(formData.doors)}
+                  onChange={(val) => handleChange({ target: { name: 'doors', value: val, type: 'select-one' } })}
+                  options={[
+                    { value: '2', label: '2 Doors' },
+                    { value: '4', label: '4 Doors' },
+                    { value: '5', label: '5 Doors' },
+                  ]}
+                  placeholder="Select Doors"
+                />
+                <CustomSelect
+                  value={String(formData.seats)}
+                  onChange={(val) => handleChange({ target: { name: 'seats', value: val, type: 'select-one' } })}
+                  options={[2, 3, 4, 5, 6, 7, 8].map(num => ({ value: String(num), label: `${num} Seats` }))}
+                  placeholder="Select Seats"
+                />
                 <input
                   type="text"
                   name="warranty"
@@ -416,6 +454,16 @@ const AddCarModal = ({ onClose, onCarAdded }) => {
                   className="w-4 h-4 accent-neon-blue"
                 />
                 <span className="text-gray-300 text-sm">Full Service History Available</span>
+              </label>
+              <label className="flex items-center gap-2 mt-4 cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="showOnUser"
+                  checked={formData.showOnUser}
+                  onChange={handleChange}
+                  className="w-4 h-4 accent-neon-blue"
+                />
+                <span className="text-gray-300 text-sm">Show this car on the user site</span>
               </label>
             </div>
 

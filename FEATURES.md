@@ -270,7 +270,6 @@
 
 ## 🔒 Security
 
-- [x] Password hashing
 - [x] JWT tokens
 - [x] CORS protection
 - [x] Input validation

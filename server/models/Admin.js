@@ -46,7 +46,7 @@ adminSchema.pre('save', async function (next) {
   }
 })
 
-// Method to compare passwords
+// Method for compare passwords
 adminSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password)
 }

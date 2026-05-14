@@ -1,4 +1,5 @@
 import Car from '../models/Car.js'
+import Reservation from '../models/Reservation.js'
 
 // Get all cars
 export const getAllCars = async (req, res) => {
@@ -46,6 +47,48 @@ export const getCarById = async (req, res) => {
   }
 }
 
+// Reserve car (public)
+export const reserveCar = async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const reservedCar = await Car.findOneAndUpdate(
+      { _id: id, status: 'available' },
+      { status: 'reserved' },
+      { new: true }
+    )
+
+    if (!reservedCar) {
+      const existingCar = await Car.findById(id)
+
+      if (!existingCar) {
+        return res.status(404).json({
+          success: false,
+          message: 'Car not found',
+        })
+      }
+
+      return res.status(400).json({
+        success: false,
+        message: `Car is already ${existingCar.status}`,
+      })
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Car reserved successfully',
+      data: reservedCar,
+    })
+  } catch (error) {
+    console.error('Reserve car error:', error)
+    res.status(500).json({
+      success: false,
+      message: 'Failed to reserve car',
+      error: error.message,
+    })
+  }
+}
+
 // Create new car
 export const createCar = async (req, res) => {
   try {
@@ -57,10 +100,17 @@ export const createCar = async (req, res) => {
       fuel,
       transmission,
       color,
+      vehicleType,
+      registrationYear,
+      registrationState,
+      ownership,
+      peakTorque,
+      drive,
       features,
       description,
       imageUrl,
       status,
+      showOnUser,
       engineSize,
       horsepower,
       acceleration,
@@ -95,6 +145,9 @@ export const createCar = async (req, res) => {
       if (req.files.thumbnail && req.files.thumbnail[0]) {
         thumbnailImage = req.files.thumbnail[0].path
       }
+      if (!thumbnailImage && galleryImages.length > 0) {
+        thumbnailImage = galleryImages[0]
+      }
       if (req.files.featured && req.files.featured[0]) {
         featuredImage = req.files.featured[0].path
       }
@@ -108,6 +161,12 @@ export const createCar = async (req, res) => {
       fuel,
       transmission,
       color,
+      vehicleType,
+      registrationYear,
+      registrationState,
+      ownership,
+      peakTorque,
+      drive,
       features: features ? (Array.isArray(features) ? features : features.split(',').map(f => f.trim())) : [],
       description,
       imageUrl: imageUrl || thumbnailImage, // Backward compatibility
@@ -115,6 +174,7 @@ export const createCar = async (req, res) => {
       thumbnailImage,
       featuredImage,
       status: status || 'available',
+      showOnUser: showOnUser === 'true' || showOnUser === true,
       engineSize,
       horsepower,
       acceleration,
@@ -160,6 +220,9 @@ export const updateCar = async (req, res) => {
       })
     }
 
+    const wasSold = car.status === 'sold'
+    const willBeSold = req.body.status === 'sold'
+
     // Handle uploaded images
     if (req.files) {
       if (req.files.gallery) {
@@ -180,8 +243,21 @@ export const updateCar = async (req, res) => {
       req.body.features = req.body.features.split(',').map(f => f.trim())
     }
 
+    // Handle boolean toggle values coming from form data
+    if (req.body.showOnUser !== undefined) {
+      req.body.showOnUser = req.body.showOnUser === 'true' || req.body.showOnUser === true
+    }
+
     // Update fields
     car = Object.assign(car, req.body)
+
+    if (!wasSold && willBeSold) {
+      await Reservation.updateMany(
+        { carId: car._id, status: 'reserved' },
+        { status: 'sold' }
+      )
+    }
+
     await car.save()
 
     res.status(200).json({

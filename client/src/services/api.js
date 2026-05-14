@@ -4,9 +4,6 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
 const api = axios.create({
   baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 })
 
 // Add token to requests if it exists
@@ -42,6 +39,21 @@ export const deleteContact = async (id) => {
 
 export const getStats = async () => {
   const response = await api.get('/admin/stats')
+  return response.data
+}
+
+export const getReservations = async () => {
+  const response = await api.get('/admin/reservations')
+  return response.data
+}
+
+export const cancelReservation = async (id) => {
+  const response = await api.patch(`/admin/reservations/${id}/cancel`)
+  return response.data
+}
+
+export const deleteReservation = async (id) => {
+  const response = await api.delete(`/admin/reservations/${id}`)
   return response.data
 }
 
@@ -84,6 +96,16 @@ export const getCarsByStatus = async (status) => {
 
 export const getCarStats = async () => {
   const response = await api.get('/cars/stats')
+  return response.data
+}
+
+export const reserveCar = async (id) => {
+  const response = await api.patch(`/cars/${id}/reserve`)
+  return response.data
+}
+
+export const createReservation = async (data) => {
+  const response = await api.post('/reservations', data)
   return response.data
 }
 

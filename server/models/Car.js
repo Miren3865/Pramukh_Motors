@@ -37,6 +37,36 @@ const carSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Color is required'],
     },
+    vehicleType: {
+      type: String,
+      trim: true,
+      default: null,
+    },
+    registrationYear: {
+      type: Number,
+      min: 1990,
+      max: new Date().getFullYear() + 1,
+      default: null,
+    },
+    registrationState: {
+      type: String,
+      trim: true,
+      default: null,
+    },
+    ownership: {
+      type: String,
+      trim: true,
+      default: null,
+    },
+    peakTorque: {
+      type: String,
+      default: null,
+    },
+    drive: {
+      type: String,
+      trim: true,
+      default: null,
+    },
     features: {
       type: [String],
       default: [],
@@ -73,6 +103,10 @@ const carSchema = new mongoose.Schema(
       type: String,
       enum: ['available', 'sold', 'reserved'],
       default: 'available',
+    },
+    showOnUser: {
+      type: Boolean,
+      default: false,
     },
     engineSize: {
       type: String,

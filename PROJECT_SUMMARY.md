@@ -1,4 +1,4 @@
-# 🎉 Revora Motors - Complete Project Summary
+# 🎉 Pramukh Motors - Complete Project Summary
 
 ## 🚀 Project Status: PRODUCTION READY ✅
 
@@ -9,7 +9,7 @@ Congratulations! Your premium luxury car dealer website is **fully built and rea
 ## 📁 Project Structure
 
 ```
-revora-motors/
+pramukh-motors/
 ├── client/                      # React Frontend
 │   ├── src/
 │   │   ├── components/         # 13 reusable components
@@ -192,8 +192,8 @@ cd client && npm run dev
 ## 🔐 Admin Credentials
 
 ```
-Email: admin@revoramotors.com
-Password: admin123
+Email: your_email
+Password: your_password
 ```
 
 ⚠️ **CHANGE IN PRODUCTION!**
@@ -368,7 +368,7 @@ const cars = [
 Edit `client/src/components/TestimonialSection.jsx`
 
 ### Change Brand Name
-Search & replace "Revora Motors" in:
+Search & replace "Pramukh Motors" in:
 - `Navbar.jsx`
 - `Footer.jsx`
 - `index.html`
@@ -399,7 +399,7 @@ Search & replace "Revora Motors" in:
 
 ## 🎊 Conclusion
 
-Your **Revora Motors** premium luxury car dealer website is:
+Your **Pramukh Motors** premium luxury car dealer website is:
 
 ✅ **Fully functional**
 ✅ **Production-ready**
@@ -443,7 +443,7 @@ Your project includes:
 
 ## 🙏 Thank You!
 
-Your Revora Motors website is complete and ready for the world! 
+Your Pramukh Motors website is complete and ready for the world! 
 
 **Happy deploying! 🚀**
 

@@ -10,7 +10,6 @@ import TestimonialSection from './components/TestimonialSection'
 import ContactSection from './components/ContactSection'
 import Footer from './components/Footer'
 import PageLoader from './components/PageLoader'
-import WhatsAppButton from './components/WhatsAppButton'
 import ScrollProgressBar from './components/ScrollProgressBar'
 import AdminLogin from './pages/AdminLogin'
 import AdminDashboard from './pages/AdminDashboard'
@@ -40,7 +39,6 @@ function Home() {
             <ContactSection />
             <Footer />
           </main>
-          <WhatsAppButton />
         </div>
       )}
     </AnimatePresence>

@@ -1,14 +1,20 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import connectDB from './config/database.js'
 import contactRoutes from './routes/contactRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
+import reservationRoutes from './routes/reservationRoutes.js'
 import carRoutes from './routes/carRoutes.js'
 import { errorHandler, corsMiddleware } from './middleware/auth.js'
 import { handleUploadError } from './middleware/upload.js'
 
-dotenv.config()
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+dotenv.config({ path: path.resolve(__dirname, '.env') })
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -26,13 +32,14 @@ app.use(corsMiddleware)
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
-    message: 'Revora Motors API is running',
+    message: 'Pramukh Motors API is running',
     timestamp: new Date().toISOString(),
   })
 })
 
 // API Routes
 app.use('/api', contactRoutes)
+app.use('/api/reservations', reservationRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/cars', carRoutes)
 
@@ -42,7 +49,7 @@ app.use(handleUploadError)
 // Root route
 app.get('/', (req, res) => {
   res.json({
-    message: '🚗 Welcome to Revora Motors API',
+    message: '🚗 Welcome to Pramukh Motors API',
     version: '1.0.0',
     endpoints: {
       contact: '/api/contact',
@@ -67,7 +74,7 @@ app.use(errorHandler)
 app.listen(PORT, () => {
   console.log(`
 ╔════════════════════════════════════════════╗
-║   🚗 Revora Motors Backend Server 🚗      ║
+║   🚗 Pramukh Motors Backend Server 🚗      ║
 ║   ✅ Server running on port ${PORT}       ║
 ║   ✅ Database connected                   ║
 ╚════════════════════════════════════════════╝

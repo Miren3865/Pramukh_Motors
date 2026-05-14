@@ -10,7 +10,7 @@
 ### Step 1: Clone & Install
 
 ```bash
-cd revora-motors
+cd pramukh-motors
 
 # Install Backend
 cd server
@@ -45,7 +45,7 @@ npm run dev
 You should see:
 ```
 ╔════════════════════════════════════════════╗
-║   🚗 Revora Motors Backend Server 🚗      ║
+║   🚗 Pramukh Motors Backend Server 🚗      ║
 ║   ✅ Server running on port 5000          ║
 ║   ✅ Database connected                   ║
 ╚════════════════════════════════════════════╝
@@ -75,8 +75,8 @@ Or use Postman:
 
 1. Go to http://localhost:3000/admin/login
 2. Login with:
-   - Email: `admin@revoramotors.com`
-   - Password: `admin123`
+   - Email: `your_email`
+   - Password: `your_password`
 
 ## Features Overview
 
@@ -198,8 +198,8 @@ curl -X POST http://localhost:5000/api/contact \
 curl -X POST http://localhost:5000/api/admin/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "admin@revoramotors.com",
-    "password": "admin123"
+    "email": "your_email",
+    "password": "your_password"
   }'
 ```
 

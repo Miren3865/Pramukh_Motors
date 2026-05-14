@@ -1,7 +1,7 @@
 {
-  "name": "revora-motors-backend",
+  "name": "pramukh-motors-backend",
   "version": "1.0.0",
-  "description": "Backend API for Revora Motors",
+  "description": "Backend API for Pramukh Motors",
   "main": "server.js",
   "type": "module",
   "scripts": {

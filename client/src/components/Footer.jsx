@@ -22,40 +22,40 @@ const Footer = () => {
       {/* Gradient Top Border */}
       <div className="h-1 bg-gradient-to-r from-transparent via-neon-blue to-neon-purple"></div>
 
-      <div className="container-custom py-16">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-14">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr] gap-10 lg:gap-12 mb-12">
           {/* Brand Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="lg:col-span-1"
+            className="space-y-4 max-w-[320px] leading-relaxed"
           >
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-neon-blue to-neon-purple rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">R</span>
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-14 h-14 flex items-center justify-center rounded-xl shrink-0 bg-gradient-to-br from-neon-blue to-neon-purple shadow-[0_0_30px_rgba(0,217,255,0.18)]">
+                <span className="text-white font-bold text-lg">PM</span>
               </div>
-              <span className="text-xl font-bold gradient-text">Revora Motors</span>
+              <span className="text-2xl font-bold gradient-text whitespace-nowrap">Pramukh Motors</span>
             </div>
-            <p className="text-gray-400 text-sm mb-6">
+            <p className="text-gray-400 text-sm mb-6 leading-relaxed">
               Premium second-hand luxury cars for discerning buyers who demand excellence.
             </p>
 
             {/* Contact Info */}
             <div className="space-y-3">
-              <div className="flex items-center gap-2 text-gray-400 text-sm hover:text-neon-blue transition-colors">
-                <Phone size={16} />
-                <span>+1 (800) 123-4567</span>
+              <div className="flex items-center gap-3 text-gray-400 text-sm hover:text-neon-blue transition-colors">
+                <Phone size={18} className="flex-shrink-0" />
+                <span className="leading-relaxed">+91 9238764501</span>
               </div>
-              <div className="flex items-center gap-2 text-gray-400 text-sm hover:text-neon-blue transition-colors">
-                <Mail size={16} />
-                <span>hello@revoramotors.com</span>
+              <div className="flex items-center gap-3 text-gray-400 text-sm hover:text-neon-blue transition-colors">
+                <Mail size={18} className="flex-shrink-0" />
+                <span className="leading-relaxed break-words">hello@pramukhmotors.com</span>
               </div>
-              <div className="flex items-start gap-2 text-gray-400 text-sm hover:text-neon-blue transition-colors">
-                <MapPin size={16} className="mt-0.5 flex-shrink-0" />
-                <span>123 Luxury Lane, Beverly Hills, CA 90210</span>
+              <div className="flex items-center gap-3 text-gray-400 text-sm hover:text-neon-blue transition-colors">
+                <MapPin size={18} className="flex-shrink-0" />
+                <span className="leading-relaxed break-words">23, Pramukh Society, Varacha 395006</span>
               </div>
             </div>
           </motion.div>
@@ -66,15 +66,16 @@ const Footer = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.6 }}
             viewport={{ once: true }}
+            className="space-y-3"
           >
-            <h4 className="text-white font-bold mb-4">Company</h4>
-            <ul className="space-y-2">
+            <h4 className="text-white font-semibold text-sm uppercase tracking-[0.18em] mb-4">Company</h4>
+            <ul className="space-y-3 text-sm font-medium">
               {footerLinks.Company.map((link, index) => (
                 <li key={index}>
                   <motion.a
-                    whileHover={{ x: 5 }}
+                    whileHover={{ x: 4 }}
                     href="#"
-                    className="text-gray-400 hover:text-neon-blue transition-colors text-sm"
+                    className="text-gray-400 hover:text-neon-blue transition-colors duration-200 block"
                   >
                     {link}
                   </motion.a>
@@ -89,15 +90,16 @@ const Footer = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
             viewport={{ once: true }}
+            className="space-y-3"
           >
-            <h4 className="text-white font-bold mb-4">Support</h4>
-            <ul className="space-y-2">
+            <h4 className="text-white font-semibold text-sm uppercase tracking-[0.18em] mb-4">Support</h4>
+            <ul className="space-y-3 text-sm font-medium">
               {footerLinks.Support.map((link, index) => (
                 <li key={index}>
                   <motion.a
-                    whileHover={{ x: 5 }}
+                    whileHover={{ x: 4 }}
                     href="#"
-                    className="text-gray-400 hover:text-neon-blue transition-colors text-sm"
+                    className="text-gray-400 hover:text-neon-blue transition-colors duration-200 block"
                   >
                     {link}
                   </motion.a>
@@ -112,15 +114,16 @@ const Footer = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
             viewport={{ once: true }}
+            className="space-y-3"
           >
-            <h4 className="text-white font-bold mb-4">Legal</h4>
-            <ul className="space-y-2">
+            <h4 className="text-white font-semibold text-sm uppercase tracking-[0.18em] mb-4">Legal</h4>
+            <ul className="space-y-3 text-sm font-medium">
               {footerLinks.Legal.map((link, index) => (
                 <li key={index}>
                   <motion.a
-                    whileHover={{ x: 5 }}
+                    whileHover={{ x: 4 }}
                     href="#"
-                    className="text-gray-400 hover:text-neon-blue transition-colors text-sm"
+                    className="text-gray-400 hover:text-neon-blue transition-colors duration-200 block"
                   >
                     {link}
                   </motion.a>
@@ -135,20 +138,21 @@ const Footer = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
             viewport={{ once: true }}
+            className="space-y-4"
           >
-            <h4 className="text-white font-bold mb-4">Follow Us</h4>
-            <div className="flex gap-4">
+            <h4 className="text-white font-semibold text-sm uppercase tracking-[0.18em] mb-3">Follow Us</h4>
+            <div className="flex items-center gap-4">
               {footerLinks.Social.map((social, index) => {
                 const Icon = social.icon
                 return (
                   <motion.a
                     key={index}
-                    whileHover={{ scale: 1.2, rotate: 5 }}
+                    whileHover={{ scale: 1.05 }}
                     href={social.url}
-                    className="w-10 h-10 bg-gradient-to-br from-neon-blue/20 to-neon-purple/20 rounded-lg flex items-center justify-center text-neon-blue hover:from-neon-blue/40 hover:to-neon-purple/40 transition-colors"
+                    className="w-11 h-11 bg-dark-card border border-neon-blue/10 rounded-2xl flex items-center justify-center text-neon-blue hover:border-neon-blue/30 hover:bg-neon-blue/10 transition-all duration-200"
                     title={social.label}
                   >
-                    <Icon size={20} />
+                    <Icon size={18} />
                   </motion.a>
                 )
               })}
@@ -156,53 +160,23 @@ const Footer = () => {
           </motion.div>
         </div>
 
-        {/* Newsletter Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="glass-dark p-8 rounded-xl border border-neon-blue/20 mb-12"
-        >
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <h4 className="text-xl font-bold text-white mb-2">Subscribe to Our Newsletter</h4>
-              <p className="text-gray-400">Get updates on new luxury car arrivals and exclusive offers</p>
-            </div>
-            <div className="flex gap-2 w-full md:w-auto">
-              <input
-                type="email"
-                placeholder="Your email"
-                className="flex-1 md:flex-none bg-dark-card border border-neon-blue/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-neon-blue transition-all placeholder-gray-500"
-              />
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="btn-primary px-6 py-3 font-bold"
-              >
-                Subscribe
-              </motion.button>
-            </div>
-          </div>
-        </motion.div>
-
         {/* Bottom Section */}
-        <div className="border-t border-neon-blue/20 pt-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="border-t border-neon-blue/20 pt-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <motion.p
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               className="text-gray-400 text-sm text-center md:text-left"
             >
-              © {currentYear} Revora Motors. All rights reserved. Designed with{' '}
-              <Heart className="inline w-4 h-4 text-neon-blue" /> by the Revora Team.
+              © {currentYear} Pramukh Motors. All rights reserved. Designed with{' '}
+              <Heart className="inline w-4 h-4 text-neon-blue" /> by the Pramukh Team.
             </motion.p>
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              className="flex items-center gap-4"
+              className="flex items-center justify-center gap-4"
             >
               <span className="text-gray-400 text-sm">Made with ❤️ for car enthusiasts</span>
             </motion.div>

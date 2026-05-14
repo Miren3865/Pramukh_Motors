@@ -8,7 +8,7 @@ http://localhost:5000/api
 ## Authentication
 JWT Bearer token required for protected endpoints:
 ```
-Authorization: Bearer <your_jwt_token>
+Authorization: Bearer <jwt_token>
 ```
 
 ---
@@ -57,8 +57,8 @@ Authorization: Bearer <your_jwt_token>
 **Request Body:**
 ```json
 {
-  "email": "admin@revoramotors.com",
-  "password": "admin123"
+  "email": "your_email",
+  "password": "your_password"
 }
 ```
 
@@ -70,7 +70,7 @@ Authorization: Bearer <your_jwt_token>
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "admin": {
     "id": "507f1f77bcf86cd799439011",
-    "email": "admin@revoramotors.com",
+    "email": "your_email",
     "name": "Admin User",
     "role": "admin"
   }
@@ -93,8 +93,8 @@ Authorization: Bearer <your_jwt_token>
   "success": true,
   "message": "Admin user initialized successfully",
   "data": {
-    "email": "admin@revoramotors.com",
-    "name": "Revora Admin"
+    "email": "your_email",
+    "name": "Pramukh Admin"
   }
 }
 ```
@@ -110,8 +110,8 @@ Authorization: Bearer <your_jwt_token>
   "success": true,
   "data": {
     "_id": "507f1f77bcf86cd799439011",
-    "email": "admin@revoramotors.com",
-    "name": "Revora Admin",
+    "email": "your_email",
+    "name": "Pramukh Admin",
     "role": "super_admin",
     "isActive": true,
     "lastLogin": "2024-01-15T10:30:00Z"
@@ -294,8 +294,8 @@ curl -X POST http://localhost:5000/api/contact \
 curl -X POST http://localhost:5000/api/admin/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "admin@revoramotors.com",
-    "password": "admin123"
+    "email": "your_email",
+    "password": "your_password"
   }'
 ```
 

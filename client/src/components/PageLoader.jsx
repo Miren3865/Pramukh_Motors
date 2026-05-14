@@ -29,8 +29,8 @@ const PageLoader = () => {
           transition={{ duration: 1.5, repeat: Infinity }}
           className="absolute inset-0 flex items-center justify-center"
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-neon-blue to-neon-purple rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-2xl">R</span>
+          <div className="w-14 h-14 bg-gradient-to-br from-neon-blue to-neon-purple rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(0,217,255,0.2)]">
+            <span className="text-white font-bold text-xl">PM</span>
           </div>
         </motion.div>
       </div>

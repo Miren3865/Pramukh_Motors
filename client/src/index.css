@@ -229,6 +229,17 @@ select {
     box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Remove default number spinner arrows */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
 /* Swiper — luxury pagination */
 .swiper-pagination-bullet {
   background: rgba(255, 255, 255, 0.25) !important;

@@ -1,3 +1,4 @@
+import multer from 'multer';
 import { upload } from '../config/cloudinary.js';
 
 // Middleware for single image upload

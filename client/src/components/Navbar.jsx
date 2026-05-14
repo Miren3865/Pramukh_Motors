@@ -60,14 +60,14 @@ const Navbar = () => {
               animate={{ boxShadow: ['0 0 0px rgba(0, 217, 255, 0)', '0 0 20px rgba(0, 217, 255, 0.6)', '0 0 0px rgba(0, 217, 255, 0)'] }}
               transition={{ duration: 2.5, repeat: Infinity }}
             >
-              <span className="text-white font-bold text-xl">R</span>
+              <span className="text-white font-bold text-xl">PM</span>
             </motion.div>
             <motion.span
               className="text-xl font-bold gradient-text"
               animate={{ backgroundPosition: '0% 50%' }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              Revora Motors
+              Pramukh Motors
             </motion.span>
           </motion.div>
 

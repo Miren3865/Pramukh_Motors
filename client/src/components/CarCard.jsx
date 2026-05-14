@@ -6,11 +6,15 @@ import { itemVariants, card3D, glowHover } from '../animations/variants'
 import MagneticButton from './MagneticButton'
 import CarDetailModal from './CarDetailModal'
 
-const CarCard = ({ car, index }) => {
+const CarCard = ({ car, index, onCarReserved }) => {
   const [isHovered, setIsHovered] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const isReserved = car?.status === 'reserved'
+  const isSold = car?.status === 'sold'
+  const isUnavailable = isReserved || isSold
 
   const handleViewDetails = () => {
+    if (isUnavailable) return
     setIsModalOpen(true)
   }
 
@@ -145,7 +149,7 @@ const CarCard = ({ car, index }) => {
                 { label: 'Fuel Type', value: car.fuel },
                 { label: 'Mileage', value: `${car.mileage.toLocaleString()} km` },
                 { label: 'Transmission', value: car.transmission },
-                { label: 'Price', value: `$${(car.price / 1000).toFixed(0)}K`, highlight: true },
+                { label: 'Price', value: `₹${car.price?.toLocaleString()}`, highlight: true },
               ].map((spec, i) => (
                 <motion.div
                   key={i}
@@ -176,14 +180,24 @@ const CarCard = ({ car, index }) => {
               animate={isHovered ? { y: -4 } : { y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <MagneticButton
-                variant="primary"
-                onClick={handleViewDetails}
-                className="w-full flex items-center justify-center gap-2 text-sm font-bold"
-              >
-                <Eye size={18} />
-                View Details
-              </MagneticButton>
+                  {isUnavailable ? (
+                    <button
+                      type="button"
+                      disabled
+                      className="w-full rounded-lg py-3 text-sm font-bold bg-gray-700 text-gray-300 cursor-not-allowed"
+                    >
+                      {isReserved ? 'This car is already reserved' : 'This car is already sold'}
+                    </button>
+                  ) : (
+                    <MagneticButton
+                      variant="primary"
+                      onClick={handleViewDetails}
+                      className="w-full flex items-center justify-center gap-2 text-sm font-bold"
+                    >
+                      <Eye size={18} />
+                      View Details
+                    </MagneticButton>
+                  )}
             </motion.div>
           </div>
 
@@ -201,6 +215,7 @@ const CarCard = ({ car, index }) => {
         car={car}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onReserved={onCarReserved}
       />
     </motion.div>
   )
