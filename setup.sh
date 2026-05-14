@@ -8,4 +8,4 @@ echo "Building client..."
 cd client && npm run build
 cd ..
 
-echo "✅ Setup complete! Follow README.md for next steps."
+echo "✅ Setup complete! Follow README.md for further steps."
