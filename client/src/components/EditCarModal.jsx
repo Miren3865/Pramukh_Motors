@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { updateCar } from '../services/api'
+import ImageUploader from './ImageUploader'
 
 const EditCarModal = ({ car, onClose, onCarUpdated }) => {
   const [formData, setFormData] = useState({
@@ -29,6 +30,9 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
   })
 
   const [loading, setLoading] = useState(false)
+  const [galleryImages, setGalleryImages] = useState([])
+  const [thumbnailImage, setThumbnailImage] = useState([])
+  const [featuredImage, setFeaturedImage] = useState([])
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -48,6 +52,11 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
 
     try {
       setLoading(true)
+
+      // Create FormData for file uploads
+      const formDataToSend = new FormData()
+
+      // Add car data
       const carData = {
         ...formData,
         price: parseInt(formData.price),
@@ -58,7 +67,27 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
         features: formData.features ? formData.features.split(',').map((f) => f.trim()) : [],
       }
 
-      const response = await updateCar(car._id, carData)
+      // Append all car data to FormData
+      Object.keys(carData).forEach(key => {
+        if (carData[key] !== null && carData[key] !== undefined) {
+          formDataToSend.append(key, carData[key])
+        }
+      })
+
+      // Add images (only if new ones are uploaded)
+      galleryImages.forEach((file, index) => {
+        formDataToSend.append('gallery', file)
+      })
+
+      if (thumbnailImage.length > 0) {
+        formDataToSend.append('thumbnail', thumbnailImage[0])
+      }
+
+      if (featuredImage.length > 0) {
+        formDataToSend.append('featured', featuredImage[0])
+      }
+
+      const response = await updateCar(car._id, formDataToSend)
 
       if (response.success) {
         toast.success('Car updated successfully!')
@@ -231,6 +260,44 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
                   <option value="sold">Sold</option>
                 </select>
               </div>
+            </div>
+
+            {/* Image Upload Section */}
+            <div className="border-t border-neon-blue/20 pt-4">
+              <h3 className="text-lg font-semibold text-neon-blue mb-4">Update Car Images (Optional)</h3>
+
+              {/* Gallery Images */}
+              <ImageUploader
+                images={galleryImages}
+                onImagesChange={setGalleryImages}
+                maxImages={10}
+                label="Add Gallery Images"
+                description="Upload additional images to add to the gallery"
+                galleryMode={true}
+                className="mb-6"
+              />
+
+              {/* Thumbnail Image */}
+              <ImageUploader
+                images={thumbnailImage}
+                onImagesChange={setThumbnailImage}
+                maxImages={1}
+                label="Update Thumbnail Image"
+                description="Replace the main listing image"
+                thumbnailMode={true}
+                className="mb-6"
+              />
+
+              {/* Featured Image */}
+              <ImageUploader
+                images={featuredImage}
+                onImagesChange={setFeaturedImage}
+                maxImages={1}
+                label="Update Featured Image"
+                description="Replace the high-quality featured image"
+                featuredMode={true}
+                className="mb-6"
+              />
             </div>
 
             {/* Optional Fields */}

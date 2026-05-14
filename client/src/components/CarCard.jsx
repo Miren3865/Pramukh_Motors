@@ -51,25 +51,34 @@ const CarCard = ({ car, index }) => {
 
           {/* Car Image */}
           <div className="relative overflow-hidden h-64 bg-gradient-to-b from-dark-bg to-dark-card">
-            {/* Placeholder gradient for car image */}
-            <motion.div
-              className="w-full h-full bg-gradient-to-br from-neon-blue/20 via-neon-purple/10 to-transparent flex items-center justify-center"
-              animate={isHovered ? { scale: 1.1, filter: 'brightness(1.1)' } : { scale: 1, filter: 'brightness(1)' }}
-              transition={{ duration: 0.6 }}
-            >
+            {car.imageUrl || car.thumbnailImage ? (
+              <motion.img
+                src={car.thumbnailImage || car.imageUrl}
+                alt={car.name}
+                className="w-full h-full object-cover"
+                animate={isHovered ? { scale: 1.1, filter: 'brightness(1.1)' } : { scale: 1, filter: 'brightness(1)' }}
+                transition={{ duration: 0.6 }}
+              />
+            ) : (
               <motion.div
-                className="text-center"
-                animate={isHovered ? { scale: 1.15, rotate: 10 } : { scale: 1, rotate: 0 }}
-                transition={{ duration: 0.4 }}
+                className="w-full h-full bg-gradient-to-br from-neon-blue/20 via-neon-purple/10 to-transparent flex items-center justify-center"
+                animate={isHovered ? { scale: 1.1, filter: 'brightness(1.1)' } : { scale: 1, filter: 'brightness(1)' }}
+                transition={{ duration: 0.6 }}
               >
                 <motion.div
-                  className="w-24 h-24 mx-auto mb-4 rounded-lg bg-gradient-to-br from-neon-blue to-neon-purple opacity-30"
-                  animate={isHovered ? { boxShadow: '0 0 30px rgba(0, 217, 255, 0.6)' } : { boxShadow: '0 0 0px rgba(0, 217, 255, 0)' }}
+                  className="text-center"
+                  animate={isHovered ? { scale: 1.15, rotate: 10 } : { scale: 1, rotate: 0 }}
                   transition={{ duration: 0.4 }}
-                />
-                <p className="text-gray-400 text-sm">Luxury Car Image</p>
+                >
+                  <motion.div
+                    className="w-24 h-24 mx-auto mb-4 rounded-lg bg-gradient-to-br from-neon-blue to-neon-purple opacity-30"
+                    animate={isHovered ? { boxShadow: '0 0 30px rgba(0, 217, 255, 0.6)' } : { boxShadow: '0 0 0px rgba(0, 217, 255, 0)' }}
+                    transition={{ duration: 0.4 }}
+                  />
+                  <p className="text-gray-400 text-sm">Luxury Car Image</p>
+                </motion.div>
               </motion.div>
-            </motion.div>
+            )}
 
             {/* Overlay */}
             <motion.div

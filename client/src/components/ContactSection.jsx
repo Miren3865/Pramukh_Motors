@@ -35,6 +35,18 @@ const ContactSection = () => {
     e.preventDefault()
     setLoading(true)
 
+    if (formData.message.trim().length < 10) {
+      toast.error('Message must be at least 10 characters.')
+      setLoading(false)
+      return
+    }
+
+    if (formData.name.trim().length < 2) {
+      toast.error('Name must be at least 2 characters.')
+      setLoading(false)
+      return
+    }
+
     try {
       await submitContact(formData)
       setSuccess(true)
@@ -47,7 +59,8 @@ const ContactSection = () => {
         setSuccess(false)
       }, 2000)
     } catch (error) {
-      toast.error('Failed to send message. Please try again.')
+      const errorMessage = error.response?.data?.message || 'Failed to send message. Please try again.'
+      toast.error(errorMessage)
       console.error('Contact submission error:', error)
     } finally {
       setLoading(false)

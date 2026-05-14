@@ -6,6 +6,7 @@ import contactRoutes from './routes/contactRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
 import carRoutes from './routes/carRoutes.js'
 import { errorHandler, corsMiddleware } from './middleware/auth.js'
+import { handleUploadError } from './middleware/upload.js'
 
 dotenv.config()
 
@@ -34,6 +35,9 @@ app.get('/health', (req, res) => {
 app.use('/api', contactRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/cars', carRoutes)
+
+// Upload error handling
+app.use(handleUploadError)
 
 // Root route
 app.get('/', (req, res) => {

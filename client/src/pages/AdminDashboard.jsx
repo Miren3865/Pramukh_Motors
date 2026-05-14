@@ -10,9 +10,8 @@ const AdminDashboard = () => {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('contacts')
   const [contacts, setContacts] = useState([])
-  const [stats, setStats] = useState({ totalContacts: 0, newContacts: 0, respondedContacts: 0 })
+  const [stats, setStats] = useState({ totalContacts: 0 })
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState('all')
 
   useEffect(() => {
     const token = localStorage.getItem('adminToken')
@@ -64,7 +63,7 @@ const AdminDashboard = () => {
     toast.success('Logged out successfully')
   }
 
-  const filteredContacts = filter === 'all' ? contacts : contacts.filter((c) => c.status === filter)
+  const filteredContacts = contacts
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-dark-bg to-dark-card">
@@ -129,25 +128,17 @@ const AdminDashboard = () => {
         {activeTab === 'contacts' && (
           <>
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              {[
-                { label: 'Total Messages', value: stats.totalContacts, icon: '📧' },
-                { label: 'New Messages', value: stats.newContacts, icon: '🆕' },
-                { label: 'Responded', value: stats.respondedContacts, icon: '✅' },
-                { label: 'Read Messages', value: stats.totalContacts - stats.newContacts, icon: '👁️' },
-              ].map((stat, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="glass-dark p-6 rounded-xl border border-neon-blue/20"
-                >
-                  <div className="text-3xl mb-3">{stat.icon}</div>
-                  <p className="text-gray-400 text-sm mb-1">{stat.label}</p>
-                  <p className="text-3xl font-bold gradient-text">{stat.value}</p>
-                </motion.div>
-              ))}
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="glass-dark p-6 rounded-xl border border-neon-blue/20"
+              >
+                <div className="text-3xl mb-3">📧</div>
+                <p className="text-gray-400 text-sm mb-1">Total Messages</p>
+                <p className="text-3xl font-bold gradient-text">{stats.totalContacts}</p>
+              </motion.div>
             </div>
 
             {/* Contacts Section */}
@@ -159,23 +150,6 @@ const AdminDashboard = () => {
             >
               <h2 className="text-2xl font-bold text-white mb-6">Contact Submissions</h2>
 
-              {/* Filter Buttons */}
-              <div className="flex gap-3 mb-6 overflow-x-auto pb-2">
-                {['all', 'new', 'read', 'responded'].map((status) => (
-                  <motion.button
-                    key={status}
-                    whileHover={{ scale: 1.05 }}
-                    onClick={() => setFilter(status)}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-all whitespace-nowrap ${
-                      filter === status
-                        ? 'btn-primary'
-                        : 'glass border border-neon-blue/20 text-gray-400 hover:text-neon-blue'
-                    }`}
-                  >
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                  </motion.button>
-                ))}
-              </div>
 
               {/* Table */}
               {loading ? (
@@ -197,7 +171,6 @@ const AdminDashboard = () => {
                         <th className="text-left py-4 px-4 text-gray-400 font-semibold">Email</th>
                         <th className="text-left py-4 px-4 text-gray-400 font-semibold">Message</th>
                         <th className="text-left py-4 px-4 text-gray-400 font-semibold">Date</th>
-                        <th className="text-left py-4 px-4 text-gray-400 font-semibold">Status</th>
                         <th className="text-left py-4 px-4 text-gray-400 font-semibold">Action</th>
                       </tr>
                     </thead>
@@ -221,19 +194,6 @@ const AdminDashboard = () => {
                           <td className="py-4 px-4 text-gray-400 text-sm">
                             <Calendar size={16} className="inline mr-2" />
                             {new Date(contact.createdAt).toLocaleDateString()}
-                          </td>
-                          <td className="py-4 px-4">
-                            <span
-                              className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                contact.status === 'new'
-                                  ? 'bg-neon-blue/20 text-neon-blue'
-                                  : contact.status === 'responded'
-                                  ? 'bg-green-500/20 text-green-400'
-                                  : 'bg-gray-500/20 text-gray-400'
-                              }`}
-                            >
-                              {contact.status.toUpperCase()}
-                            </span>
                           </td>
                           <td className="py-4 px-4">
                             <motion.button

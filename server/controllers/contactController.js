@@ -28,6 +28,16 @@ export const submitContact = async (req, res) => {
     })
   } catch (error) {
     console.error('Contact submission error:', error)
+
+    if (error.name === 'ValidationError') {
+      const firstError = Object.values(error.errors)[0]?.message || 'Invalid contact submission.'
+      return res.status(400).json({
+        success: false,
+        message: firstError,
+        error: error.message,
+      })
+    }
+
     res.status(500).json({
       success: false,
       message: 'Failed to submit contact form',
@@ -67,10 +77,6 @@ export const getContact = async (req, res) => {
         message: 'Contact not found',
       })
     }
-
-    // Mark as read
-    contact.status = 'read'
-    await contact.save()
 
     res.status(200).json({
       success: true,
@@ -116,16 +122,11 @@ export const deleteContact = async (req, res) => {
 export const getStats = async (req, res) => {
   try {
     const totalContacts = await Contact.countDocuments()
-    const newContacts = await Contact.countDocuments({ status: 'new' })
-    const respondedContacts = await Contact.countDocuments({ status: 'responded' })
 
     res.status(200).json({
       success: true,
       data: {
         totalContacts,
-        newContacts,
-        respondedContacts,
-        readContacts: totalContacts - newContacts,
       },
     })
   } catch (error) {

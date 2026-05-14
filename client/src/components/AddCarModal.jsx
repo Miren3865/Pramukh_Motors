@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { createCar } from '../services/api'
+import ImageUploader from './ImageUploader'
 
 const AddCarModal = ({ onClose, onCarAdded }) => {
   const [formData, setFormData] = useState({
@@ -29,6 +30,9 @@ const AddCarModal = ({ onClose, onCarAdded }) => {
   })
 
   const [loading, setLoading] = useState(false)
+  const [galleryImages, setGalleryImages] = useState([])
+  const [thumbnailImage, setThumbnailImage] = useState([])
+  const [featuredImage, setFeaturedImage] = useState([])
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -46,8 +50,18 @@ const AddCarModal = ({ onClose, onCarAdded }) => {
       return
     }
 
+    if (galleryImages.length === 0) {
+      toast.error('Please upload at least one image')
+      return
+    }
+
     try {
       setLoading(true)
+
+      // Create FormData for file uploads
+      const formDataToSend = new FormData()
+
+      // Add car data
       const carData = {
         ...formData,
         price: parseInt(formData.price),
@@ -58,7 +72,27 @@ const AddCarModal = ({ onClose, onCarAdded }) => {
         features: formData.features ? formData.features.split(',').map((f) => f.trim()) : [],
       }
 
-      const response = await createCar(carData)
+      // Append all car data to FormData
+      Object.keys(carData).forEach(key => {
+        if (carData[key] !== null && carData[key] !== undefined) {
+          formDataToSend.append(key, carData[key])
+        }
+      })
+
+      // Add images
+      galleryImages.forEach((file, index) => {
+        formDataToSend.append('gallery', file)
+      })
+
+      if (thumbnailImage.length > 0) {
+        formDataToSend.append('thumbnail', thumbnailImage[0])
+      }
+
+      if (featuredImage.length > 0) {
+        formDataToSend.append('featured', featuredImage[0])
+      }
+
+      const response = await createCar(formDataToSend)
 
       if (response.success) {
         toast.success('Car added successfully!')
@@ -231,6 +265,44 @@ const AddCarModal = ({ onClose, onCarAdded }) => {
                   <option value="sold">Sold</option>
                 </select>
               </div>
+            </div>
+
+            {/* Image Upload Section */}
+            <div className="border-t border-neon-blue/20 pt-4">
+              <h3 className="text-lg font-semibold text-neon-blue mb-4">Car Images *</h3>
+
+              {/* Gallery Images */}
+              <ImageUploader
+                images={galleryImages}
+                onImagesChange={setGalleryImages}
+                maxImages={10}
+                label="Gallery Images"
+                description="Upload multiple images of the car (interior, exterior, details)"
+                galleryMode={true}
+                className="mb-6"
+              />
+
+              {/* Thumbnail Image */}
+              <ImageUploader
+                images={thumbnailImage}
+                onImagesChange={setThumbnailImage}
+                maxImages={1}
+                label="Thumbnail Image"
+                description="Main image that will be displayed in car listings"
+                thumbnailMode={true}
+                className="mb-6"
+              />
+
+              {/* Featured Image */}
+              <ImageUploader
+                images={featuredImage}
+                onImagesChange={setFeaturedImage}
+                maxImages={1}
+                label="Featured Image (Optional)"
+                description="High-quality image for featured car displays"
+                featuredMode={true}
+                className="mb-6"
+              />
             </div>
 
             {/* Optional Fields */}

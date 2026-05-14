@@ -1,8 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Zap, Gauge, Settings, Fuel, DollarSign, Star } from 'lucide-react'
+import { X, Zap, Gauge, Settings, Fuel, DollarSign, Star, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const CarDetailModal = ({ car, isOpen, onClose }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  // Get all available images for the gallery
+  const getAllImages = () => {
+    const images = []
+    if (car?.thumbnailImage) images.push(car.thumbnailImage)
+    if (car?.featuredImage) images.push(car.featuredImage)
+    if (car?.galleryImages && car.galleryImages.length > 0) {
+      images.push(...car.galleryImages.filter(img => img && !images.includes(img)))
+    }
+    if (car?.imageUrl && !images.includes(car.imageUrl)) images.push(car.imageUrl)
+    return images
+  }
+
+  const allImages = getAllImages()
+  const hasImages = allImages.length > 0
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % allImages.length)
+  }
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + allImages.length) % allImages.length)
+  }
   const backdropVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
@@ -111,18 +135,96 @@ const CarDetailModal = ({ car, isOpen, onClose }) => {
                 {/* Car Image Section */}
                 <motion.div
                   variants={itemVariants}
-                  className="relative h-80 bg-gradient-to-br from-neon-blue/20 via-neon-purple/10 to-transparent flex items-center justify-center overflow-hidden rounded-t-2xl"
+                  className="relative h-80 bg-gradient-to-br from-neon-blue/20 via-neon-purple/10 to-transparent overflow-hidden rounded-t-2xl"
                 >
-                  <div className="text-center">
-                    <motion.div
-                      className="w-32 h-32 mx-auto mb-6 rounded-lg bg-gradient-to-br from-neon-blue to-neon-purple opacity-40"
-                      animate={{
-                        scale: [1, 1.05, 1],
-                      }}
-                      transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                    />
-                    <p className="text-gray-400 text-sm">Premium Car Image</p>
-                  </div>
+                  {hasImages ? (
+                    <>
+                      {/* Main Image */}
+                      <motion.img
+                        key={currentImageIndex}
+                        src={allImages[currentImageIndex]}
+                        alt={`${car?.name} - Image ${currentImageIndex + 1}`}
+                        className="w-full h-full object-cover"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+
+                      {/* Navigation Arrows */}
+                      {allImages.length > 1 && (
+                        <>
+                          <motion.button
+                            onClick={prevImage}
+                            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center transition-colors"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                          >
+                            <ChevronLeft size={20} className="text-white" />
+                          </motion.button>
+                          <motion.button
+                            onClick={nextImage}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center transition-colors"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                          >
+                            <ChevronRight size={20} className="text-white" />
+                          </motion.button>
+                        </>
+                      )}
+
+                      {/* Image Counter */}
+                      {allImages.length > 1 && (
+                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 px-3 py-1 rounded-full">
+                          <span className="text-white text-sm">
+                            {currentImageIndex + 1} / {allImages.length}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Thumbnail Strip */}
+                      {allImages.length > 1 && (
+                        <div className="absolute bottom-4 left-4 right-4 flex justify-center space-x-2">
+                          {allImages.slice(0, 5).map((img, index) => (
+                            <motion.button
+                              key={index}
+                              onClick={() => setCurrentImageIndex(index)}
+                              className={`w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${
+                                index === currentImageIndex
+                                  ? 'border-neon-blue shadow-lg shadow-neon-blue/50'
+                                  : 'border-white/30 hover:border-white/60'
+                              }`}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                              <img
+                                src={img}
+                                alt={`Thumbnail ${index + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+                            </motion.button>
+                          ))}
+                          {allImages.length > 5 && (
+                            <div className="w-12 h-12 bg-black/50 rounded-lg flex items-center justify-center">
+                              <span className="text-white text-xs">+{allImages.length - 5}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <div className="text-center">
+                        <motion.div
+                          className="w-32 h-32 mx-auto mb-6 rounded-lg bg-gradient-to-br from-neon-blue to-neon-purple opacity-40"
+                          animate={{
+                            scale: [1, 1.05, 1],
+                          }}
+                          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                        />
+                        <p className="text-gray-400 text-sm">Premium Car Image</p>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Premium Badge */}
                   <motion.div

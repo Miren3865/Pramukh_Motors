@@ -49,6 +49,26 @@ const carSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    galleryImages: {
+      type: [String],
+      default: [],
+    },
+    thumbnailImage: {
+      type: String,
+      default: null,
+    },
+    featuredImage: {
+      type: String,
+      default: null,
+    },
+    brand: {
+      type: String,
+      trim: true,
+    },
+    location: {
+      type: String,
+      trim: true,
+    },
     status: {
       type: String,
       enum: ['available', 'sold', 'reserved'],

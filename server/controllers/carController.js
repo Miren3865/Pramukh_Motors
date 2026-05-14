@@ -71,6 +71,8 @@ export const createCar = async (req, res) => {
       trunk,
       warranty,
       serviceHistory,
+      brand,
+      location,
     } = req.body
 
     // Validation
@@ -81,6 +83,23 @@ export const createCar = async (req, res) => {
       })
     }
 
+    // Handle uploaded images
+    let galleryImages = []
+    let thumbnailImage = null
+    let featuredImage = null
+
+    if (req.files) {
+      if (req.files.gallery) {
+        galleryImages = req.files.gallery.map(file => file.path)
+      }
+      if (req.files.thumbnail && req.files.thumbnail[0]) {
+        thumbnailImage = req.files.thumbnail[0].path
+      }
+      if (req.files.featured && req.files.featured[0]) {
+        featuredImage = req.files.featured[0].path
+      }
+    }
+
     const car = new Car({
       name,
       year,
@@ -89,9 +108,12 @@ export const createCar = async (req, res) => {
       fuel,
       transmission,
       color,
-      features: features || [],
+      features: features ? (Array.isArray(features) ? features : features.split(',').map(f => f.trim())) : [],
       description,
-      imageUrl,
+      imageUrl: imageUrl || thumbnailImage, // Backward compatibility
+      galleryImages,
+      thumbnailImage,
+      featuredImage,
       status: status || 'available',
       engineSize,
       horsepower,
@@ -103,6 +125,8 @@ export const createCar = async (req, res) => {
       trunk,
       warranty,
       serviceHistory: serviceHistory !== undefined ? serviceHistory : true,
+      brand,
+      location,
     })
 
     await car.save()
@@ -134,6 +158,26 @@ export const updateCar = async (req, res) => {
         success: false,
         message: 'Car not found',
       })
+    }
+
+    // Handle uploaded images
+    if (req.files) {
+      if (req.files.gallery) {
+        const newGalleryImages = req.files.gallery.map(file => file.path)
+        car.galleryImages = [...(car.galleryImages || []), ...newGalleryImages]
+      }
+      if (req.files.thumbnail && req.files.thumbnail[0]) {
+        car.thumbnailImage = req.files.thumbnail[0].path
+        car.imageUrl = car.thumbnailImage // Update legacy field
+      }
+      if (req.files.featured && req.files.featured[0]) {
+        car.featuredImage = req.files.featured[0].path
+      }
+    }
+
+    // Handle features array
+    if (req.body.features && typeof req.body.features === 'string') {
+      req.body.features = req.body.features.split(',').map(f => f.trim())
     }
 
     // Update fields

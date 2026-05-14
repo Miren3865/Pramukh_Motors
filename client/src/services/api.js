@@ -57,12 +57,18 @@ export const getCarById = async (id) => {
 }
 
 export const createCar = async (data) => {
-  const response = await api.post('/cars', data)
+  const isFormData = data instanceof FormData
+  const response = await api.post('/cars', data, {
+    headers: isFormData ? {} : { 'Content-Type': 'application/json' }
+  })
   return response.data
 }
 
 export const updateCar = async (id, data) => {
-  const response = await api.put(`/cars/${id}`, data)
+  const isFormData = data instanceof FormData
+  const response = await api.put(`/cars/${id}`, data, {
+    headers: isFormData ? {} : { 'Content-Type': 'application/json' }
+  })
   return response.data
 }
 

@@ -19,11 +19,6 @@ const contactSchema = new mongoose.Schema(
       minlength: [10, 'Message must be at least 10 characters'],
       maxlength: [5000, 'Message cannot exceed 5000 characters'],
     },
-    status: {
-      type: String,
-      enum: ['new', 'read', 'responded'],
-      default: 'new',
-    },
     createdAt: {
       type: Date,
       default: Date.now,
