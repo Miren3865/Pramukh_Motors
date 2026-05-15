@@ -277,10 +277,6 @@ kill -9 <PID>
 - Verify API URL in frontend .env
 - Ensure backend is running
 
-## 📄 License
-
-This project is licensed under the MIT License - see LICENSE file for details.
-
 ## 👨‍💻 Author
 
 Built with ❤️ by the Pramukh Motors Team
@@ -292,19 +288,6 @@ Contributions welcome! Please submit pull requests with your improvements.
 ## 📞 Support
 
 For support, email hello@pramukhmotors.com
-
-## 🎯 Roadmap
-
-- [ ] Advanced car filtering
-- [ ] Payment integration
-- [ ] Real car listings
-- [ ] User accounts
-- [ ] Email notifications
-- [ ] SMS integration
-- [ ] WhatsApp integration
-- [ ] Analytics dashboard
-- [ ] Multi-language support
-- [ ] AI chatbot
 
 ---
 
