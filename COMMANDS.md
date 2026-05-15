@@ -92,7 +92,7 @@ VITE_API_URL=http://localhost:5000/api
 
 ### Backend (.env)
 ```env
-MONGO_URI=mongodb+srv://Second_Hand_Car_Dealing:SHCD_123@secondhandcardealing.2uvmejl.mongodb.net/secondhandcar?retryWrites=true&w=majority&appName=SecondHandCarDealing
+MONGO_URI=your_mongodb_atlas_uri
 PORT=5000
 NODE_ENV=development
 JWT_SECRET=pramukh_motors_super_secret_key_2024
