@@ -78,10 +78,12 @@ body {
 }
 
 @keyframes gradient-shift {
+
   0%,
   100% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
@@ -89,6 +91,27 @@ body {
 
 .gradient-text-animated {
   animation: gradient-shift 10s ease-in-out infinite;
+}
+
+/* Per-character animated gradient moving right-to-left */
+@keyframes move-gradient {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: 0% 0;
+  }
+}
+
+.animated-gradient-char {
+  background: linear-gradient(90deg, #c9a962 0%, #00d9ff 30%, #9d7dff 60%, #c000ff 80%, #c9a962 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 100%;
+  animation: move-gradient 3.5s linear infinite;
+  display: inline-block;
 }
 
 /* Glow Effects */
@@ -100,9 +123,12 @@ body {
 }
 
 @keyframes glow-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
   }
+
   50% {
     box-shadow: 0 0 30px rgba(0, 217, 255, 0.6);
   }
@@ -178,9 +204,12 @@ body {
 
 /* Floating Animation */
 @keyframes floating {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-20px);
   }
@@ -213,8 +242,13 @@ body {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Transitions: avoid global * — keeps Framer Motion and scroll smooth */
@@ -245,6 +279,7 @@ input[type='number'] {
   background: rgba(255, 255, 255, 0.25) !important;
   opacity: 1 !important;
 }
+
 .swiper-pagination-bullet-active {
   background: linear-gradient(90deg, #c9a962, #00d9ff) !important;
   width: 28px !important;
@@ -342,9 +377,11 @@ input[type='number'] {
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
@@ -360,9 +397,12 @@ input[type='number'] {
 }
 
 @keyframes glow-pulse-enhanced {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 15px rgba(0, 217, 255, 0.2), inset 0 0 15px rgba(0, 217, 255, 0.1);
   }
+
   50% {
     box-shadow: 0 0 35px rgba(0, 217, 255, 0.5), inset 0 0 25px rgba(0, 217, 255, 0.2);
   }
@@ -373,11 +413,11 @@ input[type='number'] {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(0, 217, 255, 0.5) 25%, 
-    transparent 50%, 
-    transparent 100%);
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(0, 217, 255, 0.5) 25%,
+      transparent 50%,
+      transparent 100%);
   pointer-events: none;
 }
 
@@ -386,12 +426,15 @@ input[type='number'] {
     transform: translateX(-100%);
     opacity: 0;
   }
+
   10% {
     opacity: 0.8;
   }
+
   90% {
     opacity: 0.8;
   }
+
   100% {
     transform: translateX(200%);
     opacity: 0;
@@ -471,8 +514,8 @@ input[type='number'] {
   opacity: 0;
 }
 
-.form-field:focus ~ .floating-label,
-.form-field:not(:placeholder-shown) ~ .floating-label {
+.form-field:focus~.floating-label,
+.form-field:not(:placeholder-shown)~.floating-label {
   opacity: 1;
   top: -12px;
   font-size: 0.75rem;
@@ -565,9 +608,12 @@ textarea.form-field {
 }
 
 @keyframes icon-float-motion {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px) rotate(0deg);
   }
+
   50% {
     transform: translateY(-12px) rotate(8deg);
   }
@@ -578,9 +624,12 @@ textarea.form-field {
 }
 
 @keyframes icon-pulse-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     filter: drop-shadow(0 0 0px rgba(0, 217, 255, 0));
   }
+
   50% {
     filter: drop-shadow(0 0 12px rgba(0, 217, 255, 0.6));
   }
@@ -599,10 +648,10 @@ textarea.form-field {
   left: -150%;
   width: 150%;
   height: 100%;
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(255, 255, 255, 0.3), 
-    transparent);
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent);
   animation: shimmer-animation 2.5s infinite;
 }
 
@@ -610,6 +659,7 @@ textarea.form-field {
   0% {
     left: -150%;
   }
+
   100% {
     left: 100%;
   }
@@ -633,9 +683,11 @@ textarea.form-field {
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
@@ -668,6 +720,7 @@ textarea.form-field {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -681,19 +734,22 @@ textarea.form-field {
 /* Luxury divider animations */
 .luxury-divider {
   height: 2px;
-  background: linear-gradient(90deg, 
-    transparent, 
-    #00D9FF, 
-    #C000FF, 
-    transparent);
+  background: linear-gradient(90deg,
+      transparent,
+      #00D9FF,
+      #C000FF,
+      transparent);
   margin: 40px 0;
   animation: divider-glow 3s ease-in-out infinite;
 }
 
 @keyframes divider-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.3;
   }
+
   50% {
     opacity: 1;
   }
@@ -705,9 +761,12 @@ textarea.form-field {
 }
 
 @keyframes badge-pulse-motion {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.08);
   }

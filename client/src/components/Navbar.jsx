@@ -103,16 +103,7 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* CTA Button with Magnetic Effect */}
-          <div className="hidden md:block">
-            <MagneticButton
-              variant="primary"
-              onClick={() => scrollToSection('#contact')}
-              className="text-sm px-6 py-2"
-            >
-              Get Started
-            </MagneticButton>
-          </div>
+          {/* CTA Button removed per request */}
 
           {/* Mobile Menu Button with Enhanced Animation */}
           <motion.button
@@ -173,19 +164,7 @@ const Navbar = () => {
                 )}
               </motion.button>
             ))}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={isOpen ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-              transition={{ delay: navLinks.length * 0.05 }}
-              className="mt-4"
-            >
-              <button
-                onClick={() => scrollToSection('#contact')}
-                className="w-full btn-primary text-sm py-2 font-bold"
-              >
-                Get Started
-              </button>
-            </motion.div>
+            {/* Mobile CTA removed per request */}
           </motion.div>
         </motion.div>
       </div>

@@ -55,8 +55,10 @@ const HeroSection = () => {
   ))
 
   // Character array for reveal effect
-  const heading1 = "Drive Dreams."
-  const heading2 = "Own Prestige."
+  const heading1 = "Drive Confidence"
+  const heading2 = "Own Value"
+
+  const formatChar = (char) => (char === ' ' ? '\u00A0' : char)
 
   return (
     <section
@@ -134,7 +136,7 @@ const HeroSection = () => {
               transition={{ duration: 0.4 }}
             >
               <p className="text-neon-blue text-sm font-semibold">
-                ✨ Premium Luxury Cars Await
+                ✨ Certified Pre-Owned Cars, Ready to Ride
               </p>
             </motion.div>
           </motion.div>
@@ -153,22 +155,35 @@ const HeroSection = () => {
                     <motion.span
                       key={`char-${i}-1`}
                       variants={charReveal}
-                      className="inline-block"
+                      className="inline-block animated-gradient-char"
                       style={{
-                        background: i % 2 === 0 ? 'linear-gradient(120deg, #c9a962, #00d9ff)' : 'linear-gradient(120deg, #00d9ff, #9d7dff)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text',
+                        whiteSpace: 'pre',
+                        animationDelay: `${-i * 0.08}s`,
                         filter: 'drop-shadow(0 0 8px rgba(0, 217, 255, 0.3))',
                       }}
                     >
-                      {char}
+                      {formatChar(char)}
                     </motion.span>
                   ))}
                 </motion.span>
               </motion.div>
               <br />
-              <span className="text-white">Own Prestige.</span>
+              <motion.span variants={charRevealContainer} initial="hidden" animate="visible" className="inline-block overflow-hidden">
+                {heading2.split('').map((char, i) => (
+                  <motion.span
+                    key={`char-${i}-2`}
+                    variants={charReveal}
+                    className="inline-block animated-gradient-char"
+                    style={{
+                      whiteSpace: 'pre',
+                      animationDelay: `${-i * 0.08}s`,
+                      filter: 'drop-shadow(0 0 6px rgba(255, 255, 255, 0.25))',
+                    }}
+                  >
+                    {formatChar(char)}
+                  </motion.span>
+                ))}
+              </motion.span>
             </h1>
           </motion.div>
 
@@ -178,12 +193,32 @@ const HeroSection = () => {
             initial="hidden"
             animate="visible"
             transition={{ delay: 0.3 }}
-            className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed"
+            className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed"
           >
-            Experience the pinnacle of luxury automotive excellence. Discover
-            hand-picked, certified pre-owned vehicles from the world's most
-            prestigious brands.
+            Shop inspected, honest second-hand cars with transparent pricing,
+            local warranty support, and fast delivery across the city.
           </motion.p>
+
+          <motion.div
+            variants={fadeInUp}
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: 0.4 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12 max-w-4xl mx-auto text-left"
+          >
+            <div className="glass-dark p-4 rounded-3xl border border-neon-blue/20 shadow-lg shadow-[#00d9ff]/10">
+              <p className="text-sm uppercase text-neon-blue font-semibold mb-1">Trusted Inventory</p>
+              <p className="text-white text-lg font-bold">100+ inspected cars</p>
+            </div>
+            <div className="glass-dark p-4 rounded-3xl border border-neon-blue/20 shadow-lg shadow-[#9d7dff]/10">
+              <p className="text-sm uppercase text-neon-blue font-semibold mb-1">Fair Pricing</p>
+              <p className="text-white text-lg font-bold">No hidden charges</p>
+            </div>
+            <div className="glass-dark p-4 rounded-3xl border border-neon-blue/20 shadow-lg shadow-[#00d9ff]/10">
+              <p className="text-sm uppercase text-neon-blue font-semibold mb-1">Peace of Mind</p>
+              <p className="text-white text-lg font-bold">7-day test drive guarantee</p>
+            </div>
+          </motion.div>
 
           {/* CTA Buttons with Magnetic Effect */}
           <motion.div
@@ -198,7 +233,7 @@ const HeroSection = () => {
               onClick={() => scrollToSection('#inventory')}
               className="text-lg px-8 py-4 font-bold"
             >
-              Explore Cars
+              Browse Inventory
             </MagneticButton>
 
             <MagneticButton

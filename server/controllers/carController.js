@@ -255,10 +255,10 @@ export const updateCar = async (req, res) => {
     const willBeSold = req.body.status === 'sold'
 
     // Handle uploaded images
+    let newGalleryImages = []
     if (req.files) {
       if (req.files.gallery) {
-        const newGalleryImages = req.files.gallery.map(file => file.path)
-        car.galleryImages = [...(car.galleryImages || []), ...newGalleryImages]
+        newGalleryImages = req.files.gallery.map(file => file.path)
       }
       if (req.files.thumbnail && req.files.thumbnail[0]) {
         car.thumbnailImage = req.files.thumbnail[0].path
@@ -267,6 +267,20 @@ export const updateCar = async (req, res) => {
       if (req.files.featured && req.files.featured[0]) {
         car.featuredImage = req.files.featured[0].path
       }
+    }
+
+    // Handle retained existing images sent from frontend
+    if (req.body.retainedGalleryImages) {
+      try {
+        const retained = JSON.parse(req.body.retainedGalleryImages)
+        car.galleryImages = [...retained, ...newGalleryImages]
+        delete req.body.retainedGalleryImages // Remove to prevent Object.assign overwrite
+      } catch (e) {
+        console.error('Error parsing retainedGalleryImages:', e)
+        car.galleryImages = [...(car.galleryImages || []), ...newGalleryImages]
+      }
+    } else {
+      car.galleryImages = [...(car.galleryImages || []), ...newGalleryImages]
     }
 
     // Handle features array

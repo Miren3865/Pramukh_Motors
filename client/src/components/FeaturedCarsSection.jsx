@@ -71,23 +71,19 @@ const FeaturedCarsSection = () => {
             viewport={{ once: true }}
           >
             <span className="inline-block overflow-hidden">
-              {heading.split('').map((char, i) => (
-                <motion.span
-                  key={`char-${i}`}
-                  variants={charReveal}
-                  className="inline-block"
-                  style={{
-                    background: i % 3 === 0 ? 'linear-gradient(120deg, #c9a962, #00d9ff)' : 
-                                i % 3 === 1 ? 'linear-gradient(120deg, #00d9ff, #9d7dff)' :
-                                'linear-gradient(120deg, #c000ff, #c9a962)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}
-                >
-                  {char}
-                </motion.span>
-              ))}
+              {heading.split('').map((char, i) => {
+                const displayChar = char === ' ' ? '\u00A0' : char
+                return (
+                  <motion.span
+                    key={`char-${i}`}
+                    variants={charReveal}
+                    className="inline-block animated-gradient-char"
+                    style={{ animationDelay: `${-i * 0.08}s` }}
+                  >
+                    {displayChar}
+                  </motion.span>
+                )
+              })}
             </span>
           </motion.h2>
 

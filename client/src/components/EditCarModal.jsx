@@ -32,7 +32,7 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
   })
 
   const [loading, setLoading] = useState(false)
-  const [galleryImages, setGalleryImages] = useState([])
+  const [galleryImages, setGalleryImages] = useState(car.galleryImages && car.galleryImages.length > 0 ? car.galleryImages : (car.imageUrl ? [car.imageUrl] : []))
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -64,7 +64,7 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
         horsepower: formData.horsepower ? parseInt(formData.horsepower) : null,
         doors: parseInt(formData.doors),
         seats: parseInt(formData.seats),
-        features: formData.features ? formData.features.split(',').map((f) => f.trim()) : [],
+        features: formData.features ? (typeof formData.features === 'string' ? formData.features.split(',').map((f) => f.trim()) : formData.features) : [],
         showOnUser: formData.showOnUser,
       }
 
@@ -75,10 +75,17 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
         }
       })
 
-      // Add gallery images (only if new ones are uploaded)
-      galleryImages.forEach((file, index) => {
-        formDataToSend.append('gallery', file)
+      // Add gallery images (separate new files from retained existing ones)
+      const retainedImages = []
+      galleryImages.forEach((item) => {
+        if (item instanceof File) {
+          formDataToSend.append('gallery', item)
+        } else if (typeof item === 'string') {
+          retainedImages.push(item)
+        }
       })
+      
+      formDataToSend.append('retainedGalleryImages', JSON.stringify(retainedImages))
 
       const response = await updateCar(car._id, formDataToSend)
 
@@ -100,6 +107,9 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
   }
 
   useEffect(() => {
+    // Disable background scrolling
+    document.body.style.overflow = 'hidden'
+
     const handleEscape = (e) => {
       if (e.key === 'Escape') {
         onClose()
@@ -107,7 +117,11 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
     }
 
     window.addEventListener('keydown', handleEscape)
-    return () => window.removeEventListener('keydown', handleEscape)
+    return () => {
+      window.removeEventListener('keydown', handleEscape)
+      // Re-enable background scrolling
+      document.body.style.overflow = 'unset'
+    }
   }, [onClose])
 
   const modalVariants = {
@@ -146,7 +160,7 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="sticky top-0 flex items-center justify-between p-6 border-b border-neon-blue/20 bg-dark-card">
+          <div className="sticky top-0 z-20 flex items-center justify-between p-6 border-b border-neon-blue/20 bg-dark-card">
             <h2 className="text-2xl font-bold text-white">Edit Car</h2>
             <motion.button
               whileHover={{ scale: 1.1, rotate: 90 }}
@@ -259,9 +273,9 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
                   options={
                     car.status === 'reserved'
                       ? [
-                          { value: 'reserved', label: 'Reserved' },
-                          { value: 'sold', label: 'Sold' },
-                        ]
+                        { value: 'reserved', label: 'Reserved' },
+                        { value: 'sold', label: 'Sold' },
+                      ]
                       : [{ value: 'available', label: 'Available' }]
                   }
                   placeholder="Select Status"
@@ -392,16 +406,6 @@ const EditCarModal = ({ car, onClose, onCarUpdated }) => {
                   className="w-4 h-4 accent-neon-blue"
                 />
                 <span className="text-gray-300 text-sm">Full Service History Available</span>
-              </label>
-              <label className="flex items-center gap-2 mt-4 cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="showOnUser"
-                  checked={formData.showOnUser}
-                  onChange={handleChange}
-                  className="w-4 h-4 accent-neon-blue"
-                />
-                <span className="text-gray-300 text-sm">Show this car on the user site</span>
               </label>
             </div>
 

@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import ScrollProgressBar from '../components/ScrollProgressBar'
 import CarCard from '../components/CarCard'
+import MagneticButton from '../components/MagneticButton'
 import { getAllCarsAll } from '../services/api'
 import { containerVariants } from '../animations/variants'
 
@@ -29,6 +30,15 @@ const AllCars = () => {
     fetchCars()
   }, [])
 
+  // Ensure the page starts at the top when navigated to
+  useEffect(() => {
+    try {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    } catch (e) {
+      window.scrollTo(0, 0)
+    }
+  }, [])
+
   return (
     <div className="min-h-screen bg-dark-bg text-white">
       <ScrollProgressBar />
@@ -45,7 +55,7 @@ const AllCars = () => {
             <p className="text-sm uppercase tracking-[0.4em] text-neon-blue mb-4">Luxury Collection</p>
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">Explore our complete premium inventory</h1>
             <p className="mx-auto max-w-2xl text-gray-400 text-lg">
-              Browse every car uploaded by our admin team, including both public and hidden listings.
+              Browse every car which are currently available for sell.
             </p>
           </motion.div>
 
@@ -66,15 +76,21 @@ const AllCars = () => {
             </motion.div>
           )}
 
-          <div className="mt-12 text-center">
-            <button
-              type="button"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            viewport={{ once: true }}
+            className="mt-12 text-center"
+          >
+            <MagneticButton
+              variant="secondary"
+              className="text-lg px-10 py-4 font-bold"
               onClick={() => navigate('/')}
-              className="inline-flex items-center justify-center rounded-3xl bg-gradient-to-r from-neon-blue to-neon-purple px-8 py-3 text-sm font-semibold text-white shadow-[0_20px_60px_rgba(56,189,248,0.25)] transition-transform duration-200 hover:-translate-y-1"
             >
-              Go to Previous Page
-            </button>
-          </div>
+              ← Go to Previous Page
+            </MagneticButton>
+          </motion.div>
         </div>
       </section>
 

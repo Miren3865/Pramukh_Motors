@@ -77,7 +77,7 @@ const AdminLogin = () => {
                   onChange={handleChange}
                   required
                   className="w-full bg-dark-card border border-neon-blue/30 rounded-lg pl-12 pr-4 py-3 text-white focus:outline-none focus:border-neon-blue transition-all"
-                  placeholder="your_email"
+                  placeholder="example@gmail.com"
                 />
               </div>
             </div>
