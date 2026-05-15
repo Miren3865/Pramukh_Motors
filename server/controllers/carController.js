@@ -21,6 +21,26 @@ export const getAllCars = async (req, res) => {
   }
 }
 
+// Get all cars for public browse page (includes all uploaded cars)
+export const getAllCarsPublicPage = async (req, res) => {
+  try {
+    const cars = await Car.find().sort({ createdAt: -1 })
+
+    res.status(200).json({
+      success: true,
+      count: cars.length,
+      data: cars,
+    })
+  } catch (error) {
+    console.error('Get all cars public page error:', error)
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch all cars',
+      error: error.message,
+    })
+  }
+}
+
 // Get single car by ID
 export const getCarById = async (req, res) => {
   try {
@@ -131,6 +151,17 @@ export const createCar = async (req, res) => {
         success: false,
         message: 'Please provide all required fields',
       })
+    }
+
+    const showOnUserFlag = showOnUser === 'true' || showOnUser === true
+    if (showOnUserFlag) {
+      const visibleCount = await Car.countDocuments({ showOnUser: true })
+      if (visibleCount >= 6) {
+        return res.status(400).json({
+          success: false,
+          message: 'Maximum 6 public cars allowed',
+        })
+      }
     }
 
     // Handle uploaded images
@@ -246,6 +277,16 @@ export const updateCar = async (req, res) => {
     // Handle boolean toggle values coming from form data
     if (req.body.showOnUser !== undefined) {
       req.body.showOnUser = req.body.showOnUser === 'true' || req.body.showOnUser === true
+    }
+
+    if (req.body.showOnUser === true && !car.showOnUser) {
+      const visibleCount = await Car.countDocuments({ showOnUser: true })
+      if (visibleCount >= 6) {
+        return res.status(400).json({
+          success: false,
+          message: 'Maximum 6 public cars allowed',
+        })
+      }
     }
 
     // Update fields

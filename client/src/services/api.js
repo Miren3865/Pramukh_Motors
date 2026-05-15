@@ -63,6 +63,11 @@ export const getAllCars = async () => {
   return response.data
 }
 
+export const getAllCarsAll = async () => {
+  const response = await api.get('/cars/all')
+  return response.data
+}
+
 export const getCarById = async (id) => {
   const response = await api.get(`/cars/${id}`)
   return response.data

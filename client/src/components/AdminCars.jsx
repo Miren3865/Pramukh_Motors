@@ -129,6 +129,8 @@ const AdminCars = () => {
     setShowEditModal(false)
   }
 
+  const visibleCarsCount = cars.filter((car) => car.showOnUser).length
+
   const filteredCars = cars.filter((car) => {
     const matchesSearch = car.name.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesStatus = filterStatus === 'all' || car.status === filterStatus
@@ -239,6 +241,9 @@ const AdminCars = () => {
       </motion.div>
 
       {/* Cars Table */}
+      <div className="glass rounded-xl border border-neon-blue/20 p-4">
+        <p className="text-sm text-yellow-300">Only 6 cars can be publicly visible at one time.</p>
+      </div>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -303,11 +308,13 @@ const AdminCars = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleToggleShowOnUser(car)}
+                        disabled={!car.showOnUser && visibleCarsCount >= 6}
+                        title={!car.showOnUser && visibleCarsCount >= 6 ? 'Maximum 6 public cars allowed' : ''}
                         className={`inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                           car.showOnUser
                             ? 'bg-green-500/10 border border-green-500/20 text-green-300 hover:bg-green-500/20'
                             : 'bg-slate-700/10 border border-slate-600/20 text-slate-300 hover:bg-slate-700/20'
-                        }`}
+                        } ${!car.showOnUser && visibleCarsCount >= 6 ? 'opacity-50 cursor-not-allowed' : ''}`}
                       >
                         {car.showOnUser ? <Eye size={14} /> : <EyeOff size={14} />}
                         <span>{car.showOnUser ? 'Visible' : 'Hidden'}</span>

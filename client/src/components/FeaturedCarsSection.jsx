@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import CarCard from './CarCard'
 import MagneticButton from './MagneticButton'
@@ -20,6 +21,8 @@ const FeaturedCarsSection = () => {
       setLoading(false)
     }
   }
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchCars()
@@ -137,6 +140,7 @@ const FeaturedCarsSection = () => {
           <MagneticButton
             variant="secondary"
             className="text-lg px-10 py-4 font-bold"
+            onClick={() => navigate('/cars')}
           >
             View All Cars →
           </MagneticButton>

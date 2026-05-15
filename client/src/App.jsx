@@ -13,6 +13,7 @@ import PageLoader from './components/PageLoader'
 import ScrollProgressBar from './components/ScrollProgressBar'
 import AdminLogin from './pages/AdminLogin'
 import AdminDashboard from './pages/AdminDashboard'
+import AllCars from './pages/AllCars'
 import './App.css'
 
 function Home() {
@@ -53,6 +54,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/cars" element={<AllCars />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AnimatePresence>

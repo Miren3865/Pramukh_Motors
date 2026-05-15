@@ -1,6 +1,7 @@
 import express from 'express'
 import {
   getAllCars,
+  getAllCarsPublicPage,
   getCarById,
   reserveCar,
   createCar,
@@ -15,6 +16,7 @@ import { uploadCarImages, handleUploadError } from '../middleware/upload.js'
 const router = express.Router()
 
 // Public routes
+router.get('/all', getAllCarsPublicPage)
 router.get('/', getAllCars)
 router.get('/stats', getCarStats)
 router.get('/status/:status', getCarsByStatus)
