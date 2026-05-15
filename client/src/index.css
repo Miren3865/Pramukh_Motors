@@ -20,6 +20,14 @@ html {
   scroll-behavior: smooth;
 }
 
+#inventory-grid {
+  scroll-margin-top: 255px;
+}
+
+section[id] {
+  scroll-margin-top: -155px;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #060814;

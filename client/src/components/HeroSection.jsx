@@ -68,7 +68,7 @@ const HeroSection = () => {
       {/* Animated Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg -z-10">
         {/* Floating Gradients */}
-        <motion.div 
+        <motion.div
           className="absolute top-0 left-0 w-96 h-96 bg-neon-blue opacity-10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"
           animate={{
             x: [0, 30, 0],
@@ -79,7 +79,7 @@ const HeroSection = () => {
             repeat: Infinity,
           }}
         />
-        <motion.div 
+        <motion.div
           className="absolute bottom-0 right-0 w-96 h-96 bg-neon-purple opacity-10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"
           animate={{
             x: [0, -30, 0],
@@ -91,7 +91,7 @@ const HeroSection = () => {
           }}
         />
         <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-neon-blue opacity-5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-        
+
         {/* Light rays */}
         {lightRays}
       </div>
@@ -230,7 +230,7 @@ const HeroSection = () => {
           >
             <MagneticButton
               variant="primary"
-              onClick={() => scrollToSection('#inventory')}
+              onClick={() => scrollToSection('#inventory-grid')}
               className="text-lg px-8 py-4 font-bold"
             >
               Browse Inventory

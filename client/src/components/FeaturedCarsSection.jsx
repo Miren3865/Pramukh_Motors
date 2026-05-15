@@ -113,6 +113,7 @@ const FeaturedCarsSection = () => {
           <div className="mb-12 text-center text-gray-400">No featured cars are available right now. Please check back later.</div>
         ) : (
           <motion.div
+            id="inventory-grid"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
