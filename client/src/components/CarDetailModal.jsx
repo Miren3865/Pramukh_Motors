@@ -394,7 +394,7 @@ const CarDetailModal = ({ car, isOpen, onClose, onReserved }) => {
                   {/* Description */}
                   <motion.div variants={itemVariants} className="mb-8">
                     <h3 className="text-sm text-text-secondary uppercase tracking-widest mb-4 font-semibold">Description</h3>
-                    <p className="text-gray-300 leading-relaxed font-light text-sm">{car?.description || 'No additional description available.'}</p>
+                    <p className="text-black leading-relaxed font-light text-sm">{car?.description || 'No additional description available.'}</p>
                   </motion.div>
 
                   {/* Detailed Attributes */}
@@ -423,7 +423,7 @@ const CarDetailModal = ({ car, isOpen, onClose, onReserved }) => {
                           className="bg-secondary-bg border border-border-light p-3 rounded-sm flex items-center gap-3"
                         >
                           <div className="w-1.5 h-1.5 rounded-sm bg-gold-accent" />
-                          <p className="text-gray-300 text-sm font-light">{feature}</p>
+                          <p className="text-black text-sm font-light">{feature}</p>
                         </div>
                       ))}
                     </div>
