@@ -171,9 +171,9 @@ ADMIN_PASSWORD=your_password
 1. Push code to GitHub
 2. Connect repository to Vercel
 3. Set environment variable:
-   ```
-   VITE_API_URL=your_backend_api_url
-   ```
+```
+VITE_API_URL=your_backend_api_url
+```
 4. Deploy!
 
 ```bash
