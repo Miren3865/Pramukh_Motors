@@ -397,3 +397,21 @@ export const iconHover = {
     transition: { duration: 0.6, ease: 'easeInOut' },
   },
 }
+
+// Page transition animations
+export const pageTransitionVariants = {
+  initial: { opacity: 0, filter: 'blur(12px)', scale: 0.96 },
+  animate: { 
+    opacity: 1, 
+    filter: 'blur(0px)', 
+    scale: 1, 
+    transition: { duration: 0.8, ease: luxuryEase } 
+  },
+  exit: { 
+    opacity: 0, 
+    filter: 'blur(8px)', 
+    scale: 1.02, 
+    transition: { duration: 0.6, ease: luxuryEase } 
+  }
+}
+

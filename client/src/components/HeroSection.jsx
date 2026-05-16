@@ -99,12 +99,12 @@ const HeroSection = () => {
                 Drive
               </motion.span>
               <motion.span variants={word2Variant} className="text-gold-accent font-serif italic font-medium">
-                Confidence.
+                Confidence
               </motion.span>
             </h1>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight tracking-tight">
               <motion.span variants={word3Variant} className="block text-text-primary">
-                Own Value.
+                Own Value
               </motion.span>
             </h1>
           </div>

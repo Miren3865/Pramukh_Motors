@@ -99,6 +99,11 @@ const AdminReservations = () => {
   const handleConfirmAction = async () => {
     if (!selectedReservation || !confirmAction) return
 
+    if (confirmAction === 'delete' && selectedReservation.status === 'reserved') {
+      toast.error('Reserved inquiries cannot be deleted')
+      return
+    }
+
     try {
       setActionLoading(true)
 
@@ -244,6 +249,7 @@ const AdminReservations = () => {
               </thead>
               <tbody>
                 {filteredReservations.map((reservation, index) => {
+                  const isReserved = reservation.status === 'reserved'
                   const isCancelled = reservation.status === 'cancelled'
                   const isSold = reservation.status === 'sold'
                   const isFinalized = isCancelled || isSold
@@ -307,8 +313,9 @@ const AdminReservations = () => {
                         <button
                           type="button"
                           onClick={() => openActionModal(reservation, 'delete')}
-                          className="w-8 h-8 rounded-sm bg-primary-bg border border-border-light inline-flex items-center justify-center text-text-secondary hover:text-error hover:border-error transition-colors"
-                          title="Delete Record"
+                          disabled={isReserved}
+                          className="w-8 h-8 rounded-sm bg-primary-bg border border-border-light inline-flex items-center justify-center text-text-secondary hover:text-error hover:border-error transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                          title={isReserved ? 'Reserved inquiries cannot be deleted' : 'Delete Record'}
                         >
                           <Trash2 size={14} />
                         </button>

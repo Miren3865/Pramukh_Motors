@@ -1,20 +1,29 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import Tilt from 'react-parallax-tilt'
 import { Eye, Sparkles } from 'lucide-react'
 import { itemVariants, card3D } from '../animations/variants'
-import CarDetailModal from './CarDetailModal'
 
 const CarCard = ({ car, index, onCarReserved }) => {
   const [isHovered, setIsHovered] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const navigate = useNavigate()
   const isReserved = car?.status === 'reserved'
   const isSold = car?.status === 'sold'
   const isUnavailable = isReserved || isSold
 
+  const toSlug = (value) =>
+    String(value || '')
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+
   const handleViewDetails = () => {
     if (isUnavailable) return
-    setIsModalOpen(true)
+    const slug = toSlug(car?.name) || car?._id
+    navigate(`/car/${slug}`, { state: { car } })
   }
 
   return (
@@ -137,14 +146,6 @@ const CarCard = ({ car, index, onCarReserved }) => {
           </div>
         </motion.div>
       </Tilt>
-
-      {/* Car Detail Modal */}
-      <CarDetailModal
-        car={car}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onReserved={onCarReserved}
-      />
     </motion.div>
   )
 }
