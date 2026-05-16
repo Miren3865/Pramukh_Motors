@@ -101,14 +101,29 @@ const Navbar = ({ hideLinks = false }) => {
   }, [activeLink])
 
   const scrollToSection = (href) => {
-    const element = document.querySelector(href)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-      setIsOpen(false)
-      setActiveLink(href)
-      // update indicator after smooth scroll starts
-      requestAnimationFrame(() => updateIndicatorForHref(href))
-    }
+    // Close mobile menu first
+    setIsOpen(false)
+    
+    // Give time for layout to settle before scrolling
+    setTimeout(() => {
+      const element = document.querySelector(href)
+      if (element) {
+        const navbarHeight = 80
+        const elementPosition = element.getBoundingClientRect().top
+        const offsetPosition = elementPosition + window.pageYOffset - navbarHeight
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        })
+        
+        setActiveLink(href)
+        // update indicator for desktop if visible
+        if (window.innerWidth >= 768) {
+          updateIndicatorForHref(href)
+        }
+      }
+    }, 300)
   }
 
   const updateIndicatorForHref = (href) => {
