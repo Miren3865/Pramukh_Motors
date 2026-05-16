@@ -15,15 +15,15 @@ const WhatsAppButton = () => {
       transition={{ delay: 0.5, duration: 0.6 }}
       className="fixed bottom-8 right-8 z-40"
     >
-      <div className="w-16 h-16 bg-gradient-to-br from-neon-blue to-neon-purple rounded-full flex items-center justify-center text-white shadow-lg hover:shadow-2xl transition-shadow cursor-pointer hover:shadow-neon-blue/50">
-        <MessageCircle size={28} />
+      <div className="w-16 h-16 bg-primary-bg border border-border-light rounded-sm flex items-center justify-center text-text-secondary shadow-luxury hover:border-gold-accent hover:text-gold-accent transition-all cursor-pointer">
+        <MessageCircle size={24} />
       </div>
 
       {/* Pulse Animation */}
       <motion.div
         animate={{ scale: [1, 1.2, 1] }}
         transition={{ duration: 1.5, repeat: Infinity }}
-        className="absolute inset-0 rounded-full border-2 border-neon-blue opacity-50"
+        className="absolute inset-0 rounded-sm border border-gold-accent/50 opacity-0"
       ></motion.div>
     </motion.a>
   )

@@ -5,7 +5,6 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import ScrollProgressBar from '../components/ScrollProgressBar'
 import CarCard from '../components/CarCard'
-import MagneticButton from '../components/MagneticButton'
 import { getAllCarsAll } from '../services/api'
 import { containerVariants } from '../animations/variants'
 
@@ -40,11 +39,11 @@ const AllCars = () => {
   }, [])
 
   return (
-    <div className="min-h-screen bg-dark-bg text-white">
+    <div className="min-h-screen bg-primary-bg text-text-primary">
       <ScrollProgressBar />
       <Navbar />
 
-      <section className="section-padding bg-gradient-to-b from-dark-bg to-dark-card relative overflow-hidden">
+      <section className="section-padding bg-primary-bg relative overflow-hidden min-h-screen">
         <div className="container-custom relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -52,23 +51,24 @@ const AllCars = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-14"
           >
-            <p className="text-sm uppercase tracking-[0.4em] text-neon-blue mb-4">Luxury Collection</p>
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">Explore our complete premium inventory</h1>
-            <p className="mx-auto max-w-2xl text-gray-400 text-lg">
-              Browse every car which are currently available for sell.
+            <div className="h-[2px] bg-gold-accent w-16 mx-auto mb-6" />
+            <p className="text-xs uppercase tracking-[0.3em] text-gold-accent mb-4 font-semibold">Luxury Collection</p>
+            <h1 className="text-4xl md:text-6xl font-bold text-text-primary mb-4 tracking-tight">Explore Our Complete <span className="text-gold-accent font-serif italic font-medium">Inventory</span></h1>
+            <p className="mx-auto max-w-2xl text-text-secondary font-light text-lg">
+              Browse every vehicle currently available in our exclusive collection.
             </p>
           </motion.div>
 
           {loading ? (
-            <div className="text-center py-24 text-gray-400">Loading full inventory...</div>
+            <div className="text-center py-24 text-text-secondary font-light">Loading full inventory...</div>
           ) : cars.length === 0 ? (
-            <div className="text-center py-24 text-gray-400">No cars were found in the inventory.</div>
+            <div className="text-center py-24 text-text-secondary font-light">No cars were found in the inventory.</div>
           ) : (
             <motion.div
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
               {cars.map((car, index) => (
                 <CarCard key={car._id || car.id} car={car} index={index} onCarReserved={fetchCars} />
@@ -81,15 +81,14 @@ const AllCars = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8 }}
             viewport={{ once: true }}
-            className="mt-12 text-center"
+            className="mt-16 text-center"
           >
-            <MagneticButton
-              variant="secondary"
-              className="text-lg px-10 py-4 font-bold"
+            <button
+              className="btn-secondary text-sm uppercase tracking-widest px-8"
               onClick={() => navigate('/')}
             >
-              ← Go to Previous Page
-            </MagneticButton>
+              Return to Home
+            </button>
           </motion.div>
         </div>
       </section>

@@ -41,7 +41,13 @@ const AdminCars = () => {
         setCars(response.data)
       }
     } catch (error) {
-      toast.error('Failed to load cars')
+      toast.error('Failed to load cars', {
+        style: {
+          background: '#1E1E1E',
+          color: '#FFFFFF',
+          border: '1px solid #C62828',
+        }
+      })
       console.error('Error fetching cars:', error)
     } finally {
       setLoading(false)
@@ -69,10 +75,26 @@ const AdminCars = () => {
       const response = await updateCar(car._id, { showOnUser: !car.showOnUser })
       if (response.success) {
         setCars((prevCars) => prevCars.map((item) => item._id === car._id ? response.data : item))
-        toast.success(`Car ${!car.showOnUser ? 'shown' : 'hidden'} on user site`)
+        toast.success(`Vehicle ${!car.showOnUser ? 'visible' : 'hidden'} on public showroom`, {
+          style: {
+            background: '#1E1E1E',
+            color: '#FFFFFF',
+            border: '1px solid #D4AF37',
+          },
+          iconTheme: {
+            primary: '#D4AF37',
+            secondary: '#1E1E1E',
+          },
+        })
       }
     } catch (error) {
-      toast.error('Failed to update visibility')
+      toast.error('Failed to update visibility', {
+        style: {
+          background: '#1E1E1E',
+          color: '#FFFFFF',
+          border: '1px solid #C62828',
+        }
+      })
       console.error('Visibility toggle error:', error)
     }
   }
@@ -83,10 +105,26 @@ const AdminCars = () => {
     try {
       await deleteCar(deleteTarget._id)
       setCars(cars.filter((car) => car._id !== deleteTarget._id))
-      toast.success('Car deleted successfully')
+      toast.success('Vehicle deleted successfully', {
+        style: {
+          background: '#1E1E1E',
+          color: '#FFFFFF',
+          border: '1px solid #D4AF37',
+        },
+        iconTheme: {
+          primary: '#D4AF37',
+          secondary: '#1E1E1E',
+        },
+      })
       fetchStats()
     } catch (error) {
-      toast.error('Failed to delete car')
+      toast.error('Failed to delete vehicle', {
+        style: {
+          background: '#1E1E1E',
+          color: '#FFFFFF',
+          border: '1px solid #C62828',
+        }
+      })
     } finally {
       setShowDeleteModal(false)
       setDeleteTarget(null)
@@ -151,29 +189,29 @@ const AdminCars = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between"
+        className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
       >
-        <div className="flex items-center gap-3">
-          <Car className="text-neon-blue" size={32} />
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-secondary-bg border border-border-light rounded-sm flex items-center justify-center">
+            <Car className="text-gold-accent" size={24} strokeWidth={1.5} />
+          </div>
           <div>
-            <h2 className="text-3xl font-bold text-white">Car Inventory</h2>
-            <p className="text-gray-400 text-sm">Manage your luxury car collection</p>
+            <h2 className="text-2xl font-bold text-text-primary tracking-tight">Inventory Management</h2>
+            <p className="text-text-secondary text-sm font-light mt-1">Oversee and update your premium vehicle collection</p>
           </div>
         </div>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+        <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-neon-blue to-neon-purple text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-neon-blue/50 transition-all"
+          className="btn-secondary text-xs uppercase tracking-widest flex items-center gap-2 px-6"
         >
-          <Plus size={20} />
-          Add Car
-        </motion.button>
+          <Plus size={16} />
+          Add Vehicle
+        </button>
       </motion.div>
 
       {/* Stats Grid */}
@@ -181,26 +219,21 @@ const AdminCars = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 md:grid-cols-4 gap-4"
+        className="grid grid-cols-2 md:grid-cols-4 gap-4"
       >
         {[
-          { label: 'Total Cars', value: stats.totalCars, icon: '🚗' },
-          { label: 'Available', value: stats.availableCars, icon: '✅' },
-          { label: 'Reserved', value: stats.reservedCars, icon: '🔔' },
-          { label: 'Sold', value: stats.soldCars, icon: '✔️' },
+          { label: 'Total Vehicles', value: stats.totalCars },
+          { label: 'Available', value: stats.availableCars },
+          { label: 'Reserved', value: stats.reservedCars },
+          { label: 'Sold', value: stats.soldCars },
         ].map((stat, i) => (
           <motion.div
             key={i}
             variants={itemVariants}
-            className="glass rounded-xl p-6 border border-neon-blue/20"
+            className="bg-secondary-bg rounded-sm p-6 border border-border-light text-center"
           >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm mb-2">{stat.label}</p>
-                <p className="text-3xl font-bold text-white">{stat.value}</p>
-              </div>
-              <div className="text-4xl">{stat.icon}</div>
-            </div>
+            <p className="text-text-secondary text-[10px] uppercase tracking-widest mb-2 font-semibold">{stat.label}</p>
+            <p className="text-3xl font-bold text-text-primary tracking-tight">{stat.value}</p>
           </motion.div>
         ))}
       </motion.div>
@@ -209,69 +242,71 @@ const AdminCars = () => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="glass rounded-xl p-6 border border-neon-blue/20"
+        className="bg-secondary-bg rounded-sm p-6 border border-border-light"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="text-gray-300 text-sm mb-2 block">Search Cars</label>
+            <label className="text-text-secondary text-[10px] uppercase tracking-widest mb-2 block font-semibold">Search Inventory</label>
             <input
               type="text"
-              placeholder="Search by name..."
+              placeholder="Search by vehicle name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full rounded-lg px-4 text-white placeholder-gray-400 focus:border-neon-blue focus:outline-none"
-              style={{ height: '44px', background: '#0d1b2e', border: '1px solid rgba(99,179,237,0.3)' }}
+              className="w-full bg-primary-bg border border-border-light rounded-sm px-4 py-3 text-text-primary text-sm font-light focus:outline-none focus:border-gold-accent transition-colors"
             />
           </div>
           <div>
-            <label className="text-gray-300 text-sm mb-2 block">Filter by Status</label>
-            <CustomSelect
-              value={filterStatus}
-              onChange={(val) => setFilterStatus(val)}
-              options={[
-                { value: 'all', label: 'All Status' },
-                { value: 'available', label: 'Available' },
-                { value: 'reserved', label: 'Reserved' },
-                { value: 'sold', label: 'Sold' },
-              ]}
-              placeholder="Filter by Status"
-            />
+            <label className="text-text-secondary text-[10px] uppercase tracking-widest mb-2 block font-semibold">Filter by Status</label>
+            <div className="border border-border-light rounded-sm overflow-hidden bg-primary-bg h-[46px]">
+               <CustomSelect
+                value={filterStatus}
+                onChange={(val) => setFilterStatus(val)}
+                options={[
+                  { value: 'all', label: 'All Status' },
+                  { value: 'available', label: 'Available' },
+                  { value: 'reserved', label: 'Reserved' },
+                  { value: 'sold', label: 'Sold' },
+                ]}
+                placeholder="Select Status"
+              />
+            </div>
           </div>
         </div>
       </motion.div>
 
       {/* Cars Table */}
-      <div className="glass rounded-xl border border-neon-blue/20 p-4">
-        <p className="text-sm text-yellow-300">Only 6 cars can be publicly visible at one time.</p>
+      <div className="bg-secondary-bg rounded-sm border border-border-light p-4">
+        <p className="text-xs text-text-secondary flex items-center gap-2">
+          <AlertCircle size={14} className="text-gold-accent" />
+          Note: Only 6 vehicles can be publicly visible on the showroom floor at one time.
+        </p>
       </div>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass rounded-xl border border-neon-blue/20 overflow-hidden"
+        className="bg-secondary-bg rounded-sm border border-border-light overflow-hidden"
       >
         {loading ? (
-          <div className="p-8 text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-neon-blue"></div>
-            <p className="text-gray-400 mt-4">Loading cars...</p>
+          <div className="p-16 text-center">
+            <div className="loader mx-auto"></div>
+            <p className="text-text-secondary mt-6 text-sm uppercase tracking-widest">Loading inventory...</p>
           </div>
         ) : filteredCars.length === 0 ? (
-          <div className="p-8 text-center">
-            <AlertCircle className="mx-auto text-gray-400 mb-4" size={48} />
-            <p className="text-gray-400">No cars found</p>
+          <div className="p-16 text-center">
+            <Car className="mx-auto text-text-secondary mb-4 opacity-50" size={48} strokeWidth={1} />
+            <p className="text-text-secondary text-sm uppercase tracking-widest">No vehicles found</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-neon-blue/10 border-b border-neon-blue/20">
+            <table className="w-full text-left">
+              <thead className="bg-primary-bg border-b border-border-light">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-neon-blue">Name</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-neon-blue">Year</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-neon-blue">Price</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-neon-blue">Fuel</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-neon-blue">Transmission</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-neon-blue">Status</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-neon-blue">Public</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-neon-blue">Actions</th>
+                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Vehicle Details</th>
+                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Price</th>
+                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Status</th>
+                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Showroom</th>
+                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -281,69 +316,65 @@ const AdminCars = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: index * 0.05 }}
-                    className="border-b border-neon-blue/10 hover:bg-neon-blue/5 transition-colors"
+                    className="border-b border-border-light hover:bg-primary-bg transition-colors"
                   >
-                    <td className="px-6 py-4 text-sm text-white font-medium">{car.name}</td>
-                    <td className="px-6 py-4 text-sm text-gray-300">{car.year}</td>
-                    <td className="px-6 py-4 text-sm text-neon-blue font-semibold">
+                    <td className="px-6 py-5">
+                      <p className="text-sm text-text-primary font-medium">{car.name}</p>
+                      <p className="text-xs text-text-secondary font-light mt-1">
+                        {car.year} · {car.fuel} · {car.transmission}
+                      </p>
+                    </td>
+                    <td className="px-6 py-5 text-sm text-text-primary font-semibold">
                       ₹{car.price?.toLocaleString()}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-300">{car.fuel}</td>
-                    <td className="px-6 py-4 text-sm text-gray-300">{car.transmission}</td>
-                    <td className="px-6 py-4 text-sm">
+                    <td className="px-6 py-5">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        className={`px-3 py-1 rounded-sm text-[10px] font-semibold uppercase tracking-widest ${
                           car.status === 'available'
-                            ? 'bg-green-500/20 text-green-400'
+                            ? 'bg-success/10 text-success border border-success/20'
                             : car.status === 'reserved'
-                            ? 'bg-yellow-500/20 text-yellow-400'
-                            : 'bg-red-500/20 text-red-400'
+                            ? 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20'
+                            : 'bg-text-secondary/10 text-text-secondary border border-text-secondary/20'
                         }`}
                       >
-                        {car.status.charAt(0).toUpperCase() + car.status.slice(1)}
+                        {car.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm">
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                    <td className="px-6 py-5">
+                      <button
                         onClick={() => handleToggleShowOnUser(car)}
                         disabled={!car.showOnUser && visibleCarsCount >= 6}
                         title={!car.showOnUser && visibleCarsCount >= 6 ? 'Maximum 6 public cars allowed' : ''}
-                        className={`inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-sm text-[10px] font-semibold uppercase tracking-widest transition-all ${
                           car.showOnUser
-                            ? 'bg-green-500/10 border border-green-500/20 text-green-300 hover:bg-green-500/20'
-                            : 'bg-slate-700/10 border border-slate-600/20 text-slate-300 hover:bg-slate-700/20'
+                            ? 'bg-gold-accent/10 border border-gold-accent/50 text-gold-accent hover:bg-gold-accent/20'
+                            : 'bg-primary-bg border border-border-light text-text-secondary hover:border-text-secondary'
                         } ${!car.showOnUser && visibleCarsCount >= 6 ? 'opacity-50 cursor-not-allowed' : ''}`}
                       >
-                        {car.showOnUser ? <Eye size={14} /> : <EyeOff size={14} />}
+                        {car.showOnUser ? <Eye size={12} /> : <EyeOff size={12} />}
                         <span>{car.showOnUser ? 'Visible' : 'Hidden'}</span>
-                      </motion.button>
+                      </button>
                     </td>
-                    <td className="px-6 py-4 text-sm flex items-center gap-2">
-                      <motion.button
-                        whileHover={{ scale: car.status === 'sold' ? 1 : 1.05 }}
-                        whileTap={{ scale: car.status === 'sold' ? 1 : 0.95 }}
+                    <td className="px-6 py-5 text-right space-x-2">
+                      <button
                         onClick={() => handleEditClick(car)}
                         disabled={car.status === 'sold'}
-                        className={`inline-flex items-center justify-center gap-2 px-3 py-2 border rounded-lg text-xs font-medium transition-all ${
+                        className={`w-8 h-8 rounded-sm inline-flex items-center justify-center transition-colors ${
                           car.status === 'sold'
-                            ? 'bg-gray-700/50 border-gray-600 text-gray-400 cursor-not-allowed'
-                            : 'bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20 text-blue-300'
+                            ? 'bg-primary-bg border border-border-light text-text-secondary opacity-50 cursor-not-allowed'
+                            : 'bg-primary-bg border border-border-light text-text-secondary hover:text-text-primary hover:border-gold-accent'
                         }`}
+                        title="Edit Vehicle"
                       >
-                        <Edit2 size={16} />
-                        <span>Edit</span>
-                      </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        <Edit2 size={14} />
+                      </button>
+                      <button
                         onClick={() => handleDelete(car)}
-                        className="inline-flex items-center justify-center gap-2 px-3 py-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-lg text-red-300 transition-all"
+                        className="w-8 h-8 rounded-sm bg-primary-bg border border-border-light inline-flex items-center justify-center text-text-secondary hover:text-error hover:border-error transition-colors"
+                        title="Delete Vehicle"
                       >
-                        <Trash2 size={16} />
-                        <span className="text-xs font-medium">Delete</span>
-                      </motion.button>
+                        <Trash2 size={14} />
+                      </button>
                     </td>
                   </motion.tr>
                 ))}
@@ -361,58 +392,52 @@ const AdminCars = () => {
         )}
         {showDeleteModal && deleteTarget && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 py-8"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-primary-bg/90 backdrop-blur-md px-4 py-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="relative w-full max-w-md overflow-hidden rounded-[2rem] border border-cyan-400/10 bg-slate-950/95 p-6 shadow-[0_40px_120px_-60px_rgba(0,0,0,0.85)] backdrop-blur-2xl"
+              className="relative w-full max-w-md overflow-hidden rounded-sm border border-border-light bg-card-bg p-8 shadow-luxury"
               initial={{ opacity: 0, y: 20, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.98 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.3 }}
             >
-              <button
-                type="button"
-                onClick={cancelDelete}
-                className="absolute right-5 top-5 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-slate-900/80 text-slate-100 transition-all duration-200 hover:scale-105 hover:bg-red-500/10 hover:border-red-400/30"
-                aria-label="Cancel delete"
-              >
-                <X size={18} />
-              </button>
-
-              <div className="mb-4">
-                <p className="text-xs uppercase tracking-[0.35em] text-cyan-300/80">Confirm Delete</p>
-                <h3 className="mt-3 text-2xl font-bold text-white">Delete this car?</h3>
-                <p className="mt-3 text-sm leading-7 text-slate-300">
-                  This will permanently remove the car from inventory. You cannot undo this action.
-                </p>
+              <div className="flex items-start gap-4 mb-6">
+                <div className="shrink-0 border border-error/50 p-3 rounded-sm bg-error/10">
+                  <AlertCircle size={24} className="text-error" />
+                </div>
+                <div>
+                  <h4 className="text-xl font-bold text-text-primary tracking-tight">Delete Vehicle</h4>
+                  <p className="mt-2 text-sm text-text-secondary leading-relaxed font-light">
+                    This will permanently remove the vehicle from inventory. This action cannot be reversed.
+                  </p>
+                </div>
               </div>
 
-              <div className="rounded-[1.5rem] border border-white/10 bg-slate-900/85 p-4">
-                <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Car preview</p>
-                <p className="mt-3 text-sm text-white font-semibold">{deleteTarget.name}</p>
-                <p className="mt-2 text-xs text-slate-500">
+              <div className="rounded-sm border border-border-light bg-secondary-bg p-5 mb-8">
+                <p className="text-[10px] uppercase tracking-widest text-text-secondary font-semibold mb-2">Vehicle Preview</p>
+                <p className="text-sm text-text-primary font-medium">{deleteTarget.name}</p>
+                <p className="mt-1 text-xs text-text-secondary font-light">
                   {deleteTarget.year} · {deleteTarget.fuel} · {deleteTarget.transmission}
                 </p>
-                <p className="mt-2 text-xs text-slate-500">Price: ₹{deleteTarget.price?.toLocaleString()}</p>
               </div>
 
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+              <div className="flex gap-4">
                 <button
                   type="button"
                   onClick={cancelDelete}
-                  className="w-full rounded-3xl border border-white/10 bg-slate-900/80 px-5 py-3 text-sm font-semibold text-slate-200 transition-all duration-200 hover:bg-slate-900/95 sm:w-auto"
+                  className="flex-1 btn-secondary text-xs uppercase tracking-widest"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={confirmDelete}
-                  className="w-full rounded-3xl bg-gradient-to-r from-red-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:scale-105 sm:w-auto"
+                  className="flex-1 bg-error text-white font-semibold rounded-sm px-6 py-3 text-xs uppercase tracking-widest hover:bg-red-700 transition-colors"
                 >
-                  Delete Car
+                  Delete Vehicle
                 </button>
               </div>
             </motion.div>

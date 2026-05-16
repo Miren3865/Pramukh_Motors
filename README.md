@@ -137,31 +137,23 @@ ADMIN_PASSWORD=your_password
 ## 📌 Key Features
 
 ### Frontend
-- ✨ Premium hero section with animations
-- 🚗 Featured luxury car inventory
-- 📊 Why choose us section with icons
-- 🏢 Showroom section with counter animations
-- 💬 Customer testimonials carousel
-- 📧 Contact form with backend integration
-- 🎨 Dark/Light theme support
-- 📱 Fully responsive design
-- ♿ Accessibility features
-- ⚡ Optimized performance
-- 🎭 Advanced animations with Framer Motion
-- 🌊 Glassmorphism effects
-- 🔔 Toast notifications
-- 🔄 Scroll progress indicator
+- ✨ **Premium Hero Section**: Animated background, particles, gradient text, and scroll indicators.
+- 🚗 **Luxury Car Inventory**: Grid of premium cars with 3D tilt hover effects, glassmorphism design, and detailed specs.
+- 📊 **Why Choose Us**: Benefit cards with animated icons, interactive hover glow, and gradient borders.
+- 🏢 **Showroom Stats**: Split layout with scroll-triggered animated counters (Cars Sold, Happy Customers, Experience).
+- 💬 **Customer Testimonials**: Auto-playing Swiper carousel with 5-star ratings and glassmorphism.
+- 📧 **Contact & Support**: Fully functional contact form with validation, toast notifications, and backend integration.
+- 🎨 **Visual Design**: Dark premium theme, neon gradients (blue/purple), glassmorphism, glowing borders.
+- 📱 **Responsive & Accessible**: Fully optimized for mobile, tablet, and desktop (375px+). Semantic HTML and ARIA labels.
+- 🎭 **Advanced Animations**: Framer Motion text reveals, stagger effects, parallax scrolling, magnetic buttons, and page transitions.
+- ⚡ **Global Features**: Page loader, scroll progress bar, floating WhatsApp button, and smooth scrolling.
 
 ### Backend
-- 🔐 JWT authentication
-- 📧 Contact form API
-- 👨‍💼 Admin dashboard API
-- 🗄️ MongoDB integration
-- ✅ Input validation
-- 🛡️ CORS security
-- 🚀 RESTful architecture
-- 📊 Statistics API
-- 🔒 Protected routes
+- 🔐 **Authentication**: JWT token-based authentication with bcryptjs password hashing. Token expiration set to 7 days.
+- 📧 **API Endpoints**: Contact form API, Admin dashboard API, and statistics tracking.
+- 🗄️ **Database**: MongoDB Atlas integration with Mongoose ODM. Contact & Admin models.
+- ✅ **Security**: Input validation, sanitization, CORS protection, and secure routing middleware.
+- 🚀 **Architecture**: Full MVC RESTful architecture with structured error handling.
 
 ### Admin Dashboard
 - 📋 View all contact submissions
@@ -221,16 +213,19 @@ vercel
 ## 📚 API Endpoints
 
 ### Contact Routes
-- `POST /api/contact` - Submit contact form
-- `GET /api/admin/contacts` - Get all contacts (protected)
-- `GET /api/admin/contacts/:id` - Get single contact (protected)
-- `DELETE /api/admin/contacts/:id` - Delete contact (protected)
-- `GET /api/admin/stats` - Get dashboard stats (protected)
+- `POST /api/contact` - Submit contact form. (Public)
+  - **Body**: `{ "name": "John Doe", "email": "john@example.com", "message": "Hi" }`
+- `GET /api/admin/contacts` - Get all contacts. (Protected)
+- `GET /api/admin/contacts/:id` - Get single contact (Marks as read). (Protected)
+- `DELETE /api/admin/contacts/:id` - Delete contact. (Protected)
+- `GET /api/admin/stats` - Get dashboard stats (Total, new, responded, read). (Protected)
 
 ### Admin Routes
-- `POST /api/admin/login` - Admin login
-- `GET /api/admin/profile` - Get admin profile (protected)
-- `POST /api/admin/initialize` - Initialize admin user
+- `POST /api/admin/login` - Admin login. (Public)
+  - **Body**: `{ "email": "admin@example.com", "password": "password" }`
+  - **Returns**: JWT Token and Admin profile.
+- `GET /api/admin/profile` - Get admin profile details. (Protected)
+- `POST /api/admin/initialize` - Initialize first admin user. (Public)
 
 ## 🎨 Customization
 
@@ -277,10 +272,6 @@ kill -9 <PID>
 - Verify API URL in frontend .env
 - Ensure backend is running
 
-## 📄 License
-
-This project is licensed under the MIT License - see LICENSE file for details.
-
 ## 👨‍💻 Author
 
 Built with ❤️ by the Pramukh Motors Team
@@ -293,22 +284,25 @@ Contributions welcome! Please submit pull requests with your improvements.
 
 For support, email hello@pramukhmotors.com
 
-## 🎯 Roadmap
+---
 
-- [ ] Advanced car filtering
-- [ ] Payment integration
-- [ ] Real car listings
-- [ ] User accounts
-- [ ] Email notifications
-- [ ] SMS integration
-- [ ] WhatsApp integration
-- [ ] Analytics dashboard
-- [ ] Multi-language support
-- [ ] AI chatbot
+## 📈 Project Statistics
+| Aspect | Count |
+|--------|-------|
+| React Components | 13 |
+| Pages | 3 |
+| API Endpoints | 8 |
+| Database Models | 2 |
+| Animations | 15+ |
+
+## 🚀 Future Enhancements
+1. Real car listings with database-driven inventory.
+2. User accounts, profiles, and booking system.
+3. Live chat support & SMS notifications.
 
 ---
 
 Made with ❤️ for car enthusiasts
-"# Pramukh_Motors" 
-"# Pramukh_Motors" 
-"# Pramukh_Motors" 
+"# Pramukh_Motors"
+"# Pramukh_Motors"
+"# Pramukh_Motors"

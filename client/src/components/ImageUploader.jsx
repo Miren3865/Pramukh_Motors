@@ -107,11 +107,11 @@ const ImageUploader = ({
   return (
     <div className={`space-y-4 ${className}`}>
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label className="text-[10px] uppercase tracking-widest font-semibold text-text-secondary">
           {label}
         </label>
         {galleryMode && (
-          <span className="text-xs text-gray-500">
+          <span className="text-[10px] uppercase tracking-widest text-text-secondary">
             {previewImages.length}/{maxImages} images
           </span>
         )}
@@ -119,10 +119,10 @@ const ImageUploader = ({
 
       {/* Upload Area */}
       <motion.div
-        className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 ${
+        className={`relative border border-dashed rounded-sm p-8 text-center transition-all duration-200 cursor-pointer ${
           dragActive
-            ? 'border-blue-400 bg-blue-50 dark:bg-blue-900/20'
-            : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
+            ? 'border-gold-accent bg-gold-accent/5'
+            : 'border-border-light bg-primary-bg hover:border-gold-accent/50'
         }`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -143,27 +143,27 @@ const ImageUploader = ({
 
         <div className="flex flex-col items-center space-y-4">
           <motion.div
-            className={`p-4 rounded-full ${
+            className={`p-4 rounded-sm flex items-center justify-center transition-colors ${
               dragActive
-                ? 'bg-blue-100 dark:bg-blue-800 text-blue-600'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-500'
+                ? 'bg-primary-bg border border-gold-accent text-gold-accent'
+                : 'bg-secondary-bg border border-border-light text-text-secondary'
             }`}
-            animate={{ scale: dragActive ? 1.1 : 1 }}
+            animate={{ scale: dragActive ? 1.05 : 1 }}
           >
             {thumbnailMode ? (
-              <FiCamera className="w-8 h-8" />
+              <FiCamera className="w-6 h-6" />
             ) : featuredMode ? (
-              <FiStar className="w-8 h-8" />
+              <FiStar className="w-6 h-6" />
             ) : (
-              <FiUpload className="w-8 h-8" />
+              <FiUpload className="w-6 h-6" />
             )}
           </motion.div>
 
           <div>
-            <p className="text-lg font-medium text-gray-700 dark:text-gray-300">
+            <p className="text-sm font-medium text-text-primary tracking-wide">
               {dragActive ? 'Drop images here' : description}
             </p>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-xs text-text-secondary font-light mt-2">
               {acceptedTypes.map(type => type.split('/')[1].toUpperCase()).join(', ')} • Max {maxSize / 1024 / 1024}MB each
             </p>
           </div>
@@ -178,22 +178,22 @@ const ImageUploader = ({
               <motion.div
                 key={index}
                 className="relative group"
-                initial={{ opacity: 0, scale: 0.8 }}
+                initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
+                exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
+                <div className="aspect-square rounded-sm overflow-hidden bg-secondary-bg border border-border-light">
                   <img
                     src={image}
                     alt={`Preview ${index + 1}`}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 </div>
 
                 {/* Overlay Controls */}
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 rounded-lg flex items-center justify-center">
-                  <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <div className="absolute inset-0 bg-primary-bg/80 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-sm flex items-center justify-center backdrop-blur-sm border border-gold-accent/50">
+                  <div className="flex space-x-3">
                     {galleryMode && index > 0 && (
                       <motion.button
                         type="button"
@@ -201,7 +201,7 @@ const ImageUploader = ({
                           e.stopPropagation()
                           setAsThumbnail(index)
                         }}
-                        className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
+                        className="p-2.5 bg-secondary-bg text-gold-accent rounded-sm border border-border-light hover:border-gold-accent transition-colors"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         title="Set as thumbnail"
@@ -216,7 +216,7 @@ const ImageUploader = ({
                         e.stopPropagation()
                         removeImage(index)
                       }}
-                      className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
+                      className="p-2.5 bg-secondary-bg text-error rounded-sm border border-border-light hover:border-error transition-colors"
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       title="Remove image"
@@ -228,9 +228,9 @@ const ImageUploader = ({
 
                 {/* Thumbnail Indicator */}
                 {galleryMode && index === 0 && (
-                  <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded-full text-xs flex items-center space-x-1">
+                  <div className="absolute top-2 left-2 bg-gold-accent text-primary-bg px-2 py-1 rounded-sm text-[10px] uppercase tracking-widest font-bold flex items-center space-x-1 shadow-md">
                     <FiStar className="w-3 h-3" />
-                    <span>Thumbnail</span>
+                    <span>Primary</span>
                   </div>
                 )}
               </motion.div>

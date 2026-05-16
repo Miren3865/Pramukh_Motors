@@ -43,7 +43,7 @@ const GallerySection = () => {
   ]
 
   return (
-    <section id="gallery" className="section-padding bg-gradient-to-b from-dark-card to-dark-bg">
+    <section id="gallery" className="section-padding bg-secondary-bg">
       <div className="container-custom">
         {/* Header */}
         <motion.div
@@ -53,11 +53,11 @@ const GallerySection = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-5xl md:text-6xl font-bold mb-4">
-            <span className="text-white">Luxury </span>
-            <span className="gradient-text neon-glow">Gallery</span>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
+            <span className="text-text-primary">Luxury </span>
+            <span className="text-gold-accent font-serif italic normal-case font-medium">Gallery</span>
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          <p className="text-text-secondary text-base max-w-2xl mx-auto font-light leading-relaxed">
             Explore our curated collection of premium automotive imagery
           </p>
         </motion.div>
@@ -72,13 +72,13 @@ const GallerySection = () => {
               transition={{ delay: index * 0.1 }}
               viewport={{ once: true }}
               whileHover={{ y: -10 }}
-              className="relative overflow-hidden rounded-xl group cursor-pointer h-64 glass-dark border border-neon-blue/20"
+              className="relative overflow-hidden rounded-sm group cursor-pointer h-64 bg-primary-bg border border-border-light hover:border-gold-accent/50 transition-all"
             >
               {/* Image Placeholder */}
-              <div className="w-full h-full bg-gradient-to-br from-neon-blue/20 via-neon-purple/10 to-transparent flex items-center justify-center">
+              <div className="w-full h-full bg-primary-bg flex items-center justify-center">
                 <div className="text-center">
                   <div className="text-6xl mb-3">{image.emoji}</div>
-                  <p className="text-gray-300">{image.title}</p>
+                  <p className="text-text-secondary uppercase tracking-widest text-xs">{image.title}</p>
                 </div>
               </div>
 
@@ -87,15 +87,15 @@ const GallerySection = () => {
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
-                className="absolute inset-0 bg-gradient-to-t from-dark-bg via-transparent to-transparent flex items-end justify-between p-6 group-hover:bg-dark-bg/60"
+                className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end justify-between p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               >
                 <div>
-                  <p className="text-white font-bold mb-1">{image.title}</p>
-                  <p className="text-neon-blue text-sm">{image.category}</p>
+                  <p className="text-white font-bold mb-1 tracking-wide">{image.title}</p>
+                  <p className="text-gold-accent text-xs uppercase tracking-widest">{image.category}</p>
                 </div>
                 <motion.div
-                  whileHover={{ scale: 1.2 }}
-                  className="w-10 h-10 bg-neon-blue rounded-lg flex items-center justify-center text-white"
+                  whileHover={{ scale: 1.1 }}
+                  className="w-10 h-10 bg-gold-accent rounded-sm flex items-center justify-center text-primary-bg"
                 >
                   <Maximize2 size={20} />
                 </motion.div>
@@ -105,7 +105,7 @@ const GallerySection = () => {
               <motion.div
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
-                className="absolute inset-0 border-2 border-neon-blue rounded-xl pointer-events-none"
+                className="absolute inset-0 border border-gold-accent rounded-sm pointer-events-none"
               ></motion.div>
             </motion.div>
           ))}

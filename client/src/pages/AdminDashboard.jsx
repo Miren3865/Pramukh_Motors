@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { LogOut, Trash2, Mail, User, MessageSquare, Calendar, Car, Eye, X, ClipboardList } from 'lucide-react'
+import { LogOut, Trash2, Mail, MessageSquare, Calendar, Car, Eye, X, ClipboardList, AlertTriangle } from 'lucide-react'
 import toast, { Toaster } from 'react-hot-toast'
 import { getContacts, deleteContact, getStats } from '../services/api'
 import AdminCars from '../components/AdminCars'
@@ -57,7 +57,13 @@ const AdminDashboard = () => {
         setStats(statsResponse.data)
       }
     } catch (error) {
-      toast.error('Failed to load dashboard data')
+      toast.error('Failed to load dashboard data', {
+        style: {
+          background: '#1E1E1E',
+          color: '#FFFFFF',
+          border: '1px solid #C62828',
+        }
+      })
       console.error('Dashboard error:', error)
     } finally {
       setLoading(false)
@@ -75,12 +81,29 @@ const AdminDashboard = () => {
     try {
       await deleteContact(deleteTarget._id)
       setContacts(contacts.filter((contact) => contact._id !== deleteTarget._id))
+      setStats((prev) => ({ ...prev, totalContacts: prev.totalContacts - 1 }))
       if (selectedMessage?._id === deleteTarget._id) {
         setSelectedMessage(null)
       }
-      toast.success('Message deleted successfully')
+      toast.success('Message deleted successfully', {
+        style: {
+          background: '#1E1E1E',
+          color: '#FFFFFF',
+          border: '1px solid #D4AF37',
+        },
+        iconTheme: {
+          primary: '#D4AF37',
+          secondary: '#1E1E1E',
+        },
+      })
     } catch (error) {
-      toast.error('Failed to delete message')
+      toast.error('Failed to delete message', {
+        style: {
+          background: '#1E1E1E',
+          color: '#FFFFFF',
+          border: '1px solid #C62828',
+        }
+      })
     } finally {
       setShowDeleteConfirm(false)
       setDeleteTarget(null)
@@ -147,7 +170,17 @@ const AdminDashboard = () => {
     setShowLogoutConfirm(false)
     localStorage.removeItem('adminToken')
     navigate('/admin/login')
-    toast.success('Logged out successfully')
+    toast.success('Logged out successfully', {
+      style: {
+        background: '#1E1E1E',
+        color: '#FFFFFF',
+        border: '1px solid #D4AF37',
+      },
+      iconTheme: {
+        primary: '#D4AF37',
+        secondary: '#1E1E1E',
+      },
+    })
   }
 
   const cancelLogout = () => {
@@ -157,100 +190,95 @@ const AdminDashboard = () => {
   const filteredContacts = contacts
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-bg to-dark-card">
+    <div className="min-h-screen bg-primary-bg font-sans">
       <Toaster position="top-right" />
 
       {/* Header */}
-      <header className="glass border-b border-neon-blue/20 sticky top-0 z-40">
+      <header className="bg-secondary-bg border-b border-border-light sticky top-0 z-40">
         <div className="container-custom h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-neon-blue to-neon-purple rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">PM</span>
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-primary-bg border border-gold-accent rounded-sm flex items-center justify-center">
+              <span className="text-gold-accent font-bold text-lg font-sans tracking-wider">PM</span>
             </div>
-            <span className="text-xl font-bold gradient-text">Pramukh Motors Admin</span>
+            <span className="text-xl font-bold text-text-primary tracking-wide uppercase">Pramukh <span className="text-gold-accent font-serif italic normal-case">Motors</span> <span className="text-text-secondary text-sm ml-2">| Portal</span></span>
           </div>
           <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ y: -2 }}
+            whileTap={{ y: 0 }}
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 btn-secondary text-sm"
+            className="flex items-center gap-2 px-5 py-2.5 bg-primary-bg border border-border-light text-text-secondary rounded-sm text-xs font-semibold uppercase tracking-widest hover:border-gold-accent hover:text-gold-accent transition-colors"
           >
-            <LogOut size={18} />
+            <LogOut size={16} />
             Logout
           </motion.button>
         </div>
       </header>
 
       {/* Tab Navigation */}
-      <div className="border-b border-neon-blue/20 bg-dark-card sticky top-20 z-30 pt-4 pb-4 mb-6">
+      <div className="border-b border-border-light bg-secondary-bg sticky top-20 z-30 pt-4">
         <div className="container-custom flex gap-8">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => {
               setActiveTab('contacts')
               setSearchParams({ tab: 'contacts' })
             }}
-            className={`px-7 py-3 font-semibold transition-all border-b-2 flex items-center gap-3 ${
-              activeTab === 'contacts'
-                ? 'text-neon-blue border-neon-blue'
-                : 'text-gray-400 border-transparent hover:text-neon-blue'
-            }`}
+            className={`px-6 py-4 font-semibold text-xs uppercase tracking-widest transition-all border-b-2 flex items-center gap-3 ${activeTab === 'contacts'
+                ? 'text-gold-accent border-gold-accent'
+                : 'text-text-secondary border-transparent hover:text-gold-accent'
+              }`}
           >
-            <Mail size={20} />
-            Messages
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            <Mail size={16} />
+            Inquiries
+          </button>
+          <button
             onClick={() => {
               setActiveTab('cars')
               setSearchParams({ tab: 'cars' })
             }}
-            className={`px-7 py-3 font-semibold transition-all border-b-2 flex items-center gap-3 ${
-              activeTab === 'cars'
-                ? 'text-neon-blue border-neon-blue'
-                : 'text-gray-400 border-transparent hover:text-neon-blue'
-            }`}
+            className={`px-6 py-4 font-semibold text-xs uppercase tracking-widest transition-all border-b-2 flex items-center gap-3 ${activeTab === 'cars'
+                ? 'text-gold-accent border-gold-accent'
+                : 'text-text-secondary border-transparent hover:text-gold-accent'
+              }`}
           >
-            <Car size={20} />
+            <Car size={16} />
             Inventory
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          </button>
+          <button
             onClick={() => {
               setActiveTab('reservations')
               setSearchParams({ tab: 'reservations' })
             }}
-            className={`px-7 py-3 font-semibold transition-all border-b-2 flex items-center gap-3 ${
-              activeTab === 'reservations'
-                ? 'text-neon-blue border-neon-blue'
-                : 'text-gray-400 border-transparent hover:text-neon-blue'
-            }`}
+            className={`px-6 py-4 font-semibold text-xs uppercase tracking-widest transition-all border-b-2 flex items-center gap-3 ${activeTab === 'reservations'
+                ? 'text-gold-accent border-gold-accent'
+                : 'text-text-secondary border-transparent hover:text-gold-accent'
+              }`}
           >
-            <ClipboardList size={20} />
+            <ClipboardList size={16} />
             Reservations
-          </motion.button>
+          </button>
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="container-custom py-8">
+      <main className="container-custom py-10">
         {/* Contacts Tab */}
         {activeTab === 'contacts' && (
           <>
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-10">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="glass-dark p-6 rounded-xl border border-neon-blue/20"
+                transition={{ duration: 0.5 }}
+                className="bg-secondary-bg p-8 rounded-sm border border-border-light flex items-center justify-between"
               >
-                <div className="text-3xl mb-3">📧</div>
-                <p className="text-gray-400 text-sm mb-1">Total Messages</p>
-                <p className="text-3xl font-bold gradient-text">{stats.totalContacts}</p>
+                <div>
+                  <p className="text-text-secondary text-xs uppercase tracking-widest mb-2 font-semibold">Total Inquiries</p>
+                  <p className="text-4xl font-bold text-text-primary">{stats.totalContacts}</p>
+                </div>
+                <div className="w-16 h-16 bg-primary-bg border border-border-light rounded-sm flex items-center justify-center">
+                  <Mail className="text-gold-accent" size={28} strokeWidth={1.5} />
+                </div>
               </motion.div>
             </div>
 
@@ -258,75 +286,74 @@ const AdminDashboard = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="glass-dark rounded-xl border border-neon-blue/20 p-8"
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="bg-secondary-bg rounded-sm border border-border-light p-8"
             >
-              <h2 className="text-2xl font-bold text-white mb-6">Contact Submissions</h2>
-
+              <h2 className="text-xl font-bold text-text-primary mb-8 tracking-wide">Client Submissions</h2>
 
               {/* Table */}
               {loading ? (
-                <div className="text-center py-12">
+                <div className="text-center py-16">
                   <div className="loader mx-auto"></div>
-                  <p className="text-gray-400 mt-4">Loading contacts...</p>
+                  <p className="text-text-secondary mt-6 text-sm uppercase tracking-widest">Loading records...</p>
                 </div>
               ) : filteredContacts.length === 0 ? (
-                <div className="text-center py-12">
-                  <MessageSquare className="mx-auto text-gray-400 mb-4" size={48} />
-                  <p className="text-gray-400">No messages found</p>
+                <div className="text-center py-16">
+                  <MessageSquare className="mx-auto text-text-secondary mb-4 opacity-50" size={48} strokeWidth={1} />
+                  <p className="text-text-secondary text-sm uppercase tracking-widest">No inquiries found</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full">
+                  <table className="w-full text-left">
                     <thead>
-                      <tr className="border-b border-neon-blue/20">
-                        <th className="text-left py-4 px-4 text-gray-400 font-semibold">Name</th>
-                        <th className="text-left py-4 px-4 text-gray-400 font-semibold">Email</th>
-                        <th className="text-left py-4 px-4 text-gray-400 font-semibold">Message</th>
-                        <th className="text-left py-4 px-4 text-gray-400 font-semibold">Date</th>
-                        <th className="text-left py-4 px-4 text-gray-400 font-semibold">Action</th>
+                      <tr className="border-b border-border-light">
+                        <th className="py-4 px-4 text-text-secondary text-xs font-semibold uppercase tracking-widest">Client Name</th>
+                        <th className="py-4 px-4 text-text-secondary text-xs font-semibold uppercase tracking-widest">Contact Details</th>
+                        <th className="py-4 px-4 text-text-secondary text-xs font-semibold uppercase tracking-widest">Inquiry Preview</th>
+                        <th className="py-4 px-4 text-text-secondary text-xs font-semibold uppercase tracking-widest">Received Date</th>
+                        <th className="py-4 px-4 text-text-secondary text-xs font-semibold uppercase tracking-widest text-right">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredContacts.map((contact, index) => (
                         <motion.tr
                           key={contact._id}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.05 }}
-                          className="border-b border-neon-blue/10 hover:bg-neon-blue/5 transition-colors"
+                          className="border-b border-border-light hover:bg-primary-bg transition-colors"
                         >
-                          <td className="py-4 px-4 text-white font-semibold">{contact.name}</td>
-                          <td className="py-4 px-4 text-gray-400 flex items-center gap-2">
-                            <Mail size={16} />
-                            {contact.email}
+                          <td className="py-5 px-4 text-text-primary font-medium text-sm">{contact.name}</td>
+                          <td className="py-5 px-4 text-text-secondary text-sm">
+                            <div className="flex items-center gap-2">
+                              <Mail size={14} className="text-gold-accent" />
+                              {contact.email}
+                            </div>
                           </td>
-                          <td className="py-4 px-4 text-gray-400 truncate max-w-xs">
+                          <td className="py-5 px-4 text-text-secondary text-sm truncate max-w-xs font-light">
                             {contact.message.substring(0, 50)}...
                           </td>
-                          <td className="py-4 px-4 text-gray-400 text-sm">
-                            <Calendar size={16} className="inline mr-2" />
-                            {new Date(contact.createdAt).toLocaleDateString()}
+                          <td className="py-5 px-4 text-text-secondary text-sm font-light">
+                            <div className="flex items-center gap-2">
+                              <Calendar size={14} className="text-gold-accent" />
+                              {new Date(contact.createdAt).toLocaleDateString()}
+                            </div>
                           </td>
-                          <td className="py-4 px-4 flex items-center gap-2">
-                            <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
+                          <td className="py-5 px-4 flex items-center justify-end gap-3">
+                            <button
                               onClick={() => handleViewMessage(contact)}
-                              className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-400/20"
+                              className="w-8 h-8 rounded-sm bg-primary-bg border border-border-light flex items-center justify-center text-text-secondary hover:text-gold-accent hover:border-gold-accent transition-colors"
+                              title="View Details"
                             >
-                              <Eye size={16} className="inline mr-2" />
-                              View
-                            </motion.button>
-                            <motion.button
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
+                              <Eye size={16} />
+                            </button>
+                            <button
                               onClick={() => handleDelete(contact)}
-                              className="rounded-full border border-rose-400/20 bg-rose-400/10 px-4 py-2 text-sm font-semibold text-rose-200 transition hover:bg-rose-400/20"
-                              title="Delete"
+                              className="w-8 h-8 rounded-sm bg-primary-bg border border-border-light flex items-center justify-center text-text-secondary hover:text-error hover:border-error transition-colors"
+                              title="Delete Record"
                             >
                               <Trash2 size={16} />
-                            </motion.button>
+                            </button>
                           </td>
                         </motion.tr>
                       ))}
@@ -345,178 +372,170 @@ const AdminDashboard = () => {
         {activeTab === 'reservations' && <AdminReservations />}
       </main>
 
-      {selectedMessage && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 py-8"
-          onClick={closeMessageModal}
-        >
+      {/* Message Modal */}
+      <AnimatePresence>
+        {selectedMessage && (
           <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.2 }}
-            className="relative w-full max-w-4xl overflow-hidden rounded-[2rem] border border-cyan-400/10 bg-slate-950/95 p-6 shadow-[0_40px_120px_-60px_rgba(0,0,0,0.85)] backdrop-blur-2xl"
-            onClick={(e) => e.stopPropagation()}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-primary-bg/90 backdrop-blur-md px-4 py-8"
+            onClick={closeMessageModal}
           >
-            <button
-              onClick={closeMessageModal}
-              className="absolute right-5 top-5 z-50 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-slate-900/80 text-slate-100 transition-all duration-200 hover:scale-105 hover:bg-red-500/10 hover:border-red-400/30 hover:shadow-[0_0_20px_rgba(244,63,94,0.18)] focus:outline-none"
-              aria-label="Close message"
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.98 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="relative w-full max-w-3xl overflow-hidden rounded-sm border border-border-light bg-card-bg p-8 shadow-luxury"
+              onClick={(e) => e.stopPropagation()}
             >
-              <X size={18} />
-            </button>
+              <button
+                onClick={closeMessageModal}
+                className="absolute right-6 top-6 w-10 h-10 flex items-center justify-center rounded-sm border border-border-light bg-secondary-bg text-text-secondary transition-all hover:bg-primary-bg hover:text-text-primary"
+                aria-label="Close message"
+              >
+                <X size={20} />
+              </button>
 
-            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:pr-12">
-              <div className="space-y-2">
-                <p className="text-xs uppercase tracking-[0.35em] text-cyan-300/80">Message Preview</p>
-                <h2 className="text-4xl font-bold text-white">{selectedMessage.name}</h2>
-                <p className="text-sm text-slate-400 max-w-2xl">Full message details from the contact submission are shown below.</p>
-              </div>
-              <div className="rounded-full border border-cyan-400/20 bg-slate-900/90 px-4 py-2 text-sm text-slate-300 shadow-sm">
-                {new Date(selectedMessage.createdAt).toLocaleString()}
-              </div>
-            </div>
-
-            <div className="grid gap-4 lg:grid-cols-2">
-              <div className="rounded-[1.5rem] border border-white/10 bg-slate-900/85 p-5 shadow-[0_30px_80px_-40px_rgba(14,165,233,0.15)]">
-                <div className="flex items-center gap-3 text-cyan-400">
-                  <Mail size={18} />
-                  <p className="uppercase text-xs tracking-[0.35em] text-cyan-300/80">Email</p>
+              <div className="mb-8 border-b border-border-light pb-6">
+                <p className="text-xs uppercase tracking-widest text-gold-accent font-semibold mb-2">Inquiry Details</p>
+                <h2 className="text-3xl font-bold text-text-primary tracking-tight">{selectedMessage.name}</h2>
+                <div className="mt-4 inline-flex items-center gap-2 rounded-sm border border-border-light bg-secondary-bg px-3 py-1.5 text-xs text-text-secondary">
+                  <Calendar size={14} className="text-gold-accent" />
+                  {new Date(selectedMessage.createdAt).toLocaleString()}
                 </div>
-                <p className="mt-4 text-lg font-semibold text-white break-all">{selectedMessage.email}</p>
               </div>
 
-              <div className="rounded-[1.5rem] border border-white/10 bg-slate-900/85 p-5 shadow-[0_30px_80px_-40px_rgba(14,165,233,0.15)]">
-                <div className="flex items-center gap-3 text-cyan-400">
-                  <MessageSquare size={18} />
-                  <p className="uppercase text-xs tracking-[0.35em] text-cyan-300/80">Subject</p>
+              <div className="grid gap-6 md:grid-cols-2 mb-8">
+                <div className="rounded-sm border border-border-light bg-secondary-bg p-5">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Mail size={16} className="text-gold-accent" />
+                    <p className="uppercase text-[10px] tracking-widest text-text-secondary font-semibold">Email Address</p>
+                  </div>
+                  <p className="text-base font-medium text-text-primary break-all">{selectedMessage.email}</p>
                 </div>
-                <p className="mt-4 text-lg font-semibold text-white">{selectedMessage.subject || 'General Inquiry'}</p>
               </div>
-            </div>
 
-            <div className="mt-6 rounded-[2rem] border border-cyan-400/10 bg-slate-900/90 p-6 shadow-[0_30px_80px_-45px_rgba(0,0,0,0.3)]">
-              <div className="mb-4 flex items-center justify-between gap-4">
+              <div className="rounded-sm border border-border-light bg-secondary-bg p-6">
+                <div className="mb-4 flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-text-secondary font-semibold mb-1">Message Content</p>
+                    <h3 className="text-lg font-semibold text-text-primary">Client Note</h3>
+                  </div>
+                </div>
+                <div className="bg-primary-bg border border-border-light rounded-sm p-5">
+                  <p className="whitespace-pre-line text-sm leading-relaxed text-text-secondary font-light">
+                    {selectedMessage.message}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Delete Confirm Modal */}
+      <AnimatePresence>
+        {showDeleteConfirm && deleteTarget && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-primary-bg/90 backdrop-blur-md px-4 py-8"
+            onClick={cancelDelete}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.98 }}
+              transition={{ duration: 0.3 }}
+              className="relative w-full max-w-md overflow-hidden rounded-sm border border-border-light bg-card-bg p-8 shadow-luxury"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start gap-4 mb-6">
+                <div className="shrink-0 border border-error/50 p-3 rounded-sm bg-error/10">
+                  <AlertTriangle size={24} className="text-error" />
+                </div>
                 <div>
-                  <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Message</p>
-                  <h3 className="text-xl font-semibold text-white">Customer note</h3>
+                  <h4 className="text-xl font-bold text-text-primary tracking-tight">Delete Record</h4>
+                  <p className="mt-2 text-sm text-text-secondary leading-relaxed font-light">
+                    This will permanently remove the inquiry from the database. This action cannot be reversed.
+                  </p>
                 </div>
-                <span className="inline-flex rounded-full bg-cyan-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300">
-                  {selectedMessage.status || 'New'}
-                </span>
               </div>
-              <p className="whitespace-pre-line text-sm leading-7 text-slate-200">{selectedMessage.message}</p>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
 
-      {showDeleteConfirm && deleteTarget && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 py-8"
-          onClick={cancelDelete}
-        >
+              <div className="rounded-sm border border-border-light bg-secondary-bg p-5 mb-8">
+                <p className="text-[10px] uppercase tracking-widest text-text-secondary font-semibold mb-2">Record Preview</p>
+                <p className="text-sm text-text-primary font-medium">{deleteTarget.name}</p>
+                <p className="text-xs text-text-secondary mt-1">{deleteTarget.email}</p>
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  onClick={cancelDelete}
+                  className="flex-1 btn-secondary text-xs uppercase tracking-widest"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDelete}
+                  className="flex-1 bg-error text-text-primary font-semibold rounded-sm px-6 py-3 text-xs uppercase tracking-widest hover:bg-red-700 transition-colors"
+                >
+                  Confirm Deletion
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Logout Confirm Modal */}
+      <AnimatePresence>
+        {showLogoutConfirm && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.98 }}
-            transition={{ duration: 0.2 }}
-            className="relative w-full max-w-md overflow-hidden rounded-[2rem] border border-cyan-400/10 bg-slate-950/95 p-6 shadow-[0_40px_120px_-60px_rgba(0,0,0,0.85)] backdrop-blur-2xl"
-            onClick={(e) => e.stopPropagation()}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-primary-bg/90 backdrop-blur-md px-4 py-8"
+            onClick={cancelLogout}
           >
-            <button
-              onClick={cancelDelete}
-              className="absolute right-5 top-5 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-slate-900/80 text-slate-100 transition-all duration-200 hover:scale-105 hover:bg-red-500/10 hover:border-red-400/30"
-              aria-label="Close delete confirmation"
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.98 }}
+              transition={{ duration: 0.3 }}
+              className="relative w-full max-w-md overflow-hidden rounded-sm border border-border-light bg-card-bg p-8 shadow-luxury"
+              onClick={(e) => e.stopPropagation()}
             >
-              <X size={18} />
-            </button>
-
-            <div className="mb-4">
-              <p className="text-xs uppercase tracking-[0.35em] text-cyan-300/80">Confirm Delete</p>
-              <h3 className="mt-3 text-2xl font-bold text-white">Delete this message?</h3>
-              <p className="mt-3 text-sm leading-7 text-slate-300">
-                This will permanently remove the message from the inbox. You cannot undo this action.
-              </p>
-            </div>
-
-            <div className="rounded-[1.5rem] border border-white/10 bg-slate-900/85 p-4">
-              <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Message preview</p>
-              <p className="mt-3 text-sm text-white">{deleteTarget.message}</p>
-              <p className="mt-3 text-xs text-slate-500">From: {deleteTarget.name} — {deleteTarget.email}</p>
-            </div>
-
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
-              <button
-                onClick={cancelDelete}
-                className="w-full rounded-3xl border border-white/10 bg-slate-900/80 px-5 py-3 text-sm font-semibold text-slate-200 transition-all duration-200 hover:bg-slate-900/95 sm:w-auto"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmDelete}
-                className="w-full rounded-3xl bg-gradient-to-r from-red-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:scale-105 sm:w-auto"
-              >
-                Delete Message
-              </button>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-
-      {showLogoutConfirm && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 py-8"
-          onClick={cancelLogout}
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.2 }}
-            className="relative w-full max-w-md overflow-hidden rounded-[2rem] border border-cyan-400/10 bg-slate-950/95 p-6 shadow-[0_40px_120px_-60px_rgba(0,0,0,0.85)] backdrop-blur-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-start justify-between gap-4 pb-4 border-b border-white/10">
-              <div>
-                <p className="text-xs uppercase tracking-[0.35em] text-cyan-300/80">Confirm Logout</p>
-                <h3 className="mt-3 text-2xl font-bold text-white">Are you sure you want to logout?</h3>
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 bg-secondary-bg border border-border-light rounded-sm flex items-center justify-center mx-auto mb-6">
+                  <LogOut size={24} className="text-gold-accent" />
+                </div>
+                <h3 className="text-2xl font-bold text-text-primary tracking-tight mb-2">End Session</h3>
+                <p className="text-sm text-text-secondary font-light">
+                  Are you sure you want to log out of the executive portal?
+                </p>
               </div>
-              <button
-                onClick={cancelLogout}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-slate-900/80 text-slate-100 transition-all duration-200 hover:scale-105 hover:bg-red-500/10 hover:border-red-400/30"
-                aria-label="Cancel logout"
-              >
-                <X size={18} />
-              </button>
-            </div>
 
-            <p className="mt-6 text-sm leading-7 text-slate-300">
-              Logging out will end your current admin session. Any unsaved changes in the dashboard will be lost.
-            </p>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">
-              <button
-                onClick={cancelLogout}
-                className="w-full rounded-3xl border border-white/10 bg-slate-900/80 px-5 py-3 text-sm font-semibold text-slate-200 transition-all duration-200 hover:bg-slate-900/95 sm:w-auto"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmLogout}
-                className="w-full rounded-3xl bg-gradient-to-r from-red-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:scale-105 sm:w-auto"
-              >
-                Logout
-              </button>
-            </div>
+              <div className="flex gap-4">
+                <button
+                  onClick={cancelLogout}
+                  className="flex-1 btn-secondary text-xs uppercase tracking-widest"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmLogout}
+                  className="flex-1 btn-primary text-xs uppercase tracking-widest"
+                >
+                  Logout
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
-        </motion.div>
-      )}
+        )}
+      </AnimatePresence>
 
     </div>
   )

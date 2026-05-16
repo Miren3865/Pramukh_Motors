@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { formField } from '../animations/variants';
 
 const LuxuryFormField = ({
@@ -45,9 +46,9 @@ const LuxuryFormField = ({
       viewport={{ once: true, margin: '-100px' }}
     >
       {label && (
-        <label htmlFor={name} className="block text-sm font-medium text-slate-200 mb-2">
+        <label htmlFor={name} className="block text-sm font-medium text-text-primary mb-2">
           {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
+          {required && <span className="text-error ml-1">*</span>}
         </label>
       )}
 
@@ -65,9 +66,15 @@ const LuxuryFormField = ({
       />
 
       {error ? (
-        <p className="text-sm text-red-400 mt-2">{error}</p>
+        <p className="text-sm text-error mt-2 flex items-center gap-1.5 font-medium">
+          <AlertCircle size={14} />
+          {error}
+        </p>
       ) : success ? (
-        <p className="text-sm text-emerald-400 mt-2">Looks good</p>
+        <p className="text-sm text-success mt-2 flex items-center gap-1.5 font-medium">
+          <CheckCircle2 size={14} />
+          Looks good
+        </p>
       ) : (
         <p className="sr-only">{label} field</p>
       )}

@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import CarCard from './CarCard'
-import MagneticButton from './MagneticButton'
 import { getAllCars } from '../services/api'
-import { containerVariants, charRevealContainer, charReveal } from '../animations/variants'
+import { containerVariants, lineVariant, textRevealVariant, subtitleVariant } from '../animations/variants'
 
 const FeaturedCarsSection = () => {
   const [cars, setCars] = useState([])
@@ -28,97 +27,57 @@ const FeaturedCarsSection = () => {
     fetchCars()
   }, [])
 
-  const heading = "Featured Inventory"
-
   return (
-    <section id="inventory" className="section-padding bg-gradient-to-b from-dark-bg to-dark-card relative overflow-hidden">
-      {/* Animated background orbs */}
-      <motion.div
-        className="absolute top-10 left-1/4 w-80 h-80 bg-neon-blue opacity-5 rounded-full blur-3xl"
-        animate={{ y: [-30, 30, -30], x: [0, 20, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        style={{ pointerEvents: 'none' }}
-      />
-      <motion.div
-        className="absolute bottom-10 right-1/4 w-80 h-80 bg-neon-purple opacity-5 rounded-full blur-3xl"
-        animate={{ y: [30, -30, 30], x: [0, -20, 0] }}
-        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-        style={{ pointerEvents: 'none' }}
-      />
-
+    <section id="inventory" className="section-padding bg-secondary-bg relative overflow-hidden">
       <div className="container-custom relative z-10">
-        {/* Header with Character Reveal */}
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={{
+            hidden: { opacity: 1 },
+            visible: {
+              opacity: 1,
+              transition: { staggerChildren: 0.3, delayChildren: 0.1 }
+            }
+          }}
           className="text-center mb-16"
         >
           {/* Luxury Divider Top */}
           <motion.div
-            className="luxury-divider mb-8"
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            transition={{ duration: 1, ease: 'easeOut' }}
+            variants={lineVariant}
+            className="h-[2px] bg-gold-accent mx-auto mb-6"
           />
 
           <motion.h2
-            className="text-5xl md:text-6xl font-bold mb-4"
-            variants={charRevealContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+            variants={textRevealVariant}
+            className="text-4xl md:text-5xl font-bold mb-4 tracking-tight text-text-primary"
           >
-            <span className="inline-block overflow-hidden">
-              {heading.split('').map((char, i) => {
-                const displayChar = char === ' ' ? '\u00A0' : char
-                return (
-                  <motion.span
-                    key={`char-${i}`}
-                    variants={charReveal}
-                    className="inline-block animated-gradient-char"
-                    style={{ animationDelay: `${-i * 0.08}s` }}
-                  >
-                    {displayChar}
-                  </motion.span>
-                )
-              })}
-            </span>
+            Featured <span className="text-gold-accent font-serif italic font-medium">Inventory</span>
           </motion.h2>
 
           <motion.p
-            className="text-gray-400 text-lg max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            viewport={{ once: true }}
+            variants={subtitleVariant}
+            className="text-text-secondary text-base max-w-2xl mx-auto font-light leading-relaxed"
           >
-            Curated selection of premium luxury vehicles, handpicked and verified for excellence
+            Curated selection of premium luxury vehicles, handpicked and verified for uncompromised excellence.
           </motion.p>
-
-          {/* Luxury Divider Bottom */}
-          <motion.div
-            className="luxury-divider mt-8"
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            transition={{ duration: 1, delay: 0.1, ease: 'easeOut' }}
-          />
         </motion.div>
 
-        {/* Cars Grid with Enhanced Stagger */}
+        {/* Cars Grid */}
         {loading ? (
-          <div className="mb-12 text-center text-gray-400">Loading cars...</div>
+          <div className="mb-12 text-center text-text-secondary font-light">Loading premium inventory...</div>
         ) : cars.filter((car) => car.showOnUser).length === 0 ? (
-          <div className="mb-12 text-center text-gray-400">No featured cars are available right now. Please check back later.</div>
+          <div className="mb-12 text-center text-text-secondary font-light">No featured vehicles are available right now. Please consult our concierge.</div>
         ) : (
           <motion.div
             id="inventory-grid"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: '-100px' }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
+            viewport={{ once: true, margin: '-50px' }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
           >
             {cars.filter((car) => car.showOnUser).slice(0, 6).map((car, index) => (
               <CarCard key={car._id || car.id} car={car} index={index} onCarReserved={fetchCars} />
@@ -126,21 +85,22 @@ const FeaturedCarsSection = () => {
           </motion.div>
         )}
 
-        {/* Browse All Button with Magnetic Effect */}
+        {/* Browse All Button */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
+          transition={{ delay: 0.6, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
           className="text-center"
         >
-          <MagneticButton
-            variant="secondary"
-            className="text-lg px-10 py-4 font-bold"
+          <motion.button
+            whileHover={{ scale: 1.01, borderColor: '#D4AF37', color: '#D4AF37' }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="btn-secondary text-sm uppercase tracking-widest px-8"
             onClick={() => navigate('/cars')}
           >
-            View All Cars →
-          </MagneticButton>
+            View Complete Collection
+          </motion.button>
         </motion.div>
       </div>
     </section>

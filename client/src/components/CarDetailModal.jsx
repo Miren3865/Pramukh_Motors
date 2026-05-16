@@ -84,6 +84,7 @@ const CarDetailModal = ({ car, isOpen, onClose, onReserved }) => {
   const prevImage = () => {
     setCurrentImageIndex((prev) => (prev - 1 + allImages.length) % allImages.length)
   }
+  
   const backdropVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
@@ -91,7 +92,7 @@ const CarDetailModal = ({ car, isOpen, onClose, onReserved }) => {
   }
 
   const modalVariants = {
-    hidden: { opacity: 0, y: 50, scale: 0.95 },
+    hidden: { opacity: 0, y: 30, scale: 0.98 },
     visible: {
       opacity: 1,
       y: 0,
@@ -104,8 +105,8 @@ const CarDetailModal = ({ car, isOpen, onClose, onReserved }) => {
     },
     exit: {
       opacity: 0,
-      y: 50,
-      scale: 0.95,
+      y: 30,
+      scale: 0.98,
       transition: { duration: 0.2 },
     },
   }
@@ -115,26 +116,26 @@ const CarDetailModal = ({ car, isOpen, onClose, onReserved }) => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
+        staggerChildren: 0.05,
+        delayChildren: 0.1,
       },
     },
   }
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 10 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5 },
+      transition: { duration: 0.4 },
     },
   }
 
   const specs = [
-    { icon: Fuel, label: 'Fuel Type', value: car?.fuel || 'N/A', color: 'text-yellow-400' },
-    { icon: Gauge, label: 'Mileage', value: car?.mileage ? `${car.mileage.toLocaleString()} km` : 'N/A', color: 'text-cyan-400' },
-    { icon: Settings, label: 'Transmission', value: car?.transmission || 'N/A', color: 'text-purple-400' },
-    { icon: Zap, label: 'Year', value: car?.year || 'N/A', color: 'text-green-400' },
+    { icon: Fuel, label: 'Fuel Type', value: car?.fuel || 'N/A' },
+    { icon: Gauge, label: 'Mileage', value: car?.mileage ? `${car.mileage.toLocaleString()} km` : 'N/A' },
+    { icon: Settings, label: 'Transmission', value: car?.transmission || 'N/A' },
+    { icon: Zap, label: 'Year', value: car?.year || 'N/A' },
   ]
 
   const detailItems = [
@@ -158,10 +159,10 @@ const CarDetailModal = ({ car, isOpen, onClose, onReserved }) => {
   const featureList = car?.features?.length > 0
     ? car.features
     : [
-      '🔒 Full Service History Available',
-      '✨ Professional Detailing Included',
-      '🛡️ Extended Warranty Option',
-      '🚗 Pre-Purchase Inspection Completed',
+      'Full Service History Available',
+      'Professional Detailing Included',
+      'Extended Warranty Option',
+      'Pre-Purchase Inspection Completed',
     ]
 
   const isUnavailable = car?.status === 'reserved' || car?.status === 'sold'
@@ -209,14 +210,30 @@ const CarDetailModal = ({ car, isOpen, onClose, onReserved }) => {
           phone: '',
           note: '',
         })
-        toast.success('Reservation confirmed successfully')
+        toast.success('Reservation confirmed successfully', {
+          style: {
+            background: '#1E1E1E',
+            color: '#FFFFFF',
+            border: '1px solid #D4AF37',
+          },
+          iconTheme: {
+            primary: '#D4AF37',
+            secondary: '#1E1E1E',
+          },
+        })
         if (onReserved) {
           onReserved(response.car || response.data)
         }
         onClose()
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to reserve this car')
+      toast.error(error.response?.data?.message || 'Failed to reserve this car', {
+        style: {
+          background: '#1E1E1E',
+          color: '#FFFFFF',
+          border: '1px solid #C62828',
+        }
+      })
       console.error('Reserve car error:', error)
     } finally {
       setReserving(false)
@@ -234,7 +251,7 @@ const CarDetailModal = ({ car, isOpen, onClose, onReserved }) => {
             animate="visible"
             exit="exit"
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-md z-40"
+            className="fixed inset-0 bg-primary-bg/80 backdrop-blur-sm z-40"
           />
 
           {/* Modal */}
@@ -243,42 +260,28 @@ const CarDetailModal = ({ car, isOpen, onClose, onReserved }) => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed inset-0 flex items-center justify-center z-50 px-4"
+            className="fixed inset-0 flex items-center justify-center z-50 px-4 py-8"
           >
             <motion.div
-              className="glass-dark rounded-2xl border border-neon-blue/40 max-w-2xl w-full max-h-[90vh] overflow-y-auto relative"
+              className="bg-card-bg rounded-sm border border-border-light shadow-luxury max-w-2xl w-full max-h-full overflow-y-auto relative custom-scrollbar"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Animated background orbs */}
-              <motion.div
-                className="absolute top-0 right-0 w-64 h-64 bg-neon-blue opacity-5 rounded-full blur-3xl"
-                animate={{ y: [0, 30, 0], x: [0, 20, 0] }}
-                transition={{ duration: 6, repeat: Infinity }}
-                style={{ pointerEvents: 'none' }}
-              />
-              <motion.div
-                className="absolute bottom-0 left-0 w-64 h-64 bg-neon-purple opacity-5 rounded-full blur-3xl"
-                animate={{ y: [0, -30, 0], x: [0, -20, 0] }}
-                transition={{ duration: 8, repeat: Infinity }}
-                style={{ pointerEvents: 'none' }}
-              />
-
               {/* Content */}
               <div className="relative z-10">
                 {/* Close Button */}
                 <motion.button
-                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={onClose}
-                  className="absolute top-6 right-6 w-10 h-10 bg-neon-purple/20 hover:bg-neon-purple/40 rounded-full flex items-center justify-center transition-colors z-20 border border-neon-purple/40"
+                  className="absolute top-4 right-4 w-10 h-10 bg-primary-bg hover:bg-secondary-bg border border-border-light rounded-sm flex items-center justify-center transition-colors z-20"
                 >
-                  <X size={20} className="text-neon-purple" />
+                  <X size={20} className="text-text-secondary" />
                 </motion.button>
 
                 {/* Car Image Section */}
                 <motion.div
                   variants={itemVariants}
-                  className="relative h-80 bg-gradient-to-br from-neon-blue/20 via-neon-purple/10 to-transparent overflow-hidden rounded-t-2xl"
+                  className="relative h-72 md:h-80 bg-secondary-bg overflow-hidden border-b border-border-light"
                 >
                   {hasImages ? (
                     <>
@@ -296,61 +299,44 @@ const CarDetailModal = ({ car, isOpen, onClose, onReserved }) => {
                       {/* Navigation Arrows */}
                       {allImages.length > 1 && (
                         <>
-                          <motion.button
+                          <button
                             onClick={prevImage}
-                            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center transition-colors"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
+                            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-primary-bg/50 backdrop-blur-sm border border-border-light hover:bg-primary-bg hover:border-gold-accent rounded-sm flex items-center justify-center transition-all"
                           >
                             <ChevronLeft size={20} className="text-white" />
-                          </motion.button>
-                          <motion.button
+                          </button>
+                          <button
                             onClick={nextImage}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center transition-colors"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-primary-bg/50 backdrop-blur-sm border border-border-light hover:bg-primary-bg hover:border-gold-accent rounded-sm flex items-center justify-center transition-all"
                           >
                             <ChevronRight size={20} className="text-white" />
-                          </motion.button>
+                          </button>
                         </>
                       )}
 
                       {/* Image Counter */}
                       {allImages.length > 1 && (
-                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 px-3 py-1 rounded-full">
-                          <span className="text-white text-sm">
+                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary-bg/80 backdrop-blur-md px-3 py-1 border border-border-light rounded-sm">
+                          <span className="text-white text-xs font-mono tracking-widest">
                             {currentImageIndex + 1} / {allImages.length}
                           </span>
                         </div>
                       )}
-
-                      {/* Thumbnail Strip */}
                     </>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
                       <div className="text-center">
-                        <motion.div
-                          className="w-32 h-32 mx-auto mb-6 rounded-lg bg-gradient-to-br from-neon-blue to-neon-purple opacity-40"
-                          animate={{
-                            scale: [1, 1.05, 1],
-                          }}
-                          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                        />
-                        <p className="text-gray-400 text-sm">Premium Car Image</p>
+                        <div className="w-16 h-16 mx-auto mb-4 border border-border-light rounded-sm bg-primary-bg flex items-center justify-center" />
+                        <p className="text-text-secondary text-xs tracking-widest uppercase">Image Unavailable</p>
                       </div>
                     </div>
                   )}
 
                   {/* Premium Badge */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.3, type: 'spring' }}
-                    className="absolute top-6 left-6 flex items-center gap-2 bg-gradient-to-r from-neon-blue to-neon-purple px-4 py-2 rounded-full"
-                  >
-                    <Star size={16} className="text-yellow-300" />
-                    <span className="text-sm font-bold text-white">Premium Selection</span>
-                  </motion.div>
+                  <div className="absolute top-4 left-4 flex items-center gap-2 bg-primary-bg/80 backdrop-blur-md border border-gold-accent/50 px-3 py-1.5 rounded-sm">
+                    <Star size={12} className="text-gold-accent" />
+                    <span className="text-[10px] font-bold text-gold-accent uppercase tracking-widest">Premium Selection</span>
+                  </div>
                 </motion.div>
 
                 {/* Details Section */}
@@ -361,63 +347,45 @@ const CarDetailModal = ({ car, isOpen, onClose, onReserved }) => {
                   className="p-8"
                 >
                   {/* Header */}
-                  <motion.div variants={itemVariants} className="mb-8">
-                    <h2 className="text-4xl font-bold text-white mb-2">{car?.name}</h2>
-                    <p className="text-neon-blue font-semibold text-lg">{car?.year}</p>
-                  </motion.div>
-
-                  {/* Luxury Divider */}
-                  <motion.div
-                    variants={itemVariants}
-                    className="luxury-divider mb-8"
-                  />
-
-                  {/* Price Highlight */}
-                  <motion.div
-                    variants={itemVariants}
-                    className="mb-8 glass p-6 rounded-xl border border-neon-blue/30 hover:border-neon-blue/60 transition-all"
-                    whileHover={{
-                      boxShadow: '0 0 30px rgba(0, 217, 255, 0.4)',
-                      scale: 1.02,
-                    }}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 bg-gradient-to-br from-neon-blue/20 to-neon-purple/20 rounded-lg flex items-center justify-center">
-                        <IndianRupee className="text-neon-blue" size={28} />
+                  <motion.div variants={itemVariants} className="mb-6 flex flex-col md:flex-row md:justify-between md:items-end gap-4">
+                    <div>
+                      <h2 className="text-3xl font-bold text-text-primary mb-1 tracking-tight">{car?.name}</h2>
+                      <p className="text-gold-accent font-medium">{car?.year}</p>
+                    </div>
+                    
+                    {/* Price Highlight */}
+                    <div className="bg-primary-bg border border-gold-accent/30 px-6 py-4 rounded-sm flex items-center gap-4">
+                      <div className="w-10 h-10 border border-gold-accent/50 rounded-sm flex items-center justify-center bg-gold-accent/10">
+                        <IndianRupee className="text-gold-accent" size={20} />
                       </div>
                       <div>
-                        <p className="text-gray-400 text-sm mb-1">Price</p>
-                        <p className="text-3xl font-bold text-neon-blue">
+                        <p className="text-text-secondary text-[10px] uppercase tracking-widest mb-1">Price</p>
+                        <p className="text-2xl font-bold text-gold-accent">
                           ₹{car?.price?.toLocaleString()}
                         </p>
                       </div>
                     </div>
                   </motion.div>
 
+                  <motion.div variants={itemVariants} className="w-full h-[1px] bg-border-light mb-8" />
+
                   {/* Specifications Grid */}
                   <motion.div variants={itemVariants} className="mb-8">
-                    <h3 className="text-xl font-bold text-white mb-4">Specifications</h3>
-                    <div className="grid grid-cols-2 gap-4">
+                    <h3 className="text-sm text-text-secondary uppercase tracking-widest mb-4 font-semibold">Specifications</h3>
+                    <div className="grid grid-cols-2 gap-3">
                       {specs.map((spec, i) => {
                         const Icon = spec.icon
                         return (
-                          <motion.div
+                          <div
                             key={i}
-                            className="glass p-4 rounded-xl border border-neon-blue/20 hover:border-neon-blue/60 transition-all"
-                            whileHover={{
-                              y: -8,
-                              boxShadow: '0 12px 24px rgba(0, 217, 255, 0.2)',
-                            }}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1 * i, duration: 0.4 }}
+                            className="bg-secondary-bg border border-border-light p-4 rounded-sm hover:border-gold-accent/50 transition-colors"
                           >
-                            <div className="flex items-center gap-3 mb-2">
-                              <Icon className={`${spec.color}`} size={20} />
-                              <p className="text-gray-400 text-xs font-medium">{spec.label}</p>
+                            <div className="flex items-center gap-2 mb-2">
+                              <Icon className="text-gold-accent" size={16} />
+                              <p className="text-text-secondary text-xs uppercase tracking-wider">{spec.label}</p>
                             </div>
-                            <p className="text-white font-semibold text-lg">{spec.value}</p>
-                          </motion.div>
+                            <p className="text-text-primary font-medium pl-6">{spec.value}</p>
+                          </div>
                         )
                       })}
                     </div>
@@ -425,202 +393,165 @@ const CarDetailModal = ({ car, isOpen, onClose, onReserved }) => {
 
                   {/* Description */}
                   <motion.div variants={itemVariants} className="mb-8">
-                    <h3 className="text-xl font-bold text-white mb-4">Description</h3>
-                    <p className="text-gray-300 leading-7">{car?.description || 'No additional description available.'}</p>
+                    <h3 className="text-sm text-text-secondary uppercase tracking-widest mb-4 font-semibold">Description</h3>
+                    <p className="text-gray-300 leading-relaxed font-light text-sm">{car?.description || 'No additional description available.'}</p>
                   </motion.div>
 
                   {/* Detailed Attributes */}
                   <motion.div variants={itemVariants} className="mb-8">
-                    <h3 className="text-xl font-bold text-white mb-4">Car Details</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <h3 className="text-sm text-text-secondary uppercase tracking-widest mb-4 font-semibold">Car Details</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {detailItems.map((item, index) => (
-                        <motion.div
+                        <div
                           key={index}
-                          className="glass p-4 rounded-xl border border-neon-blue/20 hover:border-neon-blue/60 transition-all"
-                          whileHover={{ y: -6 }}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.05 * index, duration: 0.35 }}
+                          className="bg-secondary-bg border border-border-light p-3 rounded-sm hover:border-gold-accent/50 transition-colors flex justify-between items-center"
                         >
-                          <p className="text-gray-400 text-xs uppercase tracking-[.2em] mb-2">{item.label}</p>
-                          <p className="text-white font-semibold">{item.value}</p>
-                        </motion.div>
+                          <p className="text-text-secondary text-xs uppercase tracking-wider">{item.label}</p>
+                          <p className="text-text-primary font-medium text-sm text-right">{item.value}</p>
+                        </div>
                       ))}
                     </div>
                   </motion.div>
 
                   {/* Additional Info */}
-                  <motion.div variants={itemVariants} className="mb-8">
-                    <h3 className="text-xl font-bold text-white mb-4">Features & Benefits</h3>
-                    <motion.div
-                      className="grid grid-cols-1 gap-3"
-                      variants={containerVariants}
-                      initial="hidden"
-                      animate="visible"
-                    >
+                  <motion.div variants={itemVariants} className="mb-10">
+                    <h3 className="text-sm text-text-secondary uppercase tracking-widest mb-4 font-semibold">Features & Benefits</h3>
+                    <div className="grid grid-cols-1 gap-2">
                       {featureList.map((feature, i) => (
-                        <motion.div
+                        <div
                           key={i}
-                          className="glass p-3 rounded-lg border border-neon-blue/20 hover:border-neon-blue/40 transition-all flex items-center gap-3"
-                          variants={itemVariants}
-                          whileHover={{ x: 4 }}
+                          className="bg-secondary-bg border border-border-light p-3 rounded-sm flex items-center gap-3"
                         >
-                          <div className="w-1 h-1 rounded-full bg-neon-blue" />
-                          <p className="text-gray-300 text-sm">{feature}</p>
-                        </motion.div>
+                          <div className="w-1.5 h-1.5 rounded-sm bg-gold-accent" />
+                          <p className="text-gray-300 text-sm font-light">{feature}</p>
+                        </div>
                       ))}
-                    </motion.div>
+                    </div>
                   </motion.div>
 
                   {/* Action Buttons */}
                   <motion.div
                     variants={itemVariants}
-                    className="flex gap-4"
+                    className="flex flex-col sm:flex-row gap-4"
                   >
-                    <motion.button
-                      whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(0, 217, 255, 0.6)' }}
-                      whileTap={{ scale: 0.95 }}
+                    <button
                       onClick={handleReserveClick}
                       disabled={isUnavailable || reserving}
-                      className={`flex-1 py-3 font-bold rounded-lg transition-all ${
-                        isUnavailable || reserving
-                          ? 'bg-gray-700 text-gray-300 cursor-not-allowed'
-                          : 'btn-primary'
-                      }`}
+                      className={`flex-1 btn-primary text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
                       {reserving
-                        ? 'Reserving...'
+                        ? 'Processing...'
                         : isUnavailable
                         ? car?.status === 'sold'
-                          ? 'Already Sold'
-                          : 'This car is already reserved'
-                        : 'Reserve This Car'}
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                          ? 'Sold Out'
+                          : 'Reserved'
+                        : 'Reserve Vehicle'}
+                    </button>
+                    <button
                       onClick={onClose}
-                      className="flex-1 btn-secondary py-3 font-bold rounded-lg"
+                      className="flex-1 btn-secondary text-sm uppercase tracking-widest"
                     >
-                      Close
-                    </motion.button>
+                      Close Details
+                    </button>
                   </motion.div>
                 </motion.div>
-
               </div>
             </motion.div>
           </motion.div>
 
+          {/* Reservation Confirmation Modal */}
           <AnimatePresence>
             {showReserveConfirm && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 backdrop-blur-sm p-6"
+                className="fixed inset-0 z-[70] flex items-center justify-center bg-primary-bg/90 backdrop-blur-md p-4"
                 onClick={() => setShowReserveConfirm(false)}
               >
                 <motion.div
-                  initial={{ opacity: 0, y: 24, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 20, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 24, scale: 0.95 }}
-                  transition={{ type: 'spring', stiffness: 280, damping: 25 }}
-                  className="w-full max-w-lg rounded-2xl border border-neon-blue/40 bg-dark-card/95 p-6 shadow-[0_20px_80px_rgba(0,0,0,0.65)]"
+                  exit={{ opacity: 0, y: 20, scale: 0.98 }}
+                  className="w-full max-w-lg rounded-sm border border-border-light bg-card-bg p-8 shadow-luxury"
                   onClick={(event) => event.stopPropagation()}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="shrink-0 rounded-xl bg-neon-purple/20 border border-neon-purple/50 p-3">
-                      <AlertTriangle size={22} className="text-neon-purple" />
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="shrink-0 border border-gold-accent/50 p-3 rounded-sm bg-gold-accent/10">
+                      <AlertTriangle size={24} className="text-gold-accent" />
                     </div>
                     <div>
-                      <h4 className="text-xl font-bold text-white">Reservation Details Required</h4>
-                      <p className="mt-2 text-sm text-gray-300 leading-6">
-                        Please fill your details first. Final confirmation will appear after all required fields are valid.
-                      </p>
-                      <p className="mt-1 text-xs text-neon-blue">
-                        {car?.name} will be reserved once you confirm.
+                      <h4 className="text-xl font-bold text-text-primary tracking-tight">Client Information</h4>
+                      <p className="mt-1 text-sm text-text-secondary leading-relaxed font-light">
+                        Please provide your details. Our concierge will contact you to finalize the reservation.
                       </p>
                     </div>
                   </div>
 
-                  <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="md:col-span-1">
-                      <label className="mb-1 block text-xs font-medium text-gray-300">Full Name *</label>
+                      <label className="mb-2 block text-[10px] uppercase tracking-widest text-text-secondary font-semibold">Full Name *</label>
                       <input
                         type="text"
                         name="name"
                         value={reservationDetails.name}
                         onChange={handleReservationDetailChange}
-                        placeholder="Enter your full name"
-                        className="w-full rounded-lg border border-neon-blue/30 bg-dark-bg px-3 py-2 text-white placeholder-gray-500 focus:border-neon-blue focus:outline-none"
+                        placeholder="John Doe"
+                        className="form-field"
                       />
                     </div>
                     <div className="md:col-span-1">
-                      <label className="mb-1 block text-xs font-medium text-gray-300">Email *</label>
+                      <label className="mb-2 block text-[10px] uppercase tracking-widest text-text-secondary font-semibold">Email *</label>
                       <input
                         type="email"
                         name="email"
                         value={reservationDetails.email}
                         onChange={handleReservationDetailChange}
-                        placeholder="you@example.com"
-                        className="w-full rounded-lg border border-neon-blue/30 bg-dark-bg px-3 py-2 text-white placeholder-gray-500 focus:border-neon-blue focus:outline-none"
+                        placeholder="john@example.com"
+                        className="form-field"
                       />
                     </div>
                     <div className="md:col-span-2">
-                      <label className="mb-1 block text-xs font-medium text-gray-300">Phone Number *</label>
+                      <label className="mb-2 block text-[10px] uppercase tracking-widest text-text-secondary font-semibold">Phone Number *</label>
                       <input
                         type="tel"
                         name="phone"
                         value={reservationDetails.phone}
                         onChange={handleReservationDetailChange}
-                        placeholder="Enter your phone number"
-                        className="w-full rounded-lg border border-neon-blue/30 bg-dark-bg px-3 py-2 text-white placeholder-gray-500 focus:border-neon-blue focus:outline-none"
+                        placeholder="+91 9876543210"
+                        className="form-field"
                       />
                     </div>
                     <div className="md:col-span-2">
-                      <label className="mb-1 block text-xs font-medium text-gray-300">Note (Optional)</label>
+                      <label className="mb-2 block text-[10px] uppercase tracking-widest text-text-secondary font-semibold">Additional Notes (Optional)</label>
                       <textarea
                         name="note"
                         value={reservationDetails.note}
                         onChange={handleReservationDetailChange}
                         rows={3}
-                        placeholder="Any specific request..."
-                        className="w-full rounded-lg border border-neon-blue/30 bg-dark-bg px-3 py-2 text-white placeholder-gray-500 focus:border-neon-blue focus:outline-none"
+                        placeholder="Any specific requests or preferred contact time..."
+                        className="form-field resize-none"
                       />
                     </div>
                   </div>
 
-                  <div className="mt-4 rounded-lg border border-neon-blue/30 bg-neon-blue/5 p-3">
-                    <p className="text-xs text-neon-blue">
-                      {isReservationFormValid
-                        ? 'Details complete. Final confirmation is now enabled.'
-                        : 'Fill all mandatory fields to unlock final confirmation.'}
-                    </p>
-                  </div>
-
-                  <div className="mt-6 flex gap-3">
+                  <div className="mt-8 flex gap-4">
                     <button
                       type="button"
                       onClick={() => setShowReserveConfirm(false)}
                       disabled={reserving}
-                      className="flex-1 rounded-lg border border-neon-blue/40 bg-transparent py-3 font-semibold text-neon-blue transition-all hover:bg-neon-blue/10 disabled:opacity-50"
+                      className="flex-1 btn-secondary text-xs uppercase tracking-widest disabled:opacity-50"
                     >
                       Cancel
                     </button>
-                    {isReservationFormValid ? (
-                      <button
-                        type="button"
-                        onClick={handleReserveConfirm}
-                        disabled={reserving}
-                        className="flex-1 rounded-lg bg-gradient-to-r from-neon-blue to-neon-purple py-3 font-semibold text-white transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
-                      >
-                        {reserving ? 'Reserving...' : 'Final Confirm Reservation'}
-                      </button>
-                    ) : (
-                      <div className="flex-1 rounded-lg border border-dashed border-neon-blue/40 bg-neon-blue/5 py-3 text-center text-xs font-medium text-gray-300">
-                        Complete required details to unlock confirmation
-                      </div>
-                    )}
+                    <button
+                      type="button"
+                      onClick={handleReserveConfirm}
+                      disabled={reserving || !isReservationFormValid}
+                      className={`flex-1 btn-primary text-xs uppercase tracking-widest ${(!isReservationFormValid || reserving) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                      {reserving ? 'Processing...' : 'Confirm Request'}
+                    </button>
                   </div>
                 </motion.div>
               </motion.div>

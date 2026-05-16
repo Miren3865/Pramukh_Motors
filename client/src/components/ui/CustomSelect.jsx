@@ -32,11 +32,11 @@ export default function CustomSelect({ options, value, onChange, placeholder = "
       top: rect.bottom + 4,
       left: rect.left,
       width: rect.width,
-      background: "#0d1b2e",
-      border: "1px solid rgba(99,179,237,0.3)",
-      borderRadius: "8px",
+      background: "#FFFFFF",
+      border: "1px solid #E5E5E5",
+      borderRadius: "2px",
       zIndex: 99999,
-      boxShadow: "0 8px 32px rgba(0,0,0,0.7)",
+      boxShadow: "0 8px 30px rgba(0, 0, 0, 0.08)",
       overflow: "hidden",
       maxHeight: "260px",
       overflowY: "auto",
@@ -55,10 +55,10 @@ export default function CustomSelect({ options, value, onChange, placeholder = "
           width: "100%",
           height: "44px",
           padding: "0 16px",
-          background: disabled ? "#111827" : "#0d1b2e",
-          border: disabled ? "1px solid rgba(148,163,184,0.3)" : "1px solid rgba(99,179,237,0.3)",
-          borderRadius: "8px",
-          color: disabled ? "#94a3b8" : selected ? "white" : "#94a3b8",
+          background: disabled ? "#F8F8F8" : "#FFFFFF",
+          border: "1px solid #E5E5E5",
+          borderRadius: "2px",
+          color: disabled ? "#999999" : selected ? "#111111" : "#666666",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -75,7 +75,8 @@ export default function CustomSelect({ options, value, onChange, placeholder = "
           style={{
             transform: open ? "rotate(180deg)" : "rotate(0deg)",
             transition: "transform 0.2s",
-            color: "#06b6d4",
+            color: "#C9A227",
+            fontSize: "10px",
           }}
         >
           ▼
@@ -94,25 +95,29 @@ export default function CustomSelect({ options, value, onChange, placeholder = "
               style={{
                 padding: "12px 16px",
                 cursor: "pointer",
-                color: value === opt.value ? "white" : "#cbd5e1",
+                color: value === opt.value ? "#111111" : "#666666",
                 background:
                   value === opt.value
-                    ? "linear-gradient(135deg, #3b82f6, #06b6d4)"
+                    ? "#F8F8F8"
                     : "transparent",
+                fontWeight: value === opt.value ? "600" : "400",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                transition: "background 0.15s",
+                transition: "all 0.2s ease",
+                fontSize: "14px",
               }}
               onMouseEnter={(e) => {
-                if (value !== opt.value) e.currentTarget.style.background = "#1e3a5f";
+                if (value !== opt.value) e.currentTarget.style.background = "#F8F8F8";
+                if (value !== opt.value) e.currentTarget.style.color = "#111111";
               }}
               onMouseLeave={(e) => {
                 if (value !== opt.value) e.currentTarget.style.background = "transparent";
+                if (value !== opt.value) e.currentTarget.style.color = "#666666";
               }}
             >
               <span>{opt.label}</span>
-              {value === opt.value && <span>✓</span>}
+              {value === opt.value && <span style={{ color: "#C9A227" }}>✓</span>}
             </div>
           ))}
         </div>,

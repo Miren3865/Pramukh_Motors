@@ -1,4 +1,4 @@
-const luxuryEase = [0.22, 1, 0.36, 1]
+const luxuryEase = [0.16, 1, 0.3, 1]
 
 export const containerVariants = {
   hidden: { opacity: 0 },
@@ -12,15 +12,39 @@ export const containerVariants = {
 }
 
 export const itemVariants = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.75,
+      duration: 1.2,
       ease: luxuryEase,
     },
   },
+}
+
+export const lineVariant = {
+  hidden: { width: 0, opacity: 0 },
+  visible: { width: 64, opacity: 1, transition: { duration: 1.5, ease: luxuryEase } }
+}
+
+export const textRevealVariant = {
+  hidden: { opacity: 0, y: 30, filter: 'blur(8px)' },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    filter: 'blur(0px)', 
+    transition: { duration: 1.5, ease: luxuryEase } 
+  }
+}
+
+export const subtitleVariant = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 1.5, ease: luxuryEase } 
+  }
 }
 
 export const fadeInUp = {
