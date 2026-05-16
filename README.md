@@ -233,10 +233,10 @@ vercel
 Edit `client/tailwind.config.js`:
 ```js
 colors: {
-  'neon-blue': '#00D9FF',
-  'neon-purple': '#C000FF',
-  'dark-bg': '#0A0E27',
-  'dark-card': '#1A1F3A',
+  'primary-bg': '#FFFFFF',
+  'contrast-bg': '#111111',
+  'gold-accent': '#C9A227',
+  'text-primary': '#111111',
 }
 ```
 
@@ -283,24 +283,6 @@ Contributions welcome! Please submit pull requests with your improvements.
 ## 📞 Support
 
 For support, email hello@pramukhmotors.com
-
----
-
-## 📈 Project Statistics
-| Aspect | Count |
-|--------|-------|
-| React Components | 13 |
-| Pages | 3 |
-| API Endpoints | 8 |
-| Database Models | 2 |
-| Animations | 15+ |
-
-## 🚀 Future Enhancements
-1. Real car listings with database-driven inventory.
-2. User accounts, profiles, and booking system.
-3. Live chat support & SMS notifications.
-
----
 
 Made with ❤️ for car enthusiasts
 "# Pramukh_Motors"
