@@ -191,28 +191,24 @@ const AdminCars = () => {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
-      >
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-secondary-bg border border-border-light rounded-sm flex items-center justify-center">
-            <Car className="text-gold-accent" size={24} strokeWidth={1.5} />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3 md:gap-4">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-secondary-bg border border-border-light rounded-sm flex items-center justify-center shrink-0">
+              <Car className="text-gold-accent w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
+            </div>
+            <div>
+              <h2 className="text-xl md:text-2xl font-bold text-text-primary tracking-tight">Inventory Management</h2>
+              <p className="text-text-secondary text-[10px] md:text-sm font-light mt-1">Oversee and update your premium vehicle collection</p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-2xl font-bold text-text-primary tracking-tight">Inventory Management</h2>
-            <p className="text-text-secondary text-sm font-light mt-1">Oversee and update your premium vehicle collection</p>
-          </div>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="w-full sm:w-auto btn-secondary text-[10px] md:text-xs uppercase tracking-widest flex items-center justify-center gap-2 px-6 py-3 md:py-2.5"
+          >
+            <Plus size={16} />
+            Add Vehicle
+          </button>
         </div>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="btn-secondary text-xs uppercase tracking-widest flex items-center gap-2 px-6"
-        >
-          <Plus size={16} />
-          Add Vehicle
-        </button>
-      </motion.div>
 
       {/* Stats Grid */}
       <motion.div
@@ -298,38 +294,112 @@ const AdminCars = () => {
             <p className="text-text-secondary text-sm uppercase tracking-widest">No vehicles found</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead className="bg-primary-bg border-b border-border-light">
-                <tr>
-                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Vehicle Details</th>
-                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Price</th>
-                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Status</th>
-                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Showroom</th>
-                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredCars.map((car, index) => (
-                  <motion.tr
-                    key={car._id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="border-b border-border-light hover:bg-primary-bg transition-colors"
-                  >
-                    <td className="px-6 py-5">
-                      <p className="text-sm text-text-primary font-medium">{car.name}</p>
-                      <p className="text-xs text-text-secondary font-light mt-1">
+          <>
+            {/* Desktop Table */}
+            <div className="hidden lg:block overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-primary-bg border-b border-border-light">
+                  <tr>
+                    <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Vehicle Details</th>
+                    <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Price</th>
+                    <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Status</th>
+                    <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Showroom</th>
+                    <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredCars.map((car, index) => (
+                    <motion.tr
+                      key={car._id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="border-b border-border-light hover:bg-primary-bg transition-colors"
+                    >
+                      <td className="px-6 py-5">
+                        <p className="text-sm text-text-primary font-medium">{car.name}</p>
+                        <p className="text-xs text-text-secondary font-light mt-1">
+                          {car.year} · {car.fuel} · {car.transmission}
+                        </p>
+                      </td>
+                      <td className="px-6 py-5 text-sm text-text-primary font-semibold">
+                        ₹{car.price?.toLocaleString()}
+                      </td>
+                      <td className="px-6 py-5">
+                        <span
+                          className={`px-3 py-1 rounded-sm text-[10px] font-semibold uppercase tracking-widest ${
+                            car.status === 'available'
+                              ? 'bg-success/10 text-success border border-success/20'
+                              : car.status === 'reserved'
+                              ? 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20'
+                              : 'bg-text-secondary/10 text-text-secondary border border-text-secondary/20'
+                          }`}
+                        >
+                          {car.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-5">
+                        <button
+                          onClick={() => handleToggleShowOnUser(car)}
+                          disabled={!car.showOnUser && visibleCarsCount >= 6}
+                          title={!car.showOnUser && visibleCarsCount >= 6 ? 'Maximum 6 public cars allowed' : ''}
+                          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-sm text-[10px] font-semibold uppercase tracking-widest transition-all ${
+                            car.showOnUser
+                              ? 'bg-gold-accent/10 border border-gold-accent/50 text-gold-accent hover:bg-gold-accent/20'
+                              : 'bg-primary-bg border border-border-light text-text-secondary hover:border-text-secondary'
+                          } ${!car.showOnUser && visibleCarsCount >= 6 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                          {car.showOnUser ? <Eye size={12} /> : <EyeOff size={12} />}
+                          <span>{car.showOnUser ? 'Visible' : 'Hidden'}</span>
+                        </button>
+                      </td>
+                      <td className="px-6 py-5 text-right space-x-2">
+                        <button
+                          onClick={() => handleEditClick(car)}
+                          disabled={car.status === 'sold'}
+                          className={`w-8 h-8 rounded-sm inline-flex items-center justify-center transition-colors ${
+                            car.status === 'sold'
+                              ? 'bg-primary-bg border border-border-light text-text-secondary opacity-50 cursor-not-allowed'
+                              : 'bg-primary-bg border border-border-light text-text-secondary hover:text-text-primary hover:border-gold-accent'
+                          }`}
+                          title="Edit Vehicle"
+                        >
+                          <Edit2 size={14} />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(car)}
+                          className="w-8 h-8 rounded-sm bg-primary-bg border border-border-light inline-flex items-center justify-center text-text-secondary hover:text-error hover:border-error transition-colors"
+                          title="Delete Vehicle"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card List */}
+            <div className="lg:hidden p-4 space-y-4">
+              {filteredCars.map((car, index) => (
+                <motion.div
+                  key={car._id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="bg-primary-bg border border-border-light rounded-sm p-5 space-y-4"
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-text-primary font-bold text-base">{car.name}</p>
+                      <p className="text-[10px] text-text-secondary uppercase tracking-widest mt-1">
                         {car.year} · {car.fuel} · {car.transmission}
                       </p>
-                    </td>
-                    <td className="px-6 py-5 text-sm text-text-primary font-semibold">
-                      ₹{car.price?.toLocaleString()}
-                    </td>
-                    <td className="px-6 py-5">
+                    </div>
+                    <div className="flex flex-col gap-2">
                       <span
-                        className={`px-3 py-1 rounded-sm text-[10px] font-semibold uppercase tracking-widest ${
+                        className={`px-3 py-1 rounded-sm text-[9px] font-semibold uppercase tracking-widest text-center ${
                           car.status === 'available'
                             ? 'bg-success/10 text-success border border-success/20'
                             : car.status === 'reserved'
@@ -339,48 +409,44 @@ const AdminCars = () => {
                       >
                         {car.status}
                       </span>
-                    </td>
-                    <td className="px-6 py-5">
-                      <button
-                        onClick={() => handleToggleShowOnUser(car)}
-                        disabled={!car.showOnUser && visibleCarsCount >= 6}
-                        title={!car.showOnUser && visibleCarsCount >= 6 ? 'Maximum 6 public cars allowed' : ''}
-                        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-sm text-[10px] font-semibold uppercase tracking-widest transition-all ${
-                          car.showOnUser
-                            ? 'bg-gold-accent/10 border border-gold-accent/50 text-gold-accent hover:bg-gold-accent/20'
-                            : 'bg-primary-bg border border-border-light text-text-secondary hover:border-text-secondary'
-                        } ${!car.showOnUser && visibleCarsCount >= 6 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      >
-                        {car.showOnUser ? <Eye size={12} /> : <EyeOff size={12} />}
-                        <span>{car.showOnUser ? 'Visible' : 'Hidden'}</span>
-                      </button>
-                    </td>
-                    <td className="px-6 py-5 text-right space-x-2">
+                      <p className="text-xs text-gold-accent font-bold text-right">₹{car.price?.toLocaleString()}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-border-light">
+                    <button
+                      onClick={() => handleToggleShowOnUser(car)}
+                      disabled={!car.showOnUser && visibleCarsCount >= 6}
+                      className={`flex items-center gap-2 px-3 py-2 rounded-sm text-[10px] font-semibold uppercase tracking-widest transition-all ${
+                        car.showOnUser
+                          ? 'bg-gold-accent/10 border border-gold-accent/50 text-gold-accent'
+                          : 'bg-secondary-bg border border-border-light text-text-secondary'
+                      } ${!car.showOnUser && visibleCarsCount >= 6 ? 'opacity-30' : ''}`}
+                    >
+                      {car.showOnUser ? <Eye size={14} /> : <EyeOff size={14} />}
+                      {car.showOnUser ? 'Visible' : 'Hidden'}
+                    </button>
+                    
+                    <div className="flex gap-2">
                       <button
                         onClick={() => handleEditClick(car)}
                         disabled={car.status === 'sold'}
-                        className={`w-8 h-8 rounded-sm inline-flex items-center justify-center transition-colors ${
-                          car.status === 'sold'
-                            ? 'bg-primary-bg border border-border-light text-text-secondary opacity-50 cursor-not-allowed'
-                            : 'bg-primary-bg border border-border-light text-text-secondary hover:text-text-primary hover:border-gold-accent'
-                        }`}
-                        title="Edit Vehicle"
+                        className="w-10 h-10 rounded-sm bg-secondary-bg border border-border-light flex items-center justify-center text-text-secondary hover:text-gold-accent transition-colors disabled:opacity-30"
                       >
-                        <Edit2 size={14} />
+                        <Edit2 size={16} />
                       </button>
                       <button
                         onClick={() => handleDelete(car)}
-                        className="w-8 h-8 rounded-sm bg-primary-bg border border-border-light inline-flex items-center justify-center text-text-secondary hover:text-error hover:border-error transition-colors"
-                        title="Delete Vehicle"
+                        className="w-10 h-10 rounded-sm bg-secondary-bg border border-border-light flex items-center justify-center text-text-secondary hover:text-error transition-colors"
                       >
-                        <Trash2 size={14} />
+                        <Trash2 size={16} />
                       </button>
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </>
         )}
       </motion.div>
 

@@ -195,39 +195,42 @@ const AdminDashboard = () => {
 
       {/* Header */}
       <header className="bg-secondary-bg border-b border-border-light sticky top-0 z-40">
-        <div className="container-custom h-20 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-primary-bg border border-gold-accent rounded-sm flex items-center justify-center">
-              <span className="text-gold-accent font-bold text-lg font-sans tracking-wider">PM</span>
+        <div className="container-custom h-20 flex items-center justify-between px-4">
+          <div className="flex items-center gap-3 md:gap-4">
+            <div className="w-9 h-9 md:w-10 md:h-10 bg-primary-bg border border-gold-accent rounded-sm flex items-center justify-center shrink-0">
+              <span className="text-gold-accent font-bold text-base md:text-lg font-sans tracking-wider">PM</span>
             </div>
-            <span className="text-xl font-bold text-text-primary tracking-wide uppercase">Pramukh <span className="text-gold-accent font-serif italic normal-case">Motors</span> <span className="text-text-secondary text-sm ml-2">| Portal</span></span>
+            <span className="text-lg md:text-xl font-bold text-text-primary tracking-wide uppercase truncate">
+              Pramukh <span className="text-gold-accent font-serif italic normal-case">Motors</span> 
+              <span className="text-text-secondary text-xs md:text-sm ml-2 hidden sm:inline">| Portal</span>
+            </span>
           </div>
           <motion.button
             whileHover={{ y: -2 }}
             whileTap={{ y: 0 }}
             onClick={handleLogout}
-            className="flex items-center gap-2 px-5 py-2.5 bg-primary-bg border border-border-light text-text-secondary rounded-sm text-xs font-semibold uppercase tracking-widest hover:border-gold-accent hover:text-gold-accent transition-colors"
+            className="flex items-center gap-2 px-3 md:px-5 py-2 md:py-2.5 bg-primary-bg border border-border-light text-text-secondary rounded-sm text-[10px] md:text-xs font-semibold uppercase tracking-widest hover:border-gold-accent hover:text-gold-accent transition-colors shrink-0"
           >
-            <LogOut size={16} />
-            Logout
+            <LogOut size={14} className="md:w-4 md:h-4" />
+            <span className="hidden xs:inline">Logout</span>
           </motion.button>
         </div>
       </header>
 
       {/* Tab Navigation */}
-      <div className="border-b border-border-light bg-secondary-bg sticky top-20 z-30 pt-4">
-        <div className="container-custom flex gap-8">
+      <div className="border-b border-border-light bg-secondary-bg sticky top-20 z-30 pt-4 overflow-x-auto no-scrollbar">
+        <div className="container-custom flex gap-2 md:gap-8 px-4 min-w-max">
           <button
             onClick={() => {
               setActiveTab('contacts')
               setSearchParams({ tab: 'contacts' })
             }}
-            className={`px-6 py-4 font-semibold text-xs uppercase tracking-widest transition-all border-b-2 flex items-center gap-3 ${activeTab === 'contacts'
+            className={`px-4 md:px-6 py-4 font-semibold text-[10px] md:text-xs uppercase tracking-widest transition-all border-b-2 flex items-center gap-2 md:gap-3 whitespace-nowrap ${activeTab === 'contacts'
                 ? 'text-gold-accent border-gold-accent'
                 : 'text-text-secondary border-transparent hover:text-gold-accent'
               }`}
           >
-            <Mail size={16} />
+            <Mail size={14} className="md:w-4 md:h-4" />
             Inquiries
           </button>
           <button
@@ -235,12 +238,12 @@ const AdminDashboard = () => {
               setActiveTab('cars')
               setSearchParams({ tab: 'cars' })
             }}
-            className={`px-6 py-4 font-semibold text-xs uppercase tracking-widest transition-all border-b-2 flex items-center gap-3 ${activeTab === 'cars'
+            className={`px-4 md:px-6 py-4 font-semibold text-[10px] md:text-xs uppercase tracking-widest transition-all border-b-2 flex items-center gap-2 md:gap-3 whitespace-nowrap ${activeTab === 'cars'
                 ? 'text-gold-accent border-gold-accent'
                 : 'text-text-secondary border-transparent hover:text-gold-accent'
               }`}
           >
-            <Car size={16} />
+            <Car size={14} className="md:w-4 md:h-4" />
             Inventory
           </button>
           <button
@@ -248,19 +251,19 @@ const AdminDashboard = () => {
               setActiveTab('reservations')
               setSearchParams({ tab: 'reservations' })
             }}
-            className={`px-6 py-4 font-semibold text-xs uppercase tracking-widest transition-all border-b-2 flex items-center gap-3 ${activeTab === 'reservations'
+            className={`px-4 md:px-6 py-4 font-semibold text-[10px] md:text-xs uppercase tracking-widest transition-all border-b-2 flex items-center gap-2 md:gap-3 whitespace-nowrap ${activeTab === 'reservations'
                 ? 'text-gold-accent border-gold-accent'
                 : 'text-text-secondary border-transparent hover:text-gold-accent'
               }`}
           >
-            <ClipboardList size={16} />
+            <ClipboardList size={14} className="md:w-4 md:h-4" />
             Reservations
           </button>
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="container-custom py-10">
+      <main className="container-custom py-6 md:py-10 px-4 sm:px-0">
         {/* Contacts Tab */}
         {activeTab === 'contacts' && (
           <>
@@ -303,63 +306,111 @@ const AdminDashboard = () => {
                   <p className="text-text-secondary text-sm uppercase tracking-widest">No inquiries found</p>
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left">
-                    <thead>
-                      <tr className="border-b border-border-light">
-                        <th className="py-4 px-4 text-text-secondary text-xs font-semibold uppercase tracking-widest">Client Name</th>
-                        <th className="py-4 px-4 text-text-secondary text-xs font-semibold uppercase tracking-widest">Contact Details</th>
-                        <th className="py-4 px-4 text-text-secondary text-xs font-semibold uppercase tracking-widest">Inquiry Preview</th>
-                        <th className="py-4 px-4 text-text-secondary text-xs font-semibold uppercase tracking-widest">Received Date</th>
-                        <th className="py-4 px-4 text-text-secondary text-xs font-semibold uppercase tracking-widest text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredContacts.map((contact, index) => (
-                        <motion.tr
-                          key={contact._id}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.05 }}
-                          className="border-b border-border-light hover:bg-primary-bg transition-colors"
-                        >
-                          <td className="py-5 px-4 text-text-primary font-medium text-sm">{contact.name}</td>
-                          <td className="py-5 px-4 text-text-secondary text-sm">
-                            <div className="flex items-center gap-2">
-                              <Mail size={14} className="text-gold-accent" />
-                              {contact.email}
-                            </div>
-                          </td>
-                          <td className="py-5 px-4 text-text-secondary text-sm truncate max-w-xs font-light">
-                            {contact.message.substring(0, 50)}...
-                          </td>
-                          <td className="py-5 px-4 text-text-secondary text-sm font-light">
-                            <div className="flex items-center gap-2">
-                              <Calendar size={14} className="text-gold-accent" />
+                <>
+                  {/* Desktop Table */}
+                  <div className="hidden lg:block overflow-x-auto">
+                    <table className="w-full text-left">
+                      <thead>
+                        <tr className="border-b border-border-light">
+                          <th className="py-4 px-4 text-text-secondary text-xs font-semibold uppercase tracking-widest">Client Name</th>
+                          <th className="py-4 px-4 text-text-secondary text-xs font-semibold uppercase tracking-widest">Contact Details</th>
+                          <th className="py-4 px-4 text-text-secondary text-xs font-semibold uppercase tracking-widest">Inquiry Preview</th>
+                          <th className="py-4 px-4 text-text-secondary text-xs font-semibold uppercase tracking-widest">Received Date</th>
+                          <th className="py-4 px-4 text-text-secondary text-xs font-semibold uppercase tracking-widest text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredContacts.map((contact, index) => (
+                          <motion.tr
+                            key={contact._id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.05 }}
+                            className="border-b border-border-light hover:bg-primary-bg transition-colors"
+                          >
+                            <td className="py-5 px-4 text-text-primary font-medium text-sm">{contact.name}</td>
+                            <td className="py-5 px-4 text-text-secondary text-sm">
+                              <div className="flex items-center gap-2">
+                                <Mail size={14} className="text-gold-accent" />
+                                {contact.email}
+                              </div>
+                            </td>
+                            <td className="py-5 px-4 text-text-secondary text-sm truncate max-w-xs font-light">
+                              {contact.message.substring(0, 50)}...
+                            </td>
+                            <td className="py-5 px-4 text-text-secondary text-sm font-light">
+                              <div className="flex items-center gap-2">
+                                <Calendar size={14} className="text-gold-accent" />
+                                {new Date(contact.createdAt).toLocaleDateString()}
+                              </div>
+                            </td>
+                            <td className="py-5 px-4 flex items-center justify-end gap-3">
+                              <button
+                                onClick={() => handleViewMessage(contact)}
+                                className="w-8 h-8 rounded-sm bg-primary-bg border border-border-light flex items-center justify-center text-text-secondary hover:text-gold-accent hover:border-gold-accent transition-colors"
+                                title="View Details"
+                              >
+                                <Eye size={16} />
+                              </button>
+                              <button
+                                onClick={() => handleDelete(contact)}
+                                className="w-8 h-8 rounded-sm bg-primary-bg border border-border-light flex items-center justify-center text-text-secondary hover:text-error hover:border-error transition-colors"
+                                title="Delete Record"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Mobile Card List */}
+                  <div className="lg:hidden space-y-4">
+                    {filteredContacts.map((contact, index) => (
+                      <motion.div
+                        key={contact._id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className="bg-primary-bg border border-border-light rounded-sm p-5 space-y-4"
+                      >
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="text-text-primary font-bold text-base">{contact.name}</p>
+                            <p className="text-xs text-text-secondary mt-1 flex items-center gap-1.5">
+                              <Calendar size={12} className="text-gold-accent" />
                               {new Date(contact.createdAt).toLocaleDateString()}
-                            </div>
-                          </td>
-                          <td className="py-5 px-4 flex items-center justify-end gap-3">
+                            </p>
+                          </div>
+                          <div className="flex gap-2">
                             <button
                               onClick={() => handleViewMessage(contact)}
-                              className="w-8 h-8 rounded-sm bg-primary-bg border border-border-light flex items-center justify-center text-text-secondary hover:text-gold-accent hover:border-gold-accent transition-colors"
-                              title="View Details"
+                              className="w-10 h-10 rounded-sm bg-secondary-bg border border-border-light flex items-center justify-center text-text-secondary hover:text-gold-accent transition-colors"
                             >
-                              <Eye size={16} />
+                              <Eye size={18} />
                             </button>
                             <button
                               onClick={() => handleDelete(contact)}
-                              className="w-8 h-8 rounded-sm bg-primary-bg border border-border-light flex items-center justify-center text-text-secondary hover:text-error hover:border-error transition-colors"
-                              title="Delete Record"
+                              className="w-10 h-10 rounded-sm bg-secondary-bg border border-border-light flex items-center justify-center text-text-secondary hover:text-error transition-colors"
                             >
-                              <Trash2 size={16} />
+                              <Trash2 size={18} />
                             </button>
-                          </td>
-                        </motion.tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                          </div>
+                        </div>
+                        <div className="bg-secondary-bg p-3 border border-border-light rounded-sm">
+                          <p className="text-[10px] uppercase tracking-widest text-text-secondary font-semibold mb-1">Email</p>
+                          <p className="text-xs text-text-primary break-all">{contact.email}</p>
+                        </div>
+                        <div className="bg-secondary-bg p-3 border border-border-light rounded-sm">
+                          <p className="text-[10px] uppercase tracking-widest text-text-secondary font-semibold mb-1">Inquiry Preview</p>
+                          <p className="text-xs text-text-secondary font-light line-clamp-2">{contact.message}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </>
               )}
             </motion.div>
           </>

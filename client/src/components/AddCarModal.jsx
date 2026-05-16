@@ -190,10 +190,10 @@ const AddCarModal = ({ onClose, onCarAdded }) => {
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="fixed inset-0 flex items-center justify-center z-50 px-4 py-8"
+        className="fixed inset-0 flex items-center justify-center z-50 px-0 sm:px-4 py-0 sm:py-8"
       >
         <motion.div
-          className="bg-card-bg rounded-sm border border-border-light shadow-luxury max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+          className="bg-card-bg sm:rounded-sm border-x sm:border border-border-light shadow-luxury max-w-3xl w-full h-full sm:h-auto sm:max-h-[90vh] overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}

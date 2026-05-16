@@ -170,15 +170,15 @@ const AdminReservations = () => {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-4 sm:px-0"
       >
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-secondary-bg border border-border-light rounded-sm flex items-center justify-center">
-            <ClipboardList className="text-gold-accent" size={24} strokeWidth={1.5} />
+        <div className="flex items-center gap-3 md:gap-4">
+          <div className="w-10 h-10 md:w-12 md:h-12 bg-secondary-bg border border-border-light rounded-sm flex items-center justify-center shrink-0">
+            <ClipboardList className="text-gold-accent w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-text-primary tracking-tight">Client Reservations</h2>
-            <p className="text-text-secondary text-sm font-light mt-1">Manage inquiries and finalized vehicle acquisitions</p>
+            <h2 className="text-xl md:text-2xl font-bold text-text-primary tracking-tight">Client Reservations</h2>
+            <p className="text-text-secondary text-[10px] md:text-sm font-light mt-1">Manage inquiries and finalized vehicle acquisitions</p>
           </div>
         </div>
       </motion.div>
@@ -234,98 +234,174 @@ const AdminReservations = () => {
             <p className="text-text-secondary text-sm uppercase tracking-widest">No records found</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead className="bg-primary-bg border-b border-border-light">
-                <tr>
-                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Client</th>
-                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Vehicle</th>
-                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Contact</th>
-                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Note</th>
-                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Status</th>
-                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Date</th>
-                  <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredReservations.map((reservation, index) => {
-                  const isReserved = reservation.status === 'reserved'
-                  const isCancelled = reservation.status === 'cancelled'
-                  const isSold = reservation.status === 'sold'
-                  const isFinalized = isCancelled || isSold
+          <>
+            {/* Desktop Table */}
+            <div className="hidden lg:block overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-primary-bg border-b border-border-light">
+                  <tr>
+                    <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Client</th>
+                    <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Vehicle</th>
+                    <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Contact</th>
+                    <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Note</th>
+                    <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Status</th>
+                    <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest">Date</th>
+                    <th className="px-6 py-4 text-text-secondary text-[10px] font-semibold uppercase tracking-widest text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredReservations.map((reservation, index) => {
+                    const isReserved = reservation.status === 'reserved'
+                    const isCancelled = reservation.status === 'cancelled'
+                    const isSold = reservation.status === 'sold'
+                    const isFinalized = isCancelled || isSold
 
-                  return (
-                    <motion.tr
-                      key={reservation._id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: index * 0.05 }}
-                      className={`border-b border-border-light transition-colors ${
-                        isCancelled ? 'bg-primary-bg/50 opacity-70' : isSold ? 'bg-primary-bg/30' : 'hover:bg-primary-bg'
-                      }`}
-                    >
-                      <td className={`px-6 py-5 text-sm font-medium ${isCancelled ? 'text-text-secondary line-through' : 'text-text-primary'}`}>
-                        {reservation.customerName}
-                      </td>
-                      <td className={`px-6 py-5 ${isCancelled ? 'opacity-70' : ''}`}>
-                        <p className="text-sm text-text-primary font-medium mb-1">{reservation.carName}</p>
-                        <p className="text-xs text-text-secondary font-light">
-                          {reservation.carYear ? `${reservation.carYear} · ` : ''}
-                          {reservation.carPrice ? `₹${reservation.carPrice.toLocaleString()}` : ''}
+                    return (
+                      <motion.tr
+                        key={reservation._id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: index * 0.05 }}
+                        className={`border-b border-border-light transition-colors ${
+                          isCancelled ? 'bg-primary-bg/50 opacity-70' : isSold ? 'bg-primary-bg/30' : 'hover:bg-primary-bg'
+                        }`}
+                      >
+                        <td className={`px-6 py-5 text-sm font-medium ${isCancelled ? 'text-text-secondary line-through' : 'text-text-primary'}`}>
+                          {reservation.customerName}
+                        </td>
+                        <td className={`px-6 py-5 ${isCancelled ? 'opacity-70' : ''}`}>
+                          <p className="text-sm text-text-primary font-medium mb-1">{reservation.carName}</p>
+                          <p className="text-xs text-text-secondary font-light">
+                            {reservation.carYear ? `${reservation.carYear} · ` : ''}
+                            {reservation.carPrice ? `₹{reservation.carPrice.toLocaleString()}` : ''}
+                          </p>
+                        </td>
+                        <td className={`px-6 py-5 ${isCancelled ? 'opacity-70' : ''}`}>
+                          <div className="space-y-2 text-xs text-text-secondary font-light">
+                            <div className="flex items-center gap-2">
+                              <Mail size={12} className="text-gold-accent" />
+                              <span>{reservation.customerEmail}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Phone size={12} className="text-gold-accent" />
+                              <span>{reservation.customerPhone}</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td className={`px-6 py-5 max-w-xs truncate ${isCancelled ? 'opacity-70' : ''}`}>
+                          <div className="flex items-start gap-2 text-xs text-text-secondary font-light">
+                            <Clock3 size={12} className="mt-0.5 shrink-0 text-gold-accent" />
+                            <span className="truncate">{reservation.note || 'No note provided'}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-5">
+                          <span className={`inline-flex px-3 py-1 rounded-sm text-[10px] font-semibold uppercase tracking-widest border ${statusStyles[reservation.status] || 'bg-text-secondary/10 text-text-secondary border-text-secondary/20'}`}>
+                            {reservation.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-5 text-xs text-text-secondary font-light">
+                          {new Date(reservation.createdAt).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-5 text-right space-x-2">
+                          <button
+                            type="button"
+                            onClick={() => openActionModal(reservation, 'cancel')}
+                            disabled={isFinalized}
+                            className="w-8 h-8 rounded-sm bg-primary-bg border border-border-light inline-flex items-center justify-center text-text-secondary hover:text-text-primary hover:border-gold-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                            title="Cancel Reservation"
+                          >
+                            <XCircle size={14} />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => openActionModal(reservation, 'delete')}
+                            disabled={isReserved}
+                            className="w-8 h-8 rounded-sm bg-primary-bg border border-border-light inline-flex items-center justify-center text-text-secondary hover:text-error hover:border-error transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                            title={isReserved ? 'Reserved inquiries cannot be deleted' : 'Delete Record'}
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </td>
+                      </motion.tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card List */}
+            <div className="lg:hidden p-4 space-y-4">
+              {filteredReservations.map((reservation, index) => {
+                const isReserved = reservation.status === 'reserved'
+                const isCancelled = reservation.status === 'cancelled'
+                const isSold = reservation.status === 'sold'
+                const isFinalized = isCancelled || isSold
+
+                return (
+                  <motion.div
+                    key={reservation._id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className={`bg-primary-bg border border-border-light rounded-sm p-5 space-y-4 ${
+                      isCancelled ? 'opacity-70 grayscale' : ''
+                    }`}
+                  >
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className={`text-text-primary font-bold text-base ${isCancelled ? 'line-through' : ''}`}>
+                          {reservation.customerName}
                         </p>
-                      </td>
-                      <td className={`px-6 py-5 ${isCancelled ? 'opacity-70' : ''}`}>
-                        <div className="space-y-2 text-xs text-text-secondary font-light">
-                          <div className="flex items-center gap-2">
-                            <Mail size={12} className="text-gold-accent" />
-                            <span>{reservation.customerEmail}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Phone size={12} className="text-gold-accent" />
-                            <span>{reservation.customerPhone}</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td className={`px-6 py-5 max-w-xs truncate ${isCancelled ? 'opacity-70' : ''}`}>
-                         <div className="flex items-start gap-2 text-xs text-text-secondary font-light">
-                          <Clock3 size={12} className="mt-0.5 shrink-0 text-gold-accent" />
-                          <span className="truncate">{reservation.note || 'No note provided'}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <span className={`inline-flex px-3 py-1 rounded-sm text-[10px] font-semibold uppercase tracking-widest border ${statusStyles[reservation.status] || 'bg-text-secondary/10 text-text-secondary border-text-secondary/20'}`}>
-                          {reservation.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-5 text-xs text-text-secondary font-light">
-                        {new Date(reservation.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-5 text-right space-x-2">
+                        <p className="text-xs text-gold-accent font-medium mt-1">{reservation.carName}</p>
+                      </div>
+                      <span className={`px-3 py-1 rounded-sm text-[9px] font-semibold uppercase tracking-widest border ${statusStyles[reservation.status] || ''}`}>
+                        {reservation.status}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-3 bg-secondary-bg p-3 border border-border-light rounded-sm">
+                      <div className="flex items-center gap-2 text-xs text-text-secondary">
+                        <Mail size={12} className="text-gold-accent" />
+                        <span className="truncate">{reservation.customerEmail}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-text-secondary">
+                        <Phone size={12} className="text-gold-accent" />
+                        <span>{reservation.customerPhone}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-text-secondary pt-2 border-t border-border-light/50">
+                        <Calendar size={12} className="text-gold-accent" />
+                        <span>{new Date(reservation.createdAt).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2">
+                      <div className="flex items-center gap-2 text-[10px] text-text-secondary font-light italic">
+                        <Clock3 size={12} className="text-gold-accent" />
+                        <span className="truncate max-w-[150px]">{reservation.note || 'No note'}</span>
+                      </div>
+                      
+                      <div className="flex gap-2">
                         <button
-                          type="button"
                           onClick={() => openActionModal(reservation, 'cancel')}
                           disabled={isFinalized}
-                          className="w-8 h-8 rounded-sm bg-primary-bg border border-border-light inline-flex items-center justify-center text-text-secondary hover:text-text-primary hover:border-gold-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                          title="Cancel Reservation"
+                          className="w-10 h-10 rounded-sm bg-secondary-bg border border-border-light flex items-center justify-center text-text-secondary hover:text-gold-accent transition-colors disabled:opacity-30"
                         >
-                          <XCircle size={14} />
+                          <XCircle size={18} />
                         </button>
                         <button
-                          type="button"
                           onClick={() => openActionModal(reservation, 'delete')}
                           disabled={isReserved}
-                          className="w-8 h-8 rounded-sm bg-primary-bg border border-border-light inline-flex items-center justify-center text-text-secondary hover:text-error hover:border-error transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                          title={isReserved ? 'Reserved inquiries cannot be deleted' : 'Delete Record'}
+                          className="w-10 h-10 rounded-sm bg-secondary-bg border border-border-light flex items-center justify-center text-text-secondary hover:text-error transition-colors disabled:opacity-30"
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={18} />
                         </button>
-                      </td>
-                    </motion.tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </div>
+          </>
         )}
       </motion.div>
 
