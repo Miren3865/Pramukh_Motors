@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, AlertTriangle, IndianRupee } from 'lucide-react'
+import { ArrowLeft, AlertTriangle } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { getCarById, getAllCarsAll, createReservation } from '../services/api'
 import PageTransition from '../components/PageTransition'
@@ -237,9 +237,9 @@ const ReserveVehicle = () => {
                 </div>
 
                 <div className="pt-4 text-center">
-                  <div className="inline-flex items-center gap-2 text-gold-accent">
-                    <IndianRupee size={16} />
-                    <span className="text-sm font-semibold">₹{car?.price?.toLocaleString() || 'N/A'}</span>
+                  <div className="inline-flex items-center gap-[0.25cm] text-gold-accent">
+                    <span className="text-sm font-semibold">₹</span>
+                    <span className="text-sm font-semibold">{car?.price?.toLocaleString() || 'N/A'}</span>
                   </div>
                 </div>
               </form>
